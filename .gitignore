@@ -36,6 +36,14 @@ captures/
 *.iml
 .idea/workspace.xml
 .idea/vcs.xml
+.idea/tasks.xml
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/profiles_settings.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
 
 # Keystore files
 *.jks
@@ -47,3 +55,5 @@ captures/
 /build
 /captures
 .externalNativeBuild
+# User-specific configurations
+
