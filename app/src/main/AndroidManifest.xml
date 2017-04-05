@@ -18,6 +18,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+         <activity
+         android:name=".Deck_List_Activity"
+         android:label="@string/title_activity_deck__list_"
+         android:theme="@style/AppTheme.NoActionBar">
+         <meta-data
+         android:name="android.support.PARENT_ACTIVITY"
+         android:value="vanderclay.comet.benson.franticsearch.MainActivity" />
+         </activity>
+        <activity
+            android:name=".Settings"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
