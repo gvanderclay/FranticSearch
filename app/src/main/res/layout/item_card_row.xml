@@ -2,11 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
         <variable
             name="card"
             type="vanderclay.comet.benson.franticsearch.API.CardDO"/>
-
     </data>
 
     <FrameLayout
@@ -19,8 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="@{model.card}"/>
-
+            android:text="@{card.name}"/>
     </FrameLayout>
 
 </layout>

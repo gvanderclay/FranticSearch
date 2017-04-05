@@ -148,8 +148,7 @@ class CardSearchAPI//Constructor
         private val owned = "owned"
 
         @JvmStatic fun main(args: Array<String>) {
-            //        CardSearchAPI cardSearchAPI = new CardSearchAPI();
-            //        cardSearchAPI.onCreate();
+            System.out.println("hell")
         }
     }
 }
