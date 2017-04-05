@@ -9,8 +9,7 @@ import java.io.Serializable
 import io.magicthegathering.javasdk.api.CardAPI
 
 
-class CardSearchAPI//Constructor
-(context: Context) : SQLiteOpenHelper(context, CardSearchAPI.DATABASE_NAME, null, CardSearchAPI.DATABASE_VERSION), Serializable {
+class CardSearchAPI(context: Context) : SQLiteOpenHelper(context, CardSearchAPI.DATABASE_NAME, null, CardSearchAPI.DATABASE_VERSION), Serializable {
 
 
     // Creating Tables
@@ -148,7 +147,6 @@ class CardSearchAPI//Constructor
         private val owned = "owned"
 
         @JvmStatic fun main(args: Array<String>) {
-            System.out.println("hell")
         }
     }
 }
