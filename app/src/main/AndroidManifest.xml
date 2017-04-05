@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SearchActivity"
+            android:name=".CardSearchActivity"
             android:label="@string/title_search_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

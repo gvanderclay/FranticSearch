@@ -1,20 +1,17 @@
 package vanderclay.comet.benson.franticsearch
 
-import android.app.SearchManager
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.view.Menu
-import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.SearchView
 import android.widget.SearchView.OnQueryTextListener
 
-class SearchActivity : AppCompatActivity(), OnQueryTextListener{
+class CardSearchActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     private var _adapter: ArrayAdapter<String>? = null
     var adapter: ArrayAdapter<String>?
@@ -38,7 +35,7 @@ class SearchActivity : AppCompatActivity(), OnQueryTextListener{
         lv = findViewById(R.id.cardSearchList) as? ListView
         val array: Array<String> = arrayOf("This", "Is", "A", "list", "Is", "A", "list", "Is", "A", "list", "Is", "A", "list", "Is", "A", "list", "Is", "A", "list", "Is", "A", "list", "Is", "A", "list", "Is", "A", "list", "Is", "A", "list", "Is", "A", "list", "Is", "A", "list")
         adapter = ArrayAdapter(
-                this@SearchActivity,
+                this@CardSearchActivity,
                 android.R.layout.simple_list_item_1,
                 array)
         lv?.adapter = adapter
@@ -46,29 +43,22 @@ class SearchActivity : AppCompatActivity(), OnQueryTextListener{
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.search_menu, menu)
+        menuInflater?.inflate(R.menu.main_menu, menu);
 
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchMenuItem = menu?.findItem(R.id.search) as? MenuItem
-        val searchView = MenuItemCompat.getActionView(searchMenuItem) as? SearchView
-        searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView?.isSubmitButtonEnabled = true
-        searchView?.setOnQueryTextListener(this)
+        val searchItem = menu?.findItem(R.id.action_search)
+        val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
+        searchView.setOnQueryTextListener(this)
+
 
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        if(TextUtils.isEmpty(newText)) {
-
-        }
-        adapter?.filter?.filter(newText)
-        return true
+        return false
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        return false;
+        return false
     }
 }
 

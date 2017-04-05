@@ -2,161 +2,154 @@ package vanderclay.comet.benson.franticsearch.API
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
+import java.io.Serializable
 import io.magicthegathering.javasdk.api.CardAPI
-import io.magicthegathering.javasdk.resource.Card
 
 
-class CardSearchAPI(context: Context) : SQLiteOpenHelper(context, CardSearchAPI.DATABASE_NAME, null, CardSearchAPI.DATABASE_VERSION) {
+class CardSearchAPI//Constructor
+(context: Context) : SQLiteOpenHelper(context, CardSearchAPI.DATABASE_NAME, null, CardSearchAPI.DATABASE_VERSION), Serializable {
 
+
+    // Creating Tables
     override fun onCreate(db: SQLiteDatabase) {
-        val create_card_table = "CREATE TABLE " + TABLE_CARDS + " ( " +
-                id + " INTEGER PRIMARY KEY, " + name + " TEXT, " + manaCost + " INTEGER, " +
-                cmc + " INTEGER, " + colors + " TEXT , " + type + " TEXT, " + power + " INTEGER, " +
-                toughness + " INTEGER, " + loyalty + " INTEGER, " + imageName + " TEXT, " +
-                reserved + " NUMERIC, " + releaseDate + " TEXT, " + starter + ", TEXT " + owned + " NUMBERIC)"
 
-        db.execSQL(create_card_table)
+        val CREATE_CONTACTS_TABLE = """
+            CREATE TABLE $TABLE_CARDS(
+                $id INTEGER PRIMARY KEY,
+                $name TEXT,
+                $manaCost INTEGER,
+                $cmc INTEGER,
+                $colors TEXT,
+                $type TEXT,
+                $subtypes TEXT,
+                $rarity TEXT,
+                $text TEXT,
+                $power INTEGER,
+                $toughness INTEGER,
+                $loyalty INTEGER,
+                $imageName TEXT,
+                $reserved TEXT,
+                $releaseDate TEXT,
+                $starter TEXT,
+                $owned INTEGER
+            )
+        """
+        db.execSQL(CREATE_CONTACTS_TABLE)
     }
 
-    fun addCards(card: CardDO) {
-        val db = this.writableDatabase
-
-        val snapShot = ContentValues()
-        val cardsFromCardApi = CardAPI.getAllCards()
-
-        for (apiCard in cardsFromCardApi) {
-            snapShot.put(id, apiCard.id)
-            snapShot.put(name, apiCard.name)
-            snapShot.put(manaCost, apiCard.manaCost)
-            snapShot.put(cmc, apiCard.cmc)
-            snapShot.put(colors, apiCard.colors.toString())
-            snapShot.put(type, apiCard.type)
-            snapShot.put(power, apiCard.power)
-            snapShot.put(toughness, apiCard.toughness)
-            snapShot.put(loyalty, apiCard.loyalty)
-            snapShot.put(imageName, apiCard.imageName)
-            snapShot.put(reserved, apiCard.isReserved)
-            snapShot.put(releaseDate, apiCard.releaseDate)
-            snapShot.put(starter, apiCard.isStarter)
-            snapShot.put(owned, 0)
-        }
-
-        db.insert(TABLE_CARDS, null, snapShot)
-        db.close()
-    }
-
-    // Getting all cards from the Local Database
-    fun getAllShops(): List<> {
-        val shopList = ArrayList<CardDO>()
-
-        // Select All Query
-        val selectQuery = "SELECT * FROM " + TABLE_CARDS
-
-        val db = this.writableDatabase
-
-        val cursor = db.rawQuery(selectQuery, null)
-
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                var card = CardDO()
-//                snapShot.put(id, apiCard.id)
-//                snapShot.put(name, apiCard.name)
-//                snapShot.put(manaCost, apiCard.manaCost)
-//                snapShot.put(cmc, apiCard.cmc)
-//                snapShot.put(colors, apiCard.colors.toString())
-//                snapShot.put(type, apiCard.type)
-//                snapShot.put(power, apiCard.power)
-//                snapShot.put(toughness, apiCard.toughness)
-//                snapShot.put(loyalty, apiCard.loyalty)
-//                snapShot.put(imageName, apiCard.imageName)
-//                snapShot.put(reserved, apiCard.isReserved)
-//                snapShot.put(releaseDate, apiCard.releaseDate)
-//                snapShot.put(starter, apiCard.isStarter)
-//                snapShot.put(owned, 0)
-                card.id = Integer.parseInt(cursor.getString(0))
-                card.name =
-
-//                        setId(Integer.parseInt(cursor.getString(0)))
-//                shop.setName(cursor.getString(1))
-//                shop.setAddress(cursor.getString(2))
-                // Adding contact to list
-//                shopList.add(shop)
-            } while (cursor.moveToNext())
-        }
-        // return contact list
-        return shopList
-    }
-
+    // Upgrading database
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARDS);
-        // Creating tables again
+        db.execSQL("DROP TABLE IF EXISTS " + DATABASE_NAME)
+        // Create tables again
         onCreate(db)
     }
 
+    /*
+     * Get all the cards from the api we're using and creates an instance of the database.
+     */
+    fun addAllCards() {
+        val allCards = CardAPI.getAllCards()
+        val db = this.writableDatabase
+        for (apiCard in allCards) {
+            val values = ContentValues()
+
+            values.put(id, apiCard.id)
+            values.put(name, apiCard.name)
+            values.put(manaCost, apiCard.manaCost)
+            values.put(cmc, apiCard.cmc)
+            values.put(colors, apiCard.colors.toString())
+            values.put(type, apiCard.type)
+            values.put(subtypes, apiCard.subtypes.toString())
+            values.put(rarity, apiCard.rarity)
+            values.put(text, apiCard.text)
+            values.put(power, apiCard.power)
+            values.put(toughness, apiCard.toughness)
+            values.put(loyalty, apiCard.loyalty)
+            values.put(imageName, apiCard.imageName)
+            values.put(reserved, apiCard.isReserved)
+            values.put(releaseDate, apiCard.releaseDate)
+            values.put(starter, apiCard.isStarter)
+            values.put(owned, 0)
+
+            // Inserting Row
+            db.insert(TABLE_CARDS, null, values)
+            // Closing database connection
+        }
+        db.close()
+
+    }
+
+    val contacts: MutableList<CardDO>
+        get() {
+            val resultSet = mutableListOf<CardDO>()
+
+            val db = this.readableDatabase
+            val cursor = db.rawQuery("SELECT * FROM " + TABLE_CARDS, null)
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    val card = CardDO(
+                            cursor.getInt(0),
+                            cursor.getString(1),
+                            cursor.getString(2),
+                            cursor.getInt(3),
+                            cursor.getInt(4),
+                            cursor.getString(5),
+                            cursor.getString(6),
+                            cursor.getInt(7),
+                            cursor.getInt(8),
+                            cursor.getInt(9),
+                            cursor.getString(10),
+                            cursor.getInt(11) == 1,
+                            cursor.getString(12),
+                            cursor.getString(13),
+                            cursor.getInt(14) == 1
+                    )
+                    resultSet.add(card)
+                } while (cursor.moveToFirst())
+            } else {
+                println("cursor is null or there's nothing in the database.")
+            }
+            return resultSet
+        }
+
     companion object {
 
+        // Database Version
         private val DATABASE_VERSION = 1
 
+        // Database Name
         private val DATABASE_NAME = "frantic_search"
 
-        //name of the table
-        private val TABLE_CARDS = "cards"
+        // Contacts table name
+        private val TABLE_CARDS = "Cards"
 
-        //multiverse id of the card, and the primary key of the card itself.
+        // Columns name names
         private val id = "id"
-
-        //name of the card
         private val name = "name"
-
-        //mana cost of the card itself
         private val manaCost = "mana_cost"
-
-        //converted mana cost of the card
         private val cmc = "cmc"
-
-        //color identity of the card
         private val colors = "colors"
-
-        //type of the card i.e. human or rogue
         private val type = "type"
-
-        //sub types of the cards
         private val subtypes = "sub_types"
-
-        //rarity of the card
         private val rarity = "rarity"
-
-        //the actual text of the card itself
         private val text = "text"
-
-        //the power of the given card
         private val power = "power"
-
-        //the toughness of a given card
         private val toughness = "toughness"
-
-        //loyalty of a planewalkers
         private val loyalty = "loyalty"
-
-        //where to find the card itself
         private val imageName = "image_name"
-
-        //is the card on the reserved list or not
         private val reserved = "reserved"
-
-        //the release date of the card itself
         private val releaseDate = "release_date"
-
-        //no idea what this field is but sure
         private val starter = "starter"
-
-        //field for if you own the card or not
         private val owned = "owned"
+
+        @JvmStatic fun main(args: Array<String>) {
+            //        CardSearchAPI cardSearchAPI = new CardSearchAPI();
+            //        cardSearchAPI.onCreate();
+        }
     }
 }
