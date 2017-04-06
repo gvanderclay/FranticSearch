@@ -1,16 +1,16 @@
-package vanderclay.comet.benson.franticsearch.API
+package vanderclay.comet.benson.franticsearch.data.db
 
 data class CardDO(
-        val id: Int?,
+        val id: String?,
         val name: String?,
         val publisher: String?,
-        val manaCost: Int?,
-        val convertedManaCost: Int?,
+        val manaCost: Float?,
+        val convertedManaCost: String?,
         val colors: String?,
         val type: String?,
-        val power: Int?,
-        val toughness: Int?,
-        val loyalty: Int?,
+        val power: String?,
+        val toughness: String?,
+        val loyalty: String?,
         val imageName: String?,
         val reserved: Boolean?,
         val releaseDate: String?,

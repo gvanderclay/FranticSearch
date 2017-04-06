@@ -1,4 +1,4 @@
-package vanderclay.comet.benson.franticsearch.API
+package vanderclay.comet.benson.franticsearch.data.API
 
 import android.content.ContentValues
 import android.content.Context
@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 
 import java.io.Serializable
 import io.magicthegathering.javasdk.api.CardAPI
+import vanderclay.comet.benson.franticsearch.data.db.CardDO
 
 
 class CardSearchAPI(context: Context) : SQLiteOpenHelper(context, CardSearchAPI.DATABASE_NAME, null, CardSearchAPI.DATABASE_VERSION), Serializable {
@@ -17,22 +18,22 @@ class CardSearchAPI(context: Context) : SQLiteOpenHelper(context, CardSearchAPI.
 
         val CREATE_CONTACTS_TABLE = """
             CREATE TABLE $TABLE_CARDS(
-                $id INTEGER PRIMARY KEY,
+                $id TEXT PRIMARY KEY,
                 $name TEXT,
-                $manaCost INTEGER,
-                $cmc INTEGER,
+                $manaCost TEXT,
+                $cmc REAL,
                 $colors TEXT,
                 $type TEXT,
                 $subtypes TEXT,
                 $rarity TEXT,
                 $text TEXT,
-                $power INTEGER,
-                $toughness INTEGER,
+                $power TEXT,
+                $toughness TEXT,
                 $loyalty INTEGER,
                 $imageName TEXT,
-                $reserved TEXT,
+                $reserved INTEGER,
                 $releaseDate TEXT,
-                $starter TEXT,
+                $starter INTEGER,
                 $owned INTEGER
             )
         """
@@ -42,7 +43,7 @@ class CardSearchAPI(context: Context) : SQLiteOpenHelper(context, CardSearchAPI.
     // Upgrading database
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + DATABASE_NAME)
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARDS)
         // Create tables again
         onCreate(db)
     }
@@ -62,7 +63,7 @@ class CardSearchAPI(context: Context) : SQLiteOpenHelper(context, CardSearchAPI.
             values.put(cmc, apiCard.cmc)
             values.put(colors, apiCard.colors.joinToString())
             values.put(type, apiCard.type)
-            values.put(subtypes, apiCard.subtypes.toString())
+            values.put(subtypes, apiCard.subtypes.joinToString())
             values.put(rarity, apiCard.rarity)
             values.put(text, apiCard.text)
             values.put(power, apiCard.power)
@@ -92,16 +93,16 @@ class CardSearchAPI(context: Context) : SQLiteOpenHelper(context, CardSearchAPI.
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     val card = CardDO(
-                            cursor.getInt(0),
+                            cursor.getString(0),
                             cursor.getString(1),
                             cursor.getString(2),
-                            cursor.getInt(3),
-                            cursor.getInt(4),
+                            cursor.getFloat(3),
+                            cursor.getString(4),
                             cursor.getString(5),
                             cursor.getString(6),
-                            cursor.getInt(7),
-                            cursor.getInt(8),
-                            cursor.getInt(9),
+                            cursor.getString(7),
+                            cursor.getString(8),
+                            cursor.getString(9),
                             cursor.getString(10),
                             cursor.getInt(11) == 1,
                             cursor.getString(12),

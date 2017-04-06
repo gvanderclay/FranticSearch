@@ -1,14 +1,16 @@
 package vanderclay.comet.benson.franticsearch.activities
 
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.Menu
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.content_search.*
-import vanderclay.comet.benson.franticsearch.API.CardDO
-import vanderclay.comet.benson.franticsearch.API.CardSearchAPI
+import vanderclay.comet.benson.franticsearch.data.db.CardDO
+import vanderclay.comet.benson.franticsearch.data.API.CardSearchAPI
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.adapters.CardListAdapter
 
@@ -24,8 +26,7 @@ class CardSearchActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         setSupportActionBar(toolbar)
         cardAPI = CardSearchAPI(applicationContext)
         cardList.setHasFixedSize(true)
-        cardAPI?.addAllCards()
-
+        GetCardTask(cardAPI).execute()
     }
 
 
@@ -51,6 +52,16 @@ class CardSearchActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         return false
+    }
+
+    private class GetCardTask(cardAPI: CardSearchAPI?): AsyncTask<Void, Void, Void>() {
+        val mCardAPI = cardAPI
+        override fun doInBackground(vararg params: Void?): Void? {
+            mCardAPI?.addAllCards()
+            Log.d("ASYNC", "done")
+            return null
+        }
+
     }
 }
 
