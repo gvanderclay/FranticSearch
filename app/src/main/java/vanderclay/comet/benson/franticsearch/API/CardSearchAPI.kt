@@ -60,7 +60,7 @@ class CardSearchAPI(context: Context) : SQLiteOpenHelper(context, CardSearchAPI.
             values.put(name, apiCard.name)
             values.put(manaCost, apiCard.manaCost)
             values.put(cmc, apiCard.cmc)
-            values.put(colors, apiCard.colors.toString())
+            values.put(colors, apiCard.colors.joinToString())
             values.put(type, apiCard.type)
             values.put(subtypes, apiCard.subtypes.toString())
             values.put(rarity, apiCard.rarity)

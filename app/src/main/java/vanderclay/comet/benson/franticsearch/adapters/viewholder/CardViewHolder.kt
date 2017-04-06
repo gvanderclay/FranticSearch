@@ -9,7 +9,7 @@ import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
  * Created by gclay on 4/5/17.
  */
 
-class CardViewHolder(val binding: ItemCardRowBinding): RecyclerView.ViewHolder(binding.root) {
+class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(binding.root) {
     private val mBinding: ItemCardRowBinding = binding
 
 
