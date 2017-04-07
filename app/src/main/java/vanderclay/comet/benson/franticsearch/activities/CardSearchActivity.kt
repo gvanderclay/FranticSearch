@@ -10,13 +10,12 @@ import android.view.Menu
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.content_search.*
 import vanderclay.comet.benson.franticsearch.data.db.CardDO
-import vanderclay.comet.benson.franticsearch.data.API.CardSearchAPI
+import vanderclay.comet.benson.franticsearch.data.API.MtgAPI
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.adapters.CardListAdapter
 
 class CardSearchActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
-    var cardAPI: CardSearchAPI? = null
     var cardModelList: List<CardDO>? = null
 
 
@@ -24,9 +23,7 @@ class CardSearchActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         setSupportActionBar(toolbar)
-        cardAPI = CardSearchAPI(applicationContext)
         cardList.setHasFixedSize(true)
-        GetCardTask(cardAPI).execute()
     }
 
 
@@ -38,7 +35,6 @@ class CardSearchActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         searchView.setOnQueryTextListener(this)
 
 
-        cardModelList = cardAPI?.contacts
         val adapter = CardListAdapter(cardModelList as MutableList<CardDO>)
         cardList.adapter = adapter
 
@@ -52,16 +48,6 @@ class CardSearchActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         return false
-    }
-
-    private class GetCardTask(cardAPI: CardSearchAPI?): AsyncTask<Void, Void, Void>() {
-        val mCardAPI = cardAPI
-        override fun doInBackground(vararg params: Void?): Void? {
-            mCardAPI?.addAllCards()
-            Log.d("ASYNC", "done")
-            return null
-        }
-
     }
 }
 
