@@ -17,7 +17,7 @@ class DeckListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_deck_list_)
+        setContentView(R.layout.activity_deck_list)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
@@ -48,7 +48,7 @@ class DeckListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.deck__list_, menu)
+        menuInflater.inflate(R.menu.deck_list, menu)
         return true
     }
 
