@@ -4,7 +4,7 @@ package vanderclay.comet.benson.franticsearch.data.db
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import vanderclay.comet.benson.franticsearch.App
+import vanderclay.comet.benson.franticsearch.ui.App
 
 class CardDbHelper(ctx: Context? = App.instance): SQLiteOpenHelper(ctx, CardDbHelper.DATABASE_NAME, null, CardDbHelper.DB_VERSION) {
     companion object {

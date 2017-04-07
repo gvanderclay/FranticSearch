@@ -1,8 +1,7 @@
-package vanderclay.comet.benson.franticsearch.adapters.viewholder
+package vanderclay.comet.benson.franticsearch.ui.adapters.viewholder
 
-import android.content.ClipData
 import android.support.v7.widget.RecyclerView
-import vanderclay.comet.benson.franticsearch.data.db.CardDO
+import vanderclay.comet.benson.franticsearch.data.domain.Card
 import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
 
 /**
@@ -15,7 +14,7 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
 
 
     // Bind a card to the ItemCardRow
-    fun bind(card: CardDO) {
+    fun bind(card: Card) {
         mBinding.card = card
     }
 

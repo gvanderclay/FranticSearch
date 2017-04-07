@@ -1,4 +1,8 @@
-package vanderclay.comet.benson.franticsearch.data.db
+package vanderclay.comet.benson.franticsearch.data.domain
+
+/**
+ * Created by gclay on 4/7/17.
+ */
 
 data class Card(
         val id: String?,
@@ -18,4 +22,8 @@ data class Card(
         val owned: Boolean?
 )
 
-
+data class Set(
+    val code: String?,
+    val name: String?,
+    val releaseDate: String?
+)

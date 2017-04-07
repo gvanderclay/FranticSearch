@@ -1,4 +1,4 @@
-package vanderclay.comet.benson.franticsearch
+package vanderclay.comet.benson.franticsearch.ui
 
 import android.app.Application
 

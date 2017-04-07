@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="vanderclay.comet.benson.franticsearch.DeckListActivity"
+    tools:context="vanderclay.comet.benson.franticsearch.ui.activities.DeckListActivity"
     tools:showIn="@layout/app_bar_deck_list">
 
 </android.support.constraint.ConstraintLayout>

@@ -1,4 +1,4 @@
-package vanderclay.comet.benson.franticsearch.activities
+package vanderclay.comet.benson.franticsearch.ui.activities
 
 import android.os.AsyncTask
 import android.os.Bundle
@@ -12,11 +12,12 @@ import kotlinx.android.synthetic.main.content_search.*
 import vanderclay.comet.benson.franticsearch.data.db.CardDO
 import vanderclay.comet.benson.franticsearch.data.API.MtgAPI
 import vanderclay.comet.benson.franticsearch.R
-import vanderclay.comet.benson.franticsearch.adapters.CardListAdapter
+import vanderclay.comet.benson.franticsearch.data.domain.Card
+import vanderclay.comet.benson.franticsearch.ui.adapters.CardListAdapter
 
 class CardSearchActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
-    var cardModelList: List<CardDO>? = null
+    var cardModelList: List<Card>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +36,7 @@ class CardSearchActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         searchView.setOnQueryTextListener(this)
 
 
-        val adapter = CardListAdapter(cardModelList as MutableList<CardDO>)
+        val adapter = CardListAdapter(cardModelList as MutableList<Card>)
         cardList.adapter = adapter
 
 
