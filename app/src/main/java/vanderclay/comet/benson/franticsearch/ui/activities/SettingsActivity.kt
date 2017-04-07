@@ -1,5 +1,6 @@
 package vanderclay.comet.benson.franticsearch.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -72,13 +73,15 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         val id = item.itemId
 
         if (id == R.id.decks) {
-            // Handle the camera action
+            val intent = Intent(this, DeckListActivity::class.java);
+            this.startActivity(intent);
         } else if (id == R.id.card_search) {
-
-        } else if (id == R.id.card_scan) {
+            val intent = Intent(this, CardSearchActivity::class.java);
+            this.startActivity(intent);
 
         } else if (id == R.id.settings_item) {
-
+            val intent = Intent(this, SettingsActivity::class.java);
+            this.startActivity(intent);
         }
 
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout

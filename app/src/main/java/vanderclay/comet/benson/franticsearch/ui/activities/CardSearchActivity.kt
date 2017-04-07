@@ -9,7 +9,7 @@ import android.util.Log
 import android.view.Menu
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.content_search.*
-import vanderclay.comet.benson.franticsearch.data.db.CardDO
+import vanderclay.comet.benson.franticsearch.data.db.CardDB
 import vanderclay.comet.benson.franticsearch.data.API.MtgAPI
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.data.domain.Card
