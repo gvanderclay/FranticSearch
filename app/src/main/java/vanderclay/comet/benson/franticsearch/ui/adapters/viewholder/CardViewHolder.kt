@@ -1,7 +1,7 @@
 package vanderclay.comet.benson.franticsearch.ui.adapters.viewholder
 
 import android.support.v7.widget.RecyclerView
-import vanderclay.comet.benson.franticsearch.data.domain.Card
+import vanderclay.comet.benson.franticsearch.data.domain.model.Card
 import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
 
 /**

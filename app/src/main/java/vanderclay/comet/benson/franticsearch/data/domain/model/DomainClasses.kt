@@ -1,24 +1,23 @@
-package vanderclay.comet.benson.franticsearch.data.domain
+package vanderclay.comet.benson.franticsearch.data.domain.model
 
 /**
  * Created by gclay on 4/7/17.
  */
 
-data class Card(
+data class Card (
         val id: String?,
         val name: String?,
-        val publisher: String?,
-        val manaCost: Float?,
-        val convertedManaCost: String?,
-        val colors: String?,
+        val manaCost: String?,
+        val convertedManaCost: Double?,
+        val colors: List<String?>,
         val type: String?,
+        val subtypes: List<String?>,
+        val rarity: String?,
+        val text: String?,
         val power: String?,
         val toughness: String?,
-        val loyalty: String?,
-        val imageName: String?,
+        val imageUrl: String?,
         val reserved: Boolean?,
-        val releaseDate: String?,
-        val starter: String?,
         val owned: Boolean?
 )
 

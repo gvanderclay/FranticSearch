@@ -1,18 +1,14 @@
 package vanderclay.comet.benson.franticsearch.ui.activities
 
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.Menu
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.content_search.*
-import vanderclay.comet.benson.franticsearch.data.db.CardDO
-import vanderclay.comet.benson.franticsearch.data.API.MtgAPI
 import vanderclay.comet.benson.franticsearch.R
-import vanderclay.comet.benson.franticsearch.data.domain.Card
+import vanderclay.comet.benson.franticsearch.data.domain.model.Card
 import vanderclay.comet.benson.franticsearch.ui.adapters.CardListAdapter
 
 class CardSearchActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
