@@ -13,7 +13,7 @@ import vanderclay.comet.benson.franticsearch.data.db.Card as DBCard
 class DbDataMapper {
 
     fun convertFromDomain(card: Card): DBCard = with(card) {
-        return DBCard(id, name, manaCost, convertedManaCost, colors.joinToString(), type, subtypes.joinToString(), rarity, text, power, toughness, imageUrl, reserved, owned)
+        return DBCard(id, multiverseId, name, manaCost, convertedManaCost, colors?.joinToString(), types?.joinToString(), subtypes?.joinToString(), rarity, text, power, toughness, imageUrl, reserved, owned)
     }
 
     fun convertFromDomain(cards: List<Card>): List<DBCard> = cards.map {
@@ -21,7 +21,7 @@ class DbDataMapper {
     }
 
     fun convertToDomain(dbCard: DBCard): Card = with(dbCard) {
-        return Card(id, name, manaCost, convertedManaCost, colors?.split(',')!!, type, subtypes?.split(',')!!, rarity, text, power, toughness, imageUrl, reserved, owned)
+        return Card(id, multiverseId, name, manaCost, convertedManaCost, colors?.split(',')!!, types?.split(',')!!, subtypes?.split(',')!!, rarity, text, power, toughness, imageUrl, reserved, owned)
     }
 
     fun convertToDomain(dbCards: List<DBCard>): List<Card> = dbCards.map {

@@ -1,9 +1,13 @@
 package vanderclay.comet.benson.franticsearch.data.db
 
 import android.content.ContentValues
+import android.content.Context
 import android.database.Cursor
 import android.database.SQLException
 import android.util.Log
+import org.jetbrains.anko.db.insert
+import org.jetbrains.anko.db.insertOrThrow
+import org.jetbrains.anko.db.select
 import vanderclay.comet.benson.franticsearch.data.domain.datasource.CardDataSource
 import vanderclay.comet.benson.franticsearch.extensions.clear
 import vanderclay.comet.benson.franticsearch.data.domain.model.Card
@@ -13,7 +17,7 @@ import vanderclay.comet.benson.franticsearch.data.db.Card as DBCard
  * Created by gclay on 4/5/17.
  */
 
-class CardDB(val cardDbHelper: CardDbHelper = CardDbHelper.instance,
+class CardDB(val ctx: Context?, val cardDbHelper: CardDbHelper = CardDbHelper(ctx),
              val dataMapper: DbDataMapper = DbDataMapper()): CardDataSource {
 
     private val CARD_SELECTION = "${CardTable.CARD_NAME} = ?"
@@ -32,63 +36,67 @@ class CardDB(val cardDbHelper: CardDbHelper = CardDbHelper.instance,
 
     override fun requestAllCards(): List<Card> {
         val db = cardDbHelper.readableDatabase
-        val cursor = db.query(CardTable.NAME, null, null, null, null, null, null)
-        cursor.moveToFirst()
-        val cards = mutableListOf<Card>()
-        do {
-            val dbCard = getCardFromCursor(cursor)
-            val card = dataMapper.convertToDomain(dbCard)
-            cards.add(card)
-        } while(cursor.moveToNext())
-        return cards.toList()
+        return db.select(CardTable.NAME).exec {
+            moveToFirst()
+            val cards = mutableListOf<Card>()
+            while(!isAfterLast){
+                val dbCard = getCardFromCursor(this)
+                val card = dataMapper.convertToDomain(dbCard)
+                cards.add(card)
+                moveToNext()
+            }
+            cards
+        }
     }
 
     fun saveCard(card: Card) {
         val db = cardDbHelper.writableDatabase
-        db.clear(CardTable.NAME)
-        val values = ContentValues()
 
         with(dataMapper.convertFromDomain(card)) {
-
-            values.put(CardTable.ID, id)
-            values.put(CardTable.CARD_NAME, name)
-            values.put(CardTable.MANA_COST, manaCost)
-            values.put(CardTable.CONVERTED_MANA_COST, convertedManaCost)
-            values.put(CardTable.COLORS, colors)
-            values.put(CardTable.TYPE, type)
-            values.put(CardTable.POWER, power)
-            values.put(CardTable.TOUGHNESS, toughness)
-            values.put(CardTable.IMAGE_URL, imageUrl)
-            values.put(CardTable.RESERVED, reserved)
-            values.put(CardTable.OWNED, owned)
-            cardDbHelper.writableDatabase.insert(CardTable.NAME, null, values)
+            db.insertOrThrow(
+                    CardTable.NAME,
+                    CardTable.ID to  id,
+                    CardTable.MULTIVERSE_ID to multiverseId,
+                    CardTable.CARD_NAME to  name,
+                    CardTable.MANA_COST to  manaCost,
+                    CardTable.CONVERTED_MANA_COST to  convertedManaCost,
+                    CardTable.COLORS to  colors,
+                    CardTable.TYPES to  types,
+                    CardTable.SUBTYPES to  subtypes,
+                    CardTable.RARITY to  rarity,
+                    CardTable.TEXT to text,
+                    CardTable.POWER to  power,
+                    CardTable.TOUGHNESS to  toughness,
+                    CardTable.IMAGE_URL to  imageUrl,
+                    CardTable.RESERVED to  reserved,
+                    CardTable.OWNED to  owned
+            )
         }
     }
 
     fun saveCards(cards: List<Card>) {
-        val db = cardDbHelper.writableDatabase
         try {
-            db.beginTransaction()
             cards.forEach {
                 saveCard(it)
             }
-            db.setTransactionSuccessful()
+
         } catch (e: SQLException) {
             Log.e(TAG, "Error batch saving cards", e)
-        } finally {
-            db.endTransaction()
+        } catch(e: Throwable) {
+            Log.e(TAG, "Error", e)
         }
     }
 
     private fun getCardFromCursor(cursor: Cursor): DBCard {
         return  DBCard(
                 cursor.getString(cursor.getColumnIndex(CardTable.ID)),
+                cursor.getInt(cursor.getColumnIndex(CardTable.MULTIVERSE_ID)),
                 cursor.getString(cursor.getColumnIndex(CardTable.CARD_NAME)),
                 cursor.getString(cursor.getColumnIndex(CardTable.MANA_COST)),
                 cursor.getDouble(cursor.getColumnIndex(CardTable.CONVERTED_MANA_COST)),
                 cursor.getString(cursor.getColumnIndex(CardTable.COLORS)),
-                cursor.getString(cursor.getColumnIndex(CardTable.TYPE)),
-                cursor.getString(cursor.getColumnIndex(CardTable.SUBTYPE)),
+                cursor.getString(cursor.getColumnIndex(CardTable.TYPES)),
+                cursor.getString(cursor.getColumnIndex(CardTable.SUBTYPES)),
                 cursor.getString(cursor.getColumnIndex(CardTable.RARITY)),
                 cursor.getString(cursor.getColumnIndex(CardTable.TEXT)),
                 cursor.getString(cursor.getColumnIndex(CardTable.POWER)),

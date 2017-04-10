@@ -9,8 +9,8 @@ import java.lang.UnsupportedOperationException
  * Created by gclay on 4/7/17.
  */
 
-class CardAPI(val dataMapper: APIDataMapper = APIDataMapper(),
-              val cardDB: CardDB = CardDB()): CardDataSource {
+class CardAPI(val cardDB: CardDB,
+              val dataMapper: APIDataMapper = APIDataMapper()): CardDataSource {
 
     override fun requestCardByName(name: String?) = throw UnsupportedOperationException()
 

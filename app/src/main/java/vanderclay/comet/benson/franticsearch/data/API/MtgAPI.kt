@@ -1,5 +1,6 @@
 package vanderclay.comet.benson.franticsearch.data.API
 
+import android.util.Log
 import io.magicthegathering.javasdk.api.CardAPI
 import io.magicthegathering.javasdk.api.SetAPI
 import io.magicthegathering.javasdk.resource.Card
@@ -10,6 +11,7 @@ import vanderclay.comet.benson.franticsearch.commons.convertStringToDateTime
 class MtgAPI {
 
     companion object {
+        private val TAG = "MtgAPI"
         /**
          *
          *
@@ -26,14 +28,21 @@ class MtgAPI {
             val filters = arrayListOf("page=$page", *extraFilters)
             var cardsReceived = CardAPI.getAllCards(filters)
             while(cardsReceived.isNotEmpty()) {
+                Log.d(TAG, "Retrieved ${cardsReceived.size} cards")
+                Log.d(TAG, "Page ${page}")
                 cardList.addAll(cardsReceived)
                 filters[0] = "page=${++page}"
                 cardsReceived = CardAPI.getAllCards(filters)
+                if(page > 10) {
+                    break
+                }
             }
+            Log.d(TAG, "Finished retrieving ${cardList.size} cards")
             return cardList
         }
 
         fun getAllCards(): List<Card> {
+            Log.d(TAG, "Retrieving all cards")
             return getCards()
         }
 
@@ -106,9 +115,4 @@ class MtgAPI {
     }
 
 
-}
-
-fun main(args: Array<String>) {
-    val cards = MtgAPI.getAllCards()
-    print(cards)
 }

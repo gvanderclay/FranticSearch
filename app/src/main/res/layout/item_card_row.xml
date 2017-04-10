@@ -4,7 +4,7 @@
     <data>
         <variable
             name="card"
-            type="vanderclay.comet.benson.franticsearch.data.domain.Card"/>
+            type="vanderclay.comet.benson.franticsearch.data.domain.model.Card"/>
     </data>
 
     <FrameLayout

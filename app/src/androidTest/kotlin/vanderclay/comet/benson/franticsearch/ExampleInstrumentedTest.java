@@ -20,21 +20,4 @@ import vanderclay.comet.benson.franticsearch.data.API.MtgAPI;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
-    @Test
-    public void onlyGetsCardsAfterDate() throws Exception {
-        DateTime dateTime = DateHandlerKt.convertStringToDateTime("2017-01-12");
-        List<Card> cards = MtgAPI.Companion.getAllCards(dateTime);
-        boolean isCorrectSet = true;
-        for(Card card : cards) {
-
-
-            DateTime cardReleaseDate = DateHandlerKt.convertStringToDateTime(card.getReleaseDate());
-            isCorrectSet = cardReleaseDate.isAfter(dateTime);
-            if(!isCorrectSet) {
-                break;
-            }
-        }
-
-        Assert.assertTrue(isCorrectSet);
-    }
 }

@@ -1,5 +1,6 @@
 package vanderclay.comet.benson.franticsearch.data.API
 
+import android.util.Log
 import io.magicthegathering.javasdk.api.CardAPI
 import vanderclay.comet.benson.franticsearch.data.domain.model.Card
 import io.magicthegathering.javasdk.resource.Card as MtgCard
@@ -10,9 +11,44 @@ import io.magicthegathering.javasdk.resource.Card as MtgCard
  */
 
 class APIDataMapper {
+    private val TAG = "APIDataMapper"
 
     fun convertToDomain(card: MtgCard) = with(card) {
-        Card(id, name, manaCost, cmc, colors.asList(), type, subtypes.toList(), rarity, text, power, toughness, imageUrl, isReserved, owned = false)
+        Log.d(TAG, """Converting
+                    name ${card.name}
+                    multiverseId ${card.multiverseid}
+                    id ${card.id}
+                    manaCost ${card.manaCost}
+                    cmc ${card.cmc}
+                    subtypes ${card.subtypes}
+                    colorIdentity ${card.colorIdentity}
+                    types ${card.types}
+                    subtypes ${card.subtypes}
+                    rarity ${card.rarity}
+                    text ${card.text}
+                    power ${card.power}
+                    toughness ${card.toughness}
+                    imageURL ${card.imageUrl}
+                    reserved ${card.isReserved}
+
+                    """)
+        Card(
+                id,
+                multiverseid,
+                name,
+                manaCost,
+                cmc,
+                if(colorIdentity != null) colorIdentity.asList() else listOf(),
+                if(types != null) types.asList() else listOf(),
+                if(subtypes != null) subtypes.toList() else listOf(),
+                rarity,
+                text,
+                power,
+                toughness,
+                imageUrl,
+                isReserved,
+                owned = false
+        )
     }
 
     fun convertToDomain(cards: List<MtgCard>) = cards.map {

@@ -6,12 +6,13 @@ package vanderclay.comet.benson.franticsearch.data.domain.model
 
 data class Card (
         val id: String?,
+        val multiverseId: Int,
         val name: String?,
         val manaCost: String?,
-        val convertedManaCost: Double?,
-        val colors: List<String?>,
-        val type: String?,
-        val subtypes: List<String?>,
+        val convertedManaCost: Double,
+        val colors: List<String>?,
+        val types: List<String>?,
+        val subtypes: List<String>?,
         val rarity: String?,
         val text: String?,
         val power: String?,

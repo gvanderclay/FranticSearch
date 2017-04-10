@@ -1,5 +1,6 @@
 package vanderclay.comet.benson.franticsearch.data.domain.datasource
 
+import android.content.Context
 import vanderclay.comet.benson.franticsearch.data.API.CardAPI
 import vanderclay.comet.benson.franticsearch.data.db.CardDB
 import vanderclay.comet.benson.franticsearch.data.domain.model.Card
@@ -8,11 +9,9 @@ import vanderclay.comet.benson.franticsearch.data.domain.model.Card
  * Created by gclay on 4/7/17.
  */
 
-class CardProvider() {
-    companion object {
-        val db = CardDB()
-        val api = CardAPI()
-    }
+class CardProvider(val ctx: Context?) {
+    val db = CardDB(ctx)
+    val api = CardAPI(db)
 
     fun requestByName(cardName: String): Card? {
         val res = db.requestCardByName(cardName)
