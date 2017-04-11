@@ -92,25 +92,16 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
 
         signInButton?.setOnClickListener(this)
 
-        Log.d(TAG, "Assigning listener to Firebase Authorize object")
-        mAuthListener = FirebaseAuth.AuthStateListener {
-            @Override
-            fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
+        Log.w(TAG, "Assigning listener to Firebase Authorize object")
+//        object : KeyAdapter() {
+            mAuthListener = object: FirebaseAuth.AuthStateListener {
+            override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
 
                 var user: FirebaseUser? = firebaseAuth.currentUser
                 if (user != null) {
-                    Log.d(TAG, "User signed in display Alert Dialog")
-                    var builder1 = AlertDialog.Builder(this.applicationContext)
-                    builder1.setCancelable(true)
-                    builder1.setMessage(user.displayName)
-                    builder1.setPositiveButton("Yes", DialogInterface.OnClickListener {
-                        dialogInterface, i -> dialogInterface.cancel() })
-                    builder1.setNegativeButton("No", DialogInterface.OnClickListener {
-                        dialogInterface, i -> dialogInterface.cancel() })
-                    var alert11 = builder1.create()
-                    alert11.show()
+                    Log.w(TAG, "user sign in successful")
                 } else {
-                   Log.d(TAG, "User not currently signed in.")
+                   Log.w(TAG, "User not currently signed in.")
                 }
 
             }
@@ -121,7 +112,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
      * user can press create an account.
      */
     private fun createAccount(email: String , password: String) {
-        Log.d(TAG, "createAccount: " + email)
+        Log.w(TAG, "createAccount: " + email)
 //        if (!validateForm()) {
 //            return;
 //        }
@@ -133,7 +124,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
                 ?.addOnCompleteListener(this, OnCompleteListener {
                     @Override
                     fun onComplete(task: Task<AuthResult>){
-                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful())
+                        Log.w(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful())
                         if(!task.isSuccessful){
                             Toast.makeText(this.applicationContext, R.string.auth_failed, Toast.LENGTH_SHORT).show();
                         }
@@ -143,7 +134,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
 
     public override fun onStart() {
         super.onStart()
-        Log.d(TAG, "Application On Create called: Assigning Auth State Listener")
+        Log.w(TAG, "Application On Create called: Assigning Auth State Listener")
         mAuth!!.addAuthStateListener(this.mAuthListener!!)
     }
 
@@ -151,24 +142,23 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
      * Override the onStop method and
      */
     public override fun onStop() {
-        Log.d(TAG, "Stopping the task.")
+        Log.w(TAG, "Stopping the task.")
         super.onStop()
         if (mAuthListener != null) {
-            Log.d(TAG, "stop listening for changes in the login activity")
+            Log.w(TAG, "stop listening for changes in the login activity")
             mAuth!!.removeAuthStateListener(mAuthListener!!)
         }
     }
 
     private fun signIn(email: String, password: String){
-        Log.d(TAG, "signIn: " + email)
+        Log.w(TAG, "signIn: " + email)
         //validate the form
-        mAuth?.signInWithEmailAndPassword(email, password)?.addOnCompleteListener(this, OnCompleteListener {
-            @Override
-            fun onComplete(task: Task<AuthResult>){
-                Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful())
+        mAuth!!.signInWithEmailAndPassword(email, password)?.addOnCompleteListener(this, object: OnCompleteListener<AuthResult> {
+            override fun onComplete(task: Task<AuthResult>){
+                Log.w(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful())
                 if(!task.isSuccessful){
                     Log.w(TAG, "signInWithEmail:failed", task.getException());
-                    Toast.makeText(this.applicationContext, "Failed to sign in.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(applicationContext, "Failed to sign in.", Toast.LENGTH_SHORT).show();
                 }
             }
         })
@@ -182,106 +172,11 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
         }
     }
 
-
-    /**
-     *
-     */
-    private fun populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return
-        }
-
-        loaderManager.initLoader(0, null, this)
-    }
-
-    /*
-     *
-     */
-    private fun mayRequestContacts(): Boolean {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true
-        }
-//        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-//            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-//                    .setAction(android.R.string.ok,
-//                            OnClickListener { requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS) })
-//        } else {
-//            requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS)
-//        }
-        return false
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete()
-            }
-        }
-    }
-
     private fun signOut() {
         mAuth!!.signOut()
 //        updateUI(null)
     }
 
-//    /**
-//     * Attempts to sign in or register the account specified by the login form.
-//     * If there are form errors (invalid email, missing fields, etc.), the
-//     * errors are presented and no actual login attempt is made.
-//     */
-//    private fun attemptLogin() {
-//        if (mAuthTask != null) {
-//            return
-//        }
-//
-//        // Reset errors.
-//        mEmailView!!.error = null
-//        mPasswordView!!.error = null
-//
-//        // Store values at the time of the login attempt.
-//        val email = mEmailView!!.text.toString()
-//        val password = mPasswordView!!.text.toString()
-//
-//        var cancel = false
-//        var focusView: View? = null
-//
-//        // Check for a valid password, if the user entered one.
-//        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-//            mPasswordView!!.error = getString(R.string.error_invalid_password)
-//            focusView = mPasswordView
-//            cancel = true
-//        }
-//
-//        // Check for a valid email address.
-//        if (TextUtils.isEmpty(email)) {
-//            mEmailView!!.error = getString(R.string.error_field_required)
-//            focusView = mEmailView
-//            cancel = true
-//        } else if (!isEmailValid(email)) {
-//            mEmailView!!.error = getString(R.string.error_invalid_email)
-//            focusView = mEmailView
-//            cancel = true
-//        }
-//
-//        if (cancel) {
-//            // There was an error; don't attempt login and focus the first
-//            // form field with an error.
-//            focusView!!.requestFocus()
-//        } else {
-//            // Show a progress spinner, and kick off a background task to
-//            // perform the user login attempt.
-//            showProgress(true)
-//            mAuthTask = UserLoginTask(email, password)
-//            mAuthTask!!.execute(null as Void?)
-//        }
-//    }
 
     private fun isEmailValid(email: String): Boolean {
         //TODO: Replace this with your own logic
@@ -294,39 +189,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
     }
 
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private fun showProgress(show: Boolean) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime)
-
-            mLoginFormView!!.visibility = if (show) View.GONE else View.VISIBLE
-            mLoginFormView!!.animate().setDuration(shortAnimTime.toLong()).alpha(
-                    (if (show) 0 else 1).toFloat()).setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    mLoginFormView!!.visibility = if (show) View.GONE else View.VISIBLE
-                }
-            })
-
-            mProgressView!!.visibility = if (show) View.VISIBLE else View.GONE
-            mProgressView!!.animate().setDuration(shortAnimTime.toLong()).alpha(
-                    (if (show) 1 else 0).toFloat()).setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    mProgressView!!.visibility = if (show) View.VISIBLE else View.GONE
-                }
-            })
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView!!.visibility = if (show) View.VISIBLE else View.GONE
-            mLoginFormView!!.visibility = if (show) View.GONE else View.VISIBLE
-        }
-    }
 
     override fun onCreateLoader(i: Int, bundle: Bundle): Loader<Cursor> {
         return CursorLoader(this,
@@ -366,7 +228,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
         mEmailView!!.setAdapter(adapter)
     }
 
-
     private interface ProfileQuery {
         companion object {
             val PROJECTION = arrayOf(ContactsContract.CommonDataKinds.Email.ADDRESS, ContactsContract.CommonDataKinds.Email.IS_PRIMARY)
@@ -375,52 +236,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
             val IS_PRIMARY = 1
         }
     }
-
-//    /**
-//     * Represents an asynchronous login/registration task used to authenticate
-//     * the user.
-//     */
-//    inner class UserLoginTask internal constructor(private val mEmail: String, private val mPassword: String) : AsyncTask<Void, Void, Boolean>() {
-//
-//        override fun doInBackground(vararg params: Void): Boolean? {
-//            // TODO: attempt authentication against a network service.
-//
-//            try {
-//                // Simulate network access.
-//                Thread.sleep(2000)
-//            } catch (e: InterruptedException) {
-//                return false
-//            }
-//
-//            for (credential in DUMMY_CREDENTIALS) {
-//                val pieces = credential.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-//                if (pieces[0] == mEmail) {
-//                    // Account exists, return true if the password matches.
-//                    return pieces[1] == mPassword
-//                }
-//            }
-//
-//            // TODO: register the new account here.
-//            return true
-//        }
-//
-//        override fun onPostExecute(success: Boolean?) {
-//            mAuthTask = null
-//            showProgress(false)
-//
-//            if (success!!) {
-//                finish()
-//            } else {
-//                mPasswordView!!.error = getString(R.string.error_incorrect_password)
-//                mPasswordView!!.requestFocus()
-//            }
-//        }
-//
-//        override fun onCancelled() {
-//            mAuthTask = null
-//            showProgress(false)
-//        }
-//    }
 
     companion object {
 
