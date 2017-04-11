@@ -87,49 +87,19 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
         mEmailView = findViewById(R.id.email) as AutoCompleteTextView
         mPasswordView = findViewById(R.id.password) as EditText
         signInButton = findViewById(R.id.email_sign_in_button) as Button
-        mLoginFormView = findViewById(R.id.login_form)
-        mProgressView = findViewById(R.id.login_progress)
-
         signInButton?.setOnClickListener(this)
 
         Log.w(TAG, "Assigning listener to Firebase Authorize object")
-//        object : KeyAdapter() {
-            mAuthListener = object: FirebaseAuth.AuthStateListener {
+        mAuthListener = object : FirebaseAuth.AuthStateListener {
             override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
-
                 var user: FirebaseUser? = firebaseAuth.currentUser
                 if (user != null) {
                     Log.w(TAG, "user sign in successful")
                 } else {
-                   Log.w(TAG, "User not currently signed in.")
+                    Log.w(TAG, "User not currently signed in.")
                 }
-
             }
         }
-    }
-
-    /*
-     * user can press create an account.
-     */
-    private fun createAccount(email: String , password: String) {
-        Log.w(TAG, "createAccount: " + email)
-//        if (!validateForm()) {
-//            return;
-//        }
-//
-//        showProgressDialog();
-//
-//        // [START create_user_with_email]
-        mAuth?.createUserWithEmailAndPassword(email, password)
-                ?.addOnCompleteListener(this, OnCompleteListener {
-                    @Override
-                    fun onComplete(task: Task<AuthResult>){
-                        Log.w(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful())
-                        if(!task.isSuccessful){
-                            Toast.makeText(this.applicationContext, R.string.auth_failed, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
     }
 
     public override fun onStart() {
@@ -150,23 +120,63 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
         }
     }
 
-    private fun signIn(email: String, password: String){
+    /*
+     * user can press create an account.
+     */
+    private fun createAccount(email: String, password: String) {
+        Log.w(TAG, "createAccount: " + email)
+        mAuth?.createUserWithEmailAndPassword(email, password)
+                ?.addOnCompleteListener(this, OnCompleteListener {
+                    @Override
+                    fun onComplete(task: Task<AuthResult>) {
+                        if (task.isSuccessful) {
+                            Log.w(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful())
+                            val snackbar = Snackbar.make(LoginActivity, "Successfully Signed In", Snackbar.LENGTH_LONG)
+                            snackbar.show()
+                        } else if (!task.isSuccessful) {
+                            val snackbar = Snackbar.make(LoginActivity, "Welcome to AndroidHive", Snackbar.LENGTH_LONG)
+                            snackbar.show()
+                            Toast.makeText(this.applicationContext, R.string.auth_failed, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+    }
+
+
+    private fun signIn(email: String, password: String) {
         Log.w(TAG, "signIn: " + email)
-        //validate the form
-        mAuth!!.signInWithEmailAndPassword(email, password)?.addOnCompleteListener(this, object: OnCompleteListener<AuthResult> {
-            override fun onComplete(task: Task<AuthResult>){
-                Log.w(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful())
-                if(!task.isSuccessful){
-                    Log.w(TAG, "signInWithEmail:failed", task.getException());
-                    Toast.makeText(applicationContext, "Failed to sign in.", Toast.LENGTH_SHORT).show();
+        if(!isValideForm()){
+            showSnackBar("Password or Email had Invalid Format")
+            return
+        }
+        mAuth!!.signInWithEmailAndPassword(email, password)?.addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
+            override fun onComplete(task: Task<AuthResult>) {
+                if (task.isSuccessful) {
+                    Log.w(TAG, "Sign In Complete" + task.isSuccessful())
+                    showSnackBar("Successfully Signed In")
+                } else if (!task.isSuccessful) {
+                    showSnackBar("Login Unsuccessful")
                 }
             }
         })
     }
 
+    private fun showSnackBar(message: String){
+        val snackbar = Snackbar.make(LoginActivity, message, Snackbar.LENGTH_LONG)
+        snackbar.show()
+    }
+
+    private fun isValideForm(): Boolean{
+        val emailText = mEmailView?.getText().toString()
+        val passwordText = mPasswordView?.getText().toString()
+        if(!isEmailValid(emailText) || !isPasswordValid(passwordText)){
+            return false
+        }
+        return true
+    }
+
     override fun onClick(v: View) {
         val i = v.id
-
         if (i == R.id.email_sign_in_button) {
             signIn(mEmailView?.getText().toString(), mPasswordView?.getText().toString())
         }
@@ -174,9 +184,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
 
     private fun signOut() {
         mAuth!!.signOut()
-//        updateUI(null)
     }
-
 
     private fun isEmailValid(email: String): Boolean {
         //TODO: Replace this with your own logic
@@ -185,10 +193,8 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
 
     private fun isPasswordValid(password: String): Boolean {
         //TODO: Replace this with your own logic
-        return password.length > 4
+        return password.length > 6
     }
-
-
 
     override fun onCreateLoader(i: Int, bundle: Bundle): Loader<Cursor> {
         return CursorLoader(this,

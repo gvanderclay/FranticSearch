@@ -3,7 +3,6 @@ package vanderclay.comet.benson.franticsearch.ui.adapters
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.data.domain.Card
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardViewHolder
 import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
