@@ -11,8 +11,6 @@ import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
 /**
  * Created by gclay on 4/5/17.
  */
-
-
 class CardListAdapter(val cards: List<Card>): RecyclerView.Adapter<CardViewHolder>() {
 
    val mCards = cards
