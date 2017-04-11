@@ -1,4 +1,4 @@
-package vanderclay.comet.benson.franticsearch.data.API
+package vanderclay.comet.benson.franticsearch.api
 
 import android.util.Log
 import io.magicthegathering.javasdk.api.CardAPI
@@ -33,12 +33,15 @@ class MtgAPI {
                 cardList.addAll(cardsReceived)
                 filters[0] = "page=${++page}"
                 cardsReceived = CardAPI.getAllCards(filters)
-                if(page > 10) {
-                    break
-                }
             }
             Log.d(TAG, "Finished retrieving ${cardList.size} cards")
             return cardList
+        }
+
+        fun getCards(page: Int, vararg extraFilters: String): List<Card> {
+            val filters = arrayListOf("page=$page", *extraFilters)
+            Log.d(TAG, "Requesting page $page with filters ${extraFilters.joinToString()}")
+            return CardAPI.getAllCards(filters)
         }
 
         fun getAllCards(): List<Card> {
@@ -61,7 +64,15 @@ class MtgAPI {
 
 
         /**
-         *
+         * Search for cards by name
+         * @param cardName name of the card
+         */
+        fun searchForCards(name: String?):List<Card> {
+            return getCards("name=$name")
+        }
+
+        /**
+        *
          */
         fun getCardsInSet(setCode: String): List<Card> {
             return getCards("set=$setCode")
@@ -110,7 +121,6 @@ class MtgAPI {
                 releaseDate?.isAfter(after)!!
             })
         }
-
 
     }
 

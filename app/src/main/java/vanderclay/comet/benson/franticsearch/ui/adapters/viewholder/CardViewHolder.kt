@@ -1,7 +1,8 @@
 package vanderclay.comet.benson.franticsearch.ui.adapters.viewholder
 
 import android.support.v7.widget.RecyclerView
-import vanderclay.comet.benson.franticsearch.data.domain.model.Card
+import com.squareup.picasso.Picasso
+import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
 
 /**
@@ -16,6 +17,7 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
     // Bind a card to the ItemCardRow
     fun bind(card: Card) {
         mBinding.card = card
+        Picasso.with(mBinding.root.context).load(card.imageUrl).into(mBinding.cardImage)
     }
 
 }

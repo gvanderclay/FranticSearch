@@ -4,20 +4,27 @@
     <data>
         <variable
             name="card"
-            type="vanderclay.comet.benson.franticsearch.data.domain.model.Card"/>
+            type="io.magicthegathering.javasdk.resource.Card"/>
     </data>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:clickable="true">
 
+        <ImageView
+            android:id="@+id/cardImage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
         <TextView
+            android:id="@+id/cardText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="@{card.name}"/>
-    </FrameLayout>
+            android:text="@{card.name}" />
+    </LinearLayout>
 
 </layout>
