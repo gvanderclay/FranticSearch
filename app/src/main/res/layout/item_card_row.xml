@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -7,7 +9,7 @@
             type="io.magicthegathering.javasdk.resource.Card"/>
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
@@ -15,16 +17,44 @@
 
         <ImageView
             android:id="@+id/cardImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/no_card"/>
+
+        <TextView
+            android:id="@+id/missingText"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center" />
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/cardImage"
+            android:layout_alignEnd="@+id/cardImage"
+            android:layout_alignStart="@+id/cardImage"
+            android:layout_alignTop="@+id/cardImage"
+            android:gravity="center"
+            android:text="\?"
+            />
 
         <TextView
             android:id="@+id/cardText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/cardImage"
             android:padding="8dp"
-            android:text="@{card.name}" />
-    </LinearLayout>
+            android:text="@{card.name}"
+            />
+
+        <LinearLayout
+            android:id="@+id/manaContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/cardImage"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/cardText"
+            android:layout_toEndOf="@+id/cardImage"
+            android:orientation="vertical"
+            >
+        </LinearLayout>
+    </RelativeLayout>
 
 </layout>
