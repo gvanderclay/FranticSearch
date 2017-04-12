@@ -13,7 +13,6 @@ import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
  * Created by gclay on 4/5/17.
  */
 
-
 class CardListAdapter(val cards: MutableList<Card>): RecyclerView.Adapter<CardViewHolder>() {
 
 

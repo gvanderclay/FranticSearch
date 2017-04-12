@@ -3,4 +3,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="franticBlue">#7EC0EE</color>
+    <color name="franticWhite">#fffff0</color>
 </resources>

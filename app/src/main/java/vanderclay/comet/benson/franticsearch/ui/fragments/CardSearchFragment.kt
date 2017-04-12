@@ -1,4 +1,4 @@
-package layout
+package vanderclay.comet.benson.franticsearch.ui.fragments
 
 import android.content.Context
 import android.net.Uri
@@ -14,7 +14,7 @@ import android.widget.SearchView
 import io.magicthegathering.javasdk.resource.Card
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import vanderclay.comet.benson.franticsearch.MainActivity
+import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
 
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.api.MtgAPI
