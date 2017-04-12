@@ -168,7 +168,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         val i = v.id
         if (i == R.id.email_sign_in_button) {
-            signIn(mEmailView?.getText().toString(), mPasswordView?.getText().toString())
+            signIn(mEmailView?.getText().toString(), mPasswordView?.text.toString())
         }
         else if(i == R.id.create_account_button){
             transferToCreateAccount()
