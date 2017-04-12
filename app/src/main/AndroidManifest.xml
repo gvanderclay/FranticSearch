@@ -43,9 +43,10 @@
         <!-- android:label="@string/title_activity_login"></activity> -->
         <activity android:name=".ui.activities.CreateAccountActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.activities.temp"></activity>
     </application>
 
 </manifest>
