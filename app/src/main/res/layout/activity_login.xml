@@ -21,9 +21,9 @@
         android:textColor = "@color/franticWhite"
         android:background="@color/franticBlue"
         android:textSize = "35dp"
-        android:layout_marginTop="49dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="71dp" />
 
     <AutoCompleteTextView
         android:id="@+id/email"
@@ -57,21 +57,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="login"
+        android:textColor="@color/franticWhite"
         android:id="@+id/email_sign_in_button"
-        android:layout_marginBottom="24dp"
         android:background="@color/franticBlue"
         android:layout_above="@+id/create_account_button"
         android:layout_alignParentStart="true"
+        android:layout_marginBottom="14dp"
         android:layout_alignParentEnd="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create Account"
+        android:textColor="@color/franticWhite"
         android:id="@+id/create_account_button"
         android:background="@color/franticBlue"
-        android:layout_marginBottom="86dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

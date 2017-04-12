@@ -26,6 +26,7 @@ import java.util.ArrayList
 import vanderclay.comet.benson.franticsearch.R
 import android.Manifest.permission.READ_CONTACTS
 import android.content.DialogInterface
+import android.content.Intent
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.widget.*
@@ -78,6 +79,9 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
     //The tag filter
     private val TAG: String = "LoginActivity"
 
+    //Reference to the create account Button
+    private var createAccountButton: Button? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -88,6 +92,8 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
         mPasswordView = findViewById(R.id.password) as EditText
         signInButton = findViewById(R.id.email_sign_in_button) as Button
         signInButton?.setOnClickListener(this)
+        createAccountButton = findViewById(R.id.create_account_button) as Button
+        createAccountButton?.setOnClickListener(this)
 
         Log.w(TAG, "Assigning listener to Firebase Authorize object")
         mAuthListener = object : FirebaseAuth.AuthStateListener {
@@ -120,28 +126,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
         }
     }
 
-    /*
-     * user can press create an account.
-     */
-    private fun createAccount(email: String, password: String) {
-        Log.w(TAG, "createAccount: " + email)
-        mAuth?.createUserWithEmailAndPassword(email, password)
-                ?.addOnCompleteListener(this, OnCompleteListener {
-                    @Override
-                    fun onComplete(task: Task<AuthResult>) {
-                        if (task.isSuccessful) {
-                            Log.w(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful())
-                            val snackbar = Snackbar.make(LoginActivity, "Successfully Signed In", Snackbar.LENGTH_LONG)
-                            snackbar.show()
-                        } else if (!task.isSuccessful) {
-                            val snackbar = Snackbar.make(LoginActivity, "Welcome to AndroidHive", Snackbar.LENGTH_LONG)
-                            snackbar.show()
-                            Toast.makeText(this.applicationContext, R.string.auth_failed, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-    }
-
 
     private fun signIn(email: String, password: String) {
         Log.w(TAG, "signIn: " + email)
@@ -159,6 +143,11 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
                 }
             }
         })
+    }
+
+    private fun transferToCreateAccount(){
+        val intent = Intent(this, CreateAccountActivity::class.java)
+        super.startActivity(intent)
     }
 
     private fun showSnackBar(message: String){
@@ -179,6 +168,9 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClick
         val i = v.id
         if (i == R.id.email_sign_in_button) {
             signIn(mEmailView?.getText().toString(), mPasswordView?.getText().toString())
+        }
+        else if(i == R.id.create_account_button){
+            transferToCreateAccount()
         }
     }
 
