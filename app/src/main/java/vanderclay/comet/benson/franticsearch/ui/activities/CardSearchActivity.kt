@@ -90,12 +90,6 @@ class CardSearchActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         return false
     }
 
-    private fun filter(cards: List<Card>, query: String?): List<Card> {
-        return cards.filter {
-            it.name!!.contains(query as CharSequence, true)
-        }
-    }
-
 }
 
 

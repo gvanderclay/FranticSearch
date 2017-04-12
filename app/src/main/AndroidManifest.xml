@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="vanderclay.comet.benson.franticsearch.ui.activities.CardSearchActivity"
+            android:name=".ui.activities.CardSearchActivity"
             android:label="@string/title_search_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -24,11 +24,14 @@
                 android:resource="@xml/searchable">
             </meta-data>
         </activity>
-         <activity
-         android:name=".ui.activities.DeckListActivity"
-         android:label="@string/title_activity_deck__list_"
-         android:theme="@style/AppTheme.NoActionBar">
-         </activity>
+        <activity
+            android:name=".ui.activities.DeckListActivity"
+            android:label="@string/title_activity_deck__list_"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="vanderclay.comet.benson.franticsearch.ui.activities.CardSearchActivity" />
+        </activity>
         <activity
             android:name=".ui.activities.SettingsActivity"
             android:label="@string/title_activity_settings"

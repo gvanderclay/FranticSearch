@@ -52,8 +52,11 @@
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/cardText"
             android:layout_toEndOf="@+id/cardImage"
+            android:padding="8dp"
+            android:gravity="bottom"
             android:orientation="vertical"
             >
+
         </LinearLayout>
     </RelativeLayout>
 
