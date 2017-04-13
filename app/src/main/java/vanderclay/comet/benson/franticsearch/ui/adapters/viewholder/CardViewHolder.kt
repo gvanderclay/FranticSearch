@@ -15,7 +15,7 @@ import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardImageTra
  * Created by gclay on 4/5/17.
  */
 
-class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(binding.root) {
+class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(binding.root), View.OnClickListener {
     private val mBinding: ItemCardRowBinding = binding
 
     private val TAG = "CardViewHolder"
@@ -24,13 +24,10 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
 
     // Bind a card to the ItemCardRow
     fun bind(card: Card) {
+        mBinding.root.setOnClickListener(this)
         mBinding.card = card
-        val imageView = ImageView(mBinding.root.context)
-        addManaSymbols()
-        imageView.setImageResource(R.drawable.white_circle)
-        imageView.layoutParams = ViewGroup.LayoutParams(50, 50)
         mBinding.manaContainer.removeAllViews()
-        mBinding.manaContainer.addView(imageView)
+        addManaSymbols()
 
         if (card.imageUrl != null) {
             mBinding.missingText.text = ""
@@ -41,6 +38,13 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
                 .placeholder(R.drawable.no_card)
                 .into(mBinding.cardImage)
         mBinding.cardImage.scaleType = ImageView.ScaleType.FIT_XY
+        Picasso.with(mBinding.root.context)
+                .load("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=${getSet()}&size=large&rarity=${getRaritySymbol()}")
+                .into(mBinding.setImage)
+    }
+
+    override fun onClick(view: View) {
+        Log.d(TAG, "Set ${mBinding.card.set} rarity ${mBinding.card.rarity}")
     }
 
     private fun addManaSymbols() {
@@ -48,10 +52,46 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
         if(mBinding.card.manaCost == null) {
             return
         }
-        val manaSymbols = reg.split(mBinding.card.manaCost).filter {
-            it.length > 0
+        val manaSymbols = reg.split(mBinding.card.manaCost).filter(String::isNotEmpty)
+        for (manaType in manaSymbols) {
+            val url = "http://gatherer.wizards.com/Handlers/Image.ashx?size=large&name=$manaType&type=symbol"
+            val imageView = ImageView(mBinding.root.context)
+            imageView.setImageResource(R.drawable.white_circle)
+            imageView.layoutParams = ViewGroup.LayoutParams(50, 50)
+            Picasso.with(mBinding.root.context)
+                    .load(url)
+                    .into(imageView)
+            mBinding.manaContainer.addView(imageView)
+            Log.d(TAG, "Mana: $manaType")
         }
-        Log.d(TAG, "Mana: ${manaSymbols}")
     }
+
+    private fun getSet(): String {
+        val set = mBinding.card.set
+        if(set.substring(1) == "ED") {
+            return set.substring(0, 1)
+        }
+        return when(set) {
+            "HML" -> "HM"
+            "ODY" -> "OD"
+            "TMP" -> "TE"
+            "WTH" -> "WL"
+            "PCY" -> "PR"
+            "LEG" -> "LE"
+            "ULG" -> "GU"
+            else -> set
+        }
+    }
+
+    private fun getRaritySymbol(): String {
+        val rarity = mBinding.card.rarity
+        return when(rarity){
+            "Special" -> rarity
+            else -> rarity.split(" ").map {
+                         it[0]
+                    }.joinToString("")
+        }
+    }
+
 
 }

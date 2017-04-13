@@ -13,7 +13,7 @@ abstract class EndlessRecyclerViewScrollListener(layoutManager: LinearLayoutMana
 
     private var previousTotal = 0
     private var loading = true
-    private var visibleThreshold = 5
+    private var visibleThreshold = 20
     private var firstVisibleItem: Int? = null
     private var visibleItemCount: Int? = null
     private var totalItemCount: Int? = null

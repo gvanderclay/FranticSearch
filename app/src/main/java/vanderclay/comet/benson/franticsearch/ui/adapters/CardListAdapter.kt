@@ -20,6 +20,7 @@ class CardListAdapter(val cards: MutableList<Card>): RecyclerView.Adapter<CardVi
 
     private val TAG = "CardListAdapter"
 
+
     override fun getItemCount(): Int {
         return mCards.size
     }
@@ -34,64 +35,5 @@ class CardListAdapter(val cards: MutableList<Card>): RecyclerView.Adapter<CardVi
         val itemBinding = ItemCardRowBinding.inflate(layoutInflater, parent, false)
         return CardViewHolder(itemBinding)
     }
-
-    fun animateTo(cards: List<Card>){
-        Log.d(TAG, "Size of cards ${cards.size}")
-        applyAndAnimateRemovals(cards)
-        applyAndAnimateAdditions(cards)
-        applyAndAnimateMovedItems(cards)
-        notifyDataSetChanged()
-        Log.d(TAG, "Size of cards ${cards.size}")
-    }
-
-    private fun applyAndAnimateRemovals(newCards: List<Card>) {
-        for(i in mCards.size - 1 downTo 0) {
-            val card = mCards[i]
-            if(!newCards.contains(card)) {
-                removeItem(i)
-           }
-        }
-    }
-
-    private fun applyAndAnimateAdditions(newCards: List<Card>) {
-        for(i in 0 until newCards.size) {
-            val card = newCards[i]
-            if(!mCards.contains(card)) {
-                addItem(i, card)
-            }
-        }
-    }
-
-    private fun applyAndAnimateMovedItems(newCards: List<Card>) {
-        for(toPosition in newCards.size - 1 downTo 0) {
-            val card = newCards[toPosition]
-            val fromPosition = newCards.indexOf(card)
-            if(fromPosition >= 0 && fromPosition != toPosition) {
-                moveItem(fromPosition, toPosition)
-            }
-        }
-    }
-
-    fun removeItem(position: Int): Card {
-        val card = mCards.removeAt(position)
-        Log.d(TAG, "removing card ${card.name}")
-        notifyItemRemoved(position)
-        return card
-    }
-
-    fun addItem(position: Int, card: Card) {
-        mCards.add(position, card)
-        Log.d(TAG, "adding card ${card.name}")
-        notifyItemInserted(position)
-    }
-
-    fun moveItem(from: Int, to: Int) {
-        val card = mCards.removeAt(from)
-        Log.d(TAG, "moving card ${card.name}")
-        mCards.add(to, card)
-        notifyItemMoved(from, to)
-    }
-
-
-
 }
+

@@ -1,51 +1,21 @@
 package vanderclay.comet.benson.franticsearch.ui.activities
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.annotation.TargetApi
-import android.content.pm.PackageManager
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.app.LoaderManager.LoaderCallbacks
 
-import android.content.CursorLoader
-import android.content.Loader
-import android.database.Cursor
-import android.net.Uri
-import android.os.AsyncTask
 
-import android.os.Build
 import android.os.Bundle
-import android.provider.ContactsContract
-import android.text.TextUtils
-import android.view.KeyEvent
 import android.view.View
-import android.view.View.OnClickListener
-import android.view.inputmethod.EditorInfo
-import java.util.ArrayList
 import vanderclay.comet.benson.franticsearch.R
-import android.Manifest.permission.READ_CONTACTS
-import android.content.DialogInterface
 import android.content.Intent
-import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.GoogleAuthProvider;
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.toolbar.*
-import org.w3c.dom.Text
 
 
 /**
@@ -98,14 +68,12 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         createAccountButton?.setOnClickListener(this)
 
         Log.w(TAG, "Assigning listener to Firebase Authorize object")
-        mAuthListener = object : FirebaseAuth.AuthStateListener {
-            override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
-                var user: FirebaseUser? = firebaseAuth.currentUser
-                if (user != null) {
-                    Log.w(TAG, "user sign in successful")
-                } else {
-                    Log.w(TAG, "User not currently signed in.")
-                }
+        mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            var user: FirebaseUser? = firebaseAuth.currentUser
+            if (user != null) {
+                Log.w(TAG, "user sign in successful")
+            } else {
+                Log.w(TAG, "User not currently signed in.")
             }
         }
     }
@@ -131,6 +99,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun signIn(email: String, password: String) {
         Log.w(TAG, "signIn: " + email)
+        val intent = Intent(baseContext, MainActivity::class.java)
+//        if(true) {
+//            startActivity(intent)
+//        }
         if(!isValideForm()){
             showSnackBar("Password or Email had Invalid Format")
             return
@@ -138,8 +110,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         mAuth!!.signInWithEmailAndPassword(email, password)?.addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
             override fun onComplete(task: Task<AuthResult>) {
                 if (task.isSuccessful) {
-                    Log.w(TAG, "Sign In Complete" + task.isSuccessful())
+                    Log.w(TAG, "Sign In Complete" + task.isSuccessful)
                     showSnackBar("Successfully Signed In")
+                    startActivity(intent)
                 } else if (!task.isSuccessful) {
                     showSnackBar("Login Unsuccessful")
                 }
