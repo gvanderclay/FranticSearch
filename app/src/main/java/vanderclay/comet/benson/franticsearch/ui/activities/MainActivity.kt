@@ -22,15 +22,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(toolbar)
-
         mDrawer = findViewById(R.id.drawer_layout) as DrawerLayout?
         nvDrawer = findViewById(R.id.nvView) as NavigationView?
         drawerToggle = setUpDrawerToggle()
         mDrawer?.addDrawerListener(drawerToggle as DrawerLayout.DrawerListener)
 
         setupDrawerContent(nvDrawer)
-
-
     }
 
     private fun setUpDrawerToggle(): ActionBarDrawerToggle {
