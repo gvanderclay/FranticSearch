@@ -26,14 +26,13 @@
             android:id="@+id/missingText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/cardImage"
-            android:layout_alignEnd="@+id/cardImage"
-            android:layout_alignStart="@+id/cardImage"
-            android:layout_alignTop="@+id/cardImage"
             android:gravity="center"
             android:text="\?"
-            />
-
+            android:layout_alignStart="@+id/cardImage"
+            android:layout_alignEnd="@+id/cardImage"
+            android:layout_alignBottom="@+id/cardImage"
+            android:layout_alignTop="@+id/cardImage"
+        />
         <TextView
             android:id="@+id/cardText"
             android:layout_width="match_parent"
@@ -44,20 +43,40 @@
             android:text="@{card.name}"
             />
 
+        <TextView
+            android:id="@+id/typeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/cardText"
+            android:layout_toEndOf="@+id/cardImage"
+            android:paddingLeft="16dp"
+            android:text="@{card.type}"
+            android:textSize="10sp" />
+
         <LinearLayout
             android:id="@+id/manaContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignBottom="@+id/cardImage"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/cardText"
+            android:layout_alignEnd="@+id/setImage"
+            android:layout_below="@+id/typeText"
             android:layout_toEndOf="@+id/cardImage"
-            android:padding="8dp"
             android:gravity="bottom"
-            android:orientation="vertical"
-            >
+            android:orientation="horizontal"
+            android:padding="8dp">
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/setImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/typeText"
+            android:layout_alignBottom="@+id/manaContainer"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/typeText"
+            app:srcCompat="@drawable/no_card" />
     </RelativeLayout>
 
 </layout>

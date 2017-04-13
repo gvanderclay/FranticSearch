@@ -33,4 +33,5 @@
         completions."
     </string>
     <string name="auth_failed">"Failed to create an account"</string>
+    <string name="card_search">Card Search</string>
 </resources>
