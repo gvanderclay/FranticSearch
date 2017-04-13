@@ -28,7 +28,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
      */
 
     // Reference to the email view
-    private var mEmailView: EditText? = null
+    private var mEmailView: TextView? = null
 
     //Reference to the password View
     private var mPasswordView: TextView? = null
@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
         //Instantiate a Reference to the Firebase Auth Object
         this.mAuth = FirebaseAuth.getInstance()
-        mEmailView = findViewById(R.id.email) as EditText
+        mEmailView = findViewById(R.id.email) as TextView
         mPasswordView = findViewById(R.id.password) as TextView
         signInButton = findViewById(R.id.email_sign_in_button) as Button
         signInButton?.setOnClickListener(this)
