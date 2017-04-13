@@ -29,13 +29,13 @@ abstract class EndlessRecyclerViewScrollListener(layoutManager: LinearLayoutMana
         totalItemCount = layoutManager.itemCount
         firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
         if(loading) {
-            if(totalItemCount!! > previousTotal!!) {
+            if(totalItemCount!! > previousTotal) {
                 loading = false
                 previousTotal = totalItemCount!!
             }
         }
         if(!loading && (totalItemCount!! - visibleItemCount!!) <=
-                (firstVisibleItem!! + visibleThreshold!!)) {
+                (firstVisibleItem!! + visibleThreshold)) {
             currentPage++
             onLoadMore(currentPage)
 

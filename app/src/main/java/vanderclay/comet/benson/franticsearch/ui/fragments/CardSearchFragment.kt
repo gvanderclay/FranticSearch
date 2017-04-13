@@ -116,7 +116,7 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
         // TODO: Rename and change types and number of parameters
         fun newInstance(): CardSearchFragment {
             val fragment = CardSearchFragment()
-            val args = Bundle()
+//            val args = Bundle()
             return fragment
         }
     }

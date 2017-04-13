@@ -107,17 +107,15 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             showSnackBar("Password or Email had Invalid Format")
             return
         }
-        mAuth!!.signInWithEmailAndPassword(email, password)?.addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
-            override fun onComplete(task: Task<AuthResult>) {
-                if (task.isSuccessful) {
-                    Log.w(TAG, "Sign In Complete" + task.isSuccessful)
-                    showSnackBar("Successfully Signed In")
-                    startActivity(intent)
-                } else if (!task.isSuccessful) {
-                    showSnackBar("Login Unsuccessful")
-                }
+        mAuth!!.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                Log.w(TAG, "Sign In Complete" + task.isSuccessful)
+                showSnackBar("Successfully Signed In")
+                startActivity(intent)
+            } else if (!task.isSuccessful) {
+                showSnackBar("Login Unsuccessful")
             }
-        })
+        }
     }
 
     private fun transferToCreateAccount(){
