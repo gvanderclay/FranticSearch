@@ -48,7 +48,7 @@ class CreateAccountActivity : AppCompatActivity(), View.OnClickListener {
         verifyPasswordTextView = findViewById(R.id.retypePassword) as TextView
         createAccountButton = findViewById(R.id.createAccountButton) as Button
         emailTextView = findViewById(R.id.email) as TextView
-        createAccountButton?.setOnClickListener (this)
+        createAccountButton?.setOnClickListener(this)
 
         //Firebase Setup
         this.mAuth = FirebaseAuth.getInstance()
@@ -58,14 +58,18 @@ class CreateAccountActivity : AppCompatActivity(), View.OnClickListener {
                 var user: FirebaseUser? = firebaseAuth.currentUser
                 if (user != null) {
                     Log.w(TAG, "user create account successful")
+
+
                 } else {
+
+
                     Log.w(TAG, "user signed out")
                 }
             }
         }
     }
 
-    public override fun onResume(){
+    public override fun onResume() {
         super.onResume()
     }
 
@@ -87,7 +91,7 @@ class CreateAccountActivity : AppCompatActivity(), View.OnClickListener {
         mAuth!!.addAuthStateListener(this.mAuthListener!!)
     }
 
-    private fun  isValidEmail(email:String): Boolean{
+    private fun isValidEmail(email: String): Boolean {
         return email.contains("@")
     }
 
@@ -95,17 +99,16 @@ class CreateAccountActivity : AppCompatActivity(), View.OnClickListener {
       * Verifies that a users password contains an upper case letter, is 6 characters long
       * and at least one of those characters is a number.
      */
-    private fun isValidPassword(email: String): Boolean{
+    private fun isValidPassword(email: String): Boolean {
         var hasUpper = false
         var hasNumber = false
-        if( email.length>6){
+        if (email.length > 6) {
             for (character: Char in email) {
-               if( character.isUpperCase()){
-                   hasUpper = true
-               }
-               else if(character.isDigit()){
-                   hasNumber = true
-               }
+                if (character.isUpperCase()) {
+                    hasUpper = true
+                } else if (character.isDigit()) {
+                    hasNumber = true
+                }
             }
             return hasUpper && hasNumber
         }
@@ -116,11 +119,11 @@ class CreateAccountActivity : AppCompatActivity(), View.OnClickListener {
      * verifies that two strings are equal... because it's easier to read nothing more
      * Compares left hand side and right hand side to make sure they're the same...
      */
-    private fun samePassword(lhs: String, rhs: String): Boolean{
+    private fun samePassword(lhs: String, rhs: String): Boolean {
         return lhs.equals(rhs)
     }
 
-    private fun showSnackBar(message: String){
+    private fun showSnackBar(message: String) {
         //Dunno why I had to add an extra line in this version of the snackbar ???
         val snackbar = Snackbar.make(findViewById(R.id.CreateAccountActivity), message, Snackbar.LENGTH_LONG)
         snackbar.show()
@@ -130,9 +133,9 @@ class CreateAccountActivity : AppCompatActivity(), View.OnClickListener {
      * Nothing like a bunch of rested ifs to make you want to die a little inside.
      * Oh well, it's 10:37 at night...
      */
-    private fun checkCreateAccountParameters(email: String, verifyPassword: String, password: String): Boolean{
-        if(isValidPassword(password) && isValidPassword(verifyPassword)){
-            if(isValidEmail(email)) {
+    private fun checkCreateAccountParameters(email: String, verifyPassword: String, password: String): Boolean {
+        if (isValidPassword(password) && isValidPassword(verifyPassword)) {
+            if (isValidEmail(email)) {
                 //congrats you can type like a decent human being
                 if (samePassword(verifyPassword, password)) {
                     return true
@@ -156,9 +159,9 @@ class CreateAccountActivity : AppCompatActivity(), View.OnClickListener {
    */
     private fun createAccount(email: String, verifyPassword: String, password: String) {
         Log.w(TAG, "createAccount with email: " + email)
-        if(checkCreateAccountParameters(email, verifyPassword, password))
+        if (checkCreateAccountParameters(email, verifyPassword, password))
             mAuth?.createUserWithEmailAndPassword(email, password)
-                    ?.addOnCompleteListener(this, object: OnCompleteListener<AuthResult> {
+                    ?.addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
                         override fun onComplete(task: Task<AuthResult>) {
                             if (task.isSuccessful) {
                                 Log.w(TAG, "createUserWithEmail: completed?: " + task.isSuccessful())
@@ -175,12 +178,11 @@ class CreateAccountActivity : AppCompatActivity(), View.OnClickListener {
         val i = v.id
         //try and create their account display appropriate error messages to the user.
         if (i == R.id.createAccountButton) {
-           createAccount(email?.text.toString(),
-                   password?.text.toString(),
-                   verifyPasswordTextView?.text.toString())
+            createAccount(email?.text.toString(),
+                    password?.text.toString(),
+                    verifyPasswordTextView?.text.toString())
         }
     }
-
 
 
 }
