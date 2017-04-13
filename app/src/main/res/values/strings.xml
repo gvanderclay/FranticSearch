@@ -25,4 +25,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="card_search">search</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
 </resources>
