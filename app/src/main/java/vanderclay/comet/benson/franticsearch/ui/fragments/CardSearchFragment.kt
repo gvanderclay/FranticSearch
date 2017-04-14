@@ -2,6 +2,7 @@ package vanderclay.comet.benson.franticsearch.ui.fragments
 
 import android.os.Bundle
 import android.os.Handler
+import android.support.annotation.Nullable
 import android.support.v4.app.Fragment
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -40,6 +41,7 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        loadNextDataFromApi(1)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -67,7 +69,6 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
             }
         }
         cardList?.addOnScrollListener(scrollListener)
-        loadNextDataFromApi(1)
         cardList?.setHasFixedSize(true)
         cardList?.adapter = cardAdapter
         return rootView
