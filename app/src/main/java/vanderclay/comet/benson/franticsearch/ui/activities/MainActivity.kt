@@ -13,6 +13,7 @@ import org.jetbrains.anko.find
 import vanderclay.comet.benson.franticsearch.ui.fragments.CardSearchFragment
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.commons.SetCache
+import vanderclay.comet.benson.franticsearch.ui.fragments.DeckListFragment
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     var mDrawer: DrawerLayout? = null
@@ -51,6 +52,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val fragment = when(menuItem.itemId) {
             R.id.card_search -> {
                 CardSearchFragment.newInstance()
+            }
+            R.id.decks -> {
+                DeckListFragment.newInstance()
             }
             else -> CardSearchFragment.newInstance()
         }
