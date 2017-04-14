@@ -8,6 +8,7 @@ import android.widget.ImageView
 import com.squareup.picasso.Picasso
 import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.R
+import vanderclay.comet.benson.franticsearch.commons.SetCache
 import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardImageTransform
 
@@ -39,12 +40,12 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
                 .into(mBinding.cardImage)
         mBinding.cardImage.scaleType = ImageView.ScaleType.FIT_XY
         Picasso.with(mBinding.root.context)
-                .load("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=${getSet()}&size=large&rarity=${getRaritySymbol()}")
+                .load("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=${getSetCode()}&size=large&rarity=${getRaritySymbol()}")
                 .into(mBinding.setImage)
     }
 
     override fun onClick(view: View) {
-        Log.d(TAG, "Set ${mBinding.card.set} rarity ${mBinding.card.rarity}")
+        Log.d(TAG, "Set ${getSetCode()}:${mBinding.card.set} rarity ${mBinding.card.rarity}")
     }
 
     private fun addManaSymbols() {
@@ -66,21 +67,10 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
         }
     }
 
-    private fun getSet(): String {
-        val set = mBinding.card.set
-        if(set.substring(1) == "ED") {
-            return set.substring(0, 1)
-        }
-        return when(set) {
-            "HML" -> "HM"
-            "ODY" -> "OD"
-            "TMP" -> "TE"
-            "WTH" -> "WL"
-            "PCY" -> "PR"
-            "LEG" -> "LE"
-            "ULG" -> "GU"
-            else -> set
-        }
+    private fun getSetCode(): String? {
+        val card = mBinding.card
+        val gathererCode = SetCache.getSets()?.get(card.set)?.gatherercode
+        return gathererCode ?: card.set
     }
 
     private fun getRaritySymbol(): String {
