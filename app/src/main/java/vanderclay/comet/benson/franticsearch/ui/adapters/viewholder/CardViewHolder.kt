@@ -7,9 +7,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
 import io.magicthegathering.javasdk.resource.Card
+import vanderclay.comet.benson.franticsearch.ui.fragments.CardFragment
 import vanderclay.comet.benson.franticsearch.R
+import vanderclay.comet.benson.franticsearch.commons.SetCache
 import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
+import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardImageTransform
+import android.app.Activity
+
+
 
 /**
  * Created by gclay on 4/5/17.
@@ -39,12 +45,19 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
                 .into(mBinding.cardImage)
         mBinding.cardImage.scaleType = ImageView.ScaleType.FIT_XY
         Picasso.with(mBinding.root.context)
-                .load("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=${getSet()}&size=large&rarity=${getRaritySymbol()}")
+                .load("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=${getSetCode()}&size=large&rarity=${getRaritySymbol()}")
                 .into(mBinding.setImage)
     }
 
     override fun onClick(view: View) {
-        Log.d(TAG, "Set ${mBinding.card.set} rarity ${mBinding.card.rarity}")
+        val newFragment = CardFragment()
+        newFragment.card = mBinding.card
+        val manager = (mBinding.root.context as MainActivity).supportFragmentManager
+        val transaction = manager.beginTransaction()
+        transaction.replace(R.id.flContent, newFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+        Log.d(TAG, "Set ${getSetCode()}:${mBinding.card.set} rarity ${mBinding.card.rarity}")
     }
 
     private fun addManaSymbols() {
@@ -66,21 +79,10 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
         }
     }
 
-    private fun getSet(): String {
-        val set = mBinding.card.set
-        if(set.substring(1) == "ED") {
-            return set.substring(0, 1)
-        }
-        return when(set) {
-            "HML" -> "HM"
-            "ODY" -> "OD"
-            "TMP" -> "TE"
-            "WTH" -> "WL"
-            "PCY" -> "PR"
-            "LEG" -> "LE"
-            "ULG" -> "GU"
-            else -> set
-        }
+    private fun getSetCode(): String? {
+        val card = mBinding.card
+        val gathererCode = SetCache.getSets()?.get(card.set)?.gatherercode
+        return gathererCode ?: card.set
     }
 
     private fun getRaritySymbol(): String {

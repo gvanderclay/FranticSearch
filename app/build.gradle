@@ -50,6 +50,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     androidTestCompile 'junit:junit:4.12'
     kapt 'com.android.databinding:compiler:2.3.0'
+    compile 'com.google.code.gson:gson:2.7'
 }
 
 kapt {

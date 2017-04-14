@@ -50,9 +50,10 @@
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/cardText"
             android:layout_toEndOf="@+id/cardImage"
-            android:paddingLeft="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:text="@{card.type}"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <LinearLayout
             android:id="@+id/manaContainer"
@@ -70,13 +71,14 @@
 
         <ImageView
             android:id="@+id/setImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/typeText"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignBottom="@+id/manaContainer"
             android:layout_alignParentEnd="true"
-            android:layout_below="@+id/typeText"
-            app:srcCompat="@drawable/no_card" />
+            android:gravity="bottom"
+            android:padding="8dp"
+            app:srcCompat="@drawable/no_card"
+            android:contentDescription="@string/seticon"/>
     </RelativeLayout>
 
 </layout>

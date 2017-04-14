@@ -1,7 +1,5 @@
 package vanderclay.comet.benson.franticsearch.ui.fragments
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -58,7 +56,6 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater!!.inflate(R.layout.fragment_card_search, container, false)
         rootView.tag = TAG
-
         cardList = rootView.findViewById(R.id.cardList) as RecyclerView
 
         val layoutManager = LinearLayoutManager(activity.applicationContext)
@@ -117,7 +114,7 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
         // TODO: Rename and change types and number of parameters
         fun newInstance(): CardSearchFragment {
             val fragment = CardSearchFragment()
-            val args = Bundle()
+//            val args = Bundle()
             return fragment
         }
     }
