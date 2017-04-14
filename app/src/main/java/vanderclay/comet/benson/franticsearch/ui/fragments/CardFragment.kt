@@ -11,6 +11,8 @@ import android.widget.TextView
 import io.magicthegathering.javasdk.resource.Card
 import kotlinx.android.synthetic.main.fragment_card.*
 import vanderclay.comet.benson.franticsearch.R
+import vanderclay.comet.benson.franticsearch.R.layout.activity_main
+import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
 
 
 /**
@@ -46,6 +48,23 @@ class CardFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
     }
+
+    override public fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if(isVisibleToUser){
+            val a = getActivity()
+            if(a != null) { }
+        }
+    }
+
+//        @Override
+//        public void setUserVisibleHint(boolean isVisibleToUser) {
+//            super.setUserVisibleHint(isVisibleToUser);
+//            if(isVisibleToUser) {
+//                Activity a = getActivity();
+//                if(a != null) a.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//            }
+//        }
 
     companion object {
 
