@@ -102,6 +102,7 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }
 
+
     override fun onQueryTextSubmit(query: String?): Boolean {
         return false
     }
