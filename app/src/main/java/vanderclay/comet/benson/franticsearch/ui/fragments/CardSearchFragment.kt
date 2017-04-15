@@ -5,6 +5,7 @@ import android.os.Handler
 import android.support.annotation.Nullable
 import android.support.v4.app.Fragment
 import android.support.v4.view.MenuItemCompat
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -72,6 +73,11 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
         cardList?.setHasFixedSize(true)
         cardList?.adapter = cardAdapter
         return rootView
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity).supportActionBar?.title = activity.getString(R.string.card_search)
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {

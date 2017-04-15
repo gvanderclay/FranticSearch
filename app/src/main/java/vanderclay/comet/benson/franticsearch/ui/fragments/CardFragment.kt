@@ -4,12 +4,14 @@ package vanderclay.comet.benson.franticsearch.ui.fragments
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -19,6 +21,8 @@ import vanderclay.comet.benson.franticsearch.R
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.toolbar.view.*
+import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardImageTransform
 
 /**
@@ -70,6 +74,8 @@ class CardFragment : Fragment(), View.OnClickListener {
     /*Reference to the ability Text View in the Card Fragment*/
     private var abilityText: TextView? = null
 
+    private var manaContainer: LinearLayout? = null
+
     /*Reference to the Log Tag String for debugging*/
     val TAG: String = "CardFragment"
 
@@ -83,7 +89,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         Log.d(TAG, " Getting reference to buttons and references to ")
         // Inflate the layout for this fragment
         val rootView = inflater!!.inflate(R.layout.fragment_card, container, false)
-        val cardName = rootView.findViewById(R.id.cardName) as TextView
+        (activity as AppCompatActivity).supportActionBar?.title = card?.name
 
         addButton = rootView.findViewById(R.id.addButton) as Button
         favButton = rootView.findViewById(R.id.favoriteButton) as Button
@@ -99,10 +105,12 @@ class CardFragment : Fragment(), View.OnClickListener {
         cardImage = rootView.findViewById(R.id.specificCardImage) as ImageView
 //        cardImage = view?.findViewById(R.id.imageView) as ImageView
         abilityText = rootView.findViewById(R.id.abilityText) as TextView
+        manaContainer = rootView.findViewById(R.id.cardManaContainer) as LinearLayout
 
-        cardName.text = card?.name
         setText?.text = card?.set
         collectorText?.text = card?.number
+
+        addManaSymbols(card, context, manaContainer)
 
         loadCardImage()
 
@@ -195,10 +203,10 @@ class CardFragment : Fragment(), View.OnClickListener {
     private fun showSnackBar(message: String) {
 //        @+id/CardFragment
         //Dunno why I had to add an extra line in this version of the snackbar ???
-        val snackbar = Snackbar.make(CardFragment.rootView.findViewById(R.id.CardFragment),
-                message,
-                Snackbar.LENGTH_LONG)
-        snackbar.show()
+//        val snackbar = Snackbar.make(CardFragment.rootView.findViewById(R.id.CardFragment),
+//                message,
+//                Snackbar.LENGTH_LONG)
+//        snackbar.show()
     }
 
     companion object {

@@ -14,7 +14,7 @@ import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
 import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardImageTransform
 import android.app.Activity
-
+import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
 
 
 /**
@@ -26,14 +26,13 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
 
     private val TAG = "CardViewHolder"
 
-    private val reg = Regex("[\\{\\}]")
 
     // Bind a card to the ItemCardRow
     fun bind(card: Card) {
         mBinding.root.setOnClickListener(this)
         mBinding.card = card
         mBinding.manaContainer.removeAllViews()
-        addManaSymbols()
+        addManaSymbols(card, mBinding.root.context, mBinding.manaContainer)
 
         if (card.imageUrl != null) {
             mBinding.missingText.text = ""
@@ -58,25 +57,6 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
         transaction.addToBackStack(null)
         transaction.commit()
         Log.d(TAG, "Set ${getSetCode()}:${mBinding.card.set} rarity ${mBinding.card.rarity}")
-    }
-
-    private fun addManaSymbols() {
-        // our regex includes empty string so filter them out
-        if(mBinding.card.manaCost == null) {
-            return
-        }
-        val manaSymbols = reg.split(mBinding.card.manaCost).filter(String::isNotEmpty)
-        for (manaType in manaSymbols) {
-            val url = "http://gatherer.wizards.com/Handlers/Image.ashx?size=large&name=$manaType&type=symbol"
-            val imageView = ImageView(mBinding.root.context)
-            imageView.setImageResource(R.drawable.white_circle)
-            imageView.layoutParams = ViewGroup.LayoutParams(50, 50)
-            Picasso.with(mBinding.root.context)
-                    .load(url)
-                    .into(imageView)
-            mBinding.manaContainer.addView(imageView)
-            Log.d(TAG, "Mana: $manaType")
-        }
     }
 
     private fun getSetCode(): String? {
