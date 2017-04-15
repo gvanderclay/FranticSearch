@@ -3,11 +3,12 @@ package vanderclay.comet.benson.franticsearch.ui.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
+import android.widget.EditText
 
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.model.Deck
@@ -28,6 +29,7 @@ class DeckListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -44,6 +46,31 @@ class DeckListFragment : Fragment() {
         deckList?.adapter = deckAdapter
 
         return rootView
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.clear()
+        inflater?.inflate(R.menu.deck_add_menu, menu)
+        menu?.findItem(R.id.deckAdd)?.setOnMenuItemClickListener {
+            val alertDialogBuilder = AlertDialog.Builder(activity)
+            val input = EditText(activity)
+            alertDialogBuilder.setView(input)
+            alertDialogBuilder.setPositiveButton("Add Deck", { dialog, which ->
+                if(input.text.isEmpty()) return@setPositiveButton
+                val newDeck = Deck(input.text.toString())
+                deckModel.add(newDeck)
+                deckAdapter.notifyDataSetChanged()
+                Log.d(TAG, "Add deck clicked")
+            })
+            alertDialogBuilder.setNegativeButton("Cancel", { dialog, which ->
+                Log.d(TAG, "Add deck cancelled")
+            })
+            alertDialogBuilder.create().show()
+            true
+
+        }
+
     }
 
     companion object {
