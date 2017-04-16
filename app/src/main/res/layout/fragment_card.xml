@@ -18,36 +18,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="210dp"
-            tools:layout_editor_absoluteY="210dp"
-            tools:layout_editor_absoluteX="0dp" />
+            app:layout_constraintGuide_begin="314dp" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="164dp"
-            tools:layout_editor_absoluteY="164dp"
-            tools:layout_editor_absoluteX="0dp" />
+            app:layout_constraintGuide_begin="261dp" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.75"
-            tools:layout_editor_absoluteX="288dp"
-            tools:layout_editor_absoluteY="0dp" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.35"
-            tools:layout_editor_absoluteX="135dp"
-            tools:layout_editor_absoluteY="0dp" />
+            app:layout_constraintGuide_percent="0.77" />
 
     <EditText
             android:id="@+id/editText"
@@ -83,16 +68,15 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="2dp"
             android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
             app:layout_constraintBottom_toTopOf="@+id/guideline6"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/guideline9"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/island" />
+            app:srcCompat="@drawable/island"
+            app:layout_constraintRight_toLeftOf="@+id/guideline14"
+            android:layout_marginRight="8dp" />
 
     <android.support.constraint.Guideline
             android:id="@+id/guideline10"
@@ -179,19 +163,19 @@
             android:layout_marginEnd="8dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/textView2" />
 
-        <TextView
-            android:id="@+id/collectorText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginLeft="8dp"
-            app:layout_constraintLeft_toLeftOf="@+id/guideline14"
-            app:layout_constraintBaseline_toBaselineOf="@+id/textView3"
-            app:layout_constraintHorizontal_bias="0.0" />
+    <TextView
+        android:id="@+id/collectorText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:text="n/a"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView3"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline14"
+        app:layout_constraintRight_toRightOf="parent" />
 
         <TextView
             android:id="@+id/ptText"
@@ -211,21 +195,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="9dp"
         android:layout_marginTop="8dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/guideline6"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline9"
         app:layout_constraintRight_toLeftOf="@+id/guideline8"
-        app:layout_constraintTop_toTopOf="@+id/guideline10"></LinearLayout>
+        app:layout_constraintTop_toTopOf="@+id/guideline10"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintVertical_bias="0.496"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline14"></LinearLayout>
 
     <ImageButton
         android:id="@+id/addButton"
         android:layout_width="60dp"
         android:layout_height="45dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="32dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:backgroundTint="@android:color/white"
@@ -240,7 +224,7 @@
         android:layout_height="45dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
         android:background="@android:color/white"
         app:layout_constraintLeft_toLeftOf="@+id/guideline8"
         app:layout_constraintRight_toRightOf="parent"
@@ -264,15 +248,14 @@
         android:id="@+id/textView2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAlignment="viewEnd"
-        tools:text="Converted Cost: "
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintRight_toLeftOf="@+id/guideline14"
-        android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Converted Cost: "
+        android:textAlignment="viewEnd"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline14"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/textView3"

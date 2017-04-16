@@ -104,10 +104,14 @@ class CardFragment : Fragment(), View.OnClickListener {
         manaContainer = rootView.findViewById(R.id.cardManaContainer) as LinearLayout
 
         setText?.text = card?.set
-        collectorText?.text = card?.number
+
+        if(card?.number != null){
+            collectorText?.text = card?.number
+        }else{
+            collectorText?.text = "n/a"
+        }
 
         addManaSymbols(card, context, manaContainer)
-
         loadCardImage()
 
         if (card?.cmc != null) {
@@ -119,7 +123,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         if (card?.power != null && card?.toughness != null) {
             ptText?.text = card?.power + "/" + card?.toughness
         } else {
-            cmcText?.text = "0/0"
+            ptText?.text = "0/0"
         }
 
         if (card?.originalText != null) {
