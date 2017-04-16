@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.daimajia.swipe.SwipeLayout
 import com.squareup.picasso.Picasso
 import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.R

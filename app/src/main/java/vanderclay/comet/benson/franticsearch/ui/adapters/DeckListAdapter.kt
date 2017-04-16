@@ -1,19 +1,17 @@
 package vanderclay.comet.benson.franticsearch.ui.adapters
 
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.Toast
-import com.daimajia.swipe.adapters.RecyclerSwipeAdapter
-import kotlinx.android.synthetic.main.item_deck_row.*
-import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.databinding.ItemDeckRowBinding
 import vanderclay.comet.benson.franticsearch.model.Deck
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.DeckViewHolder
 
-class DeckListAdapter(decks: MutableList<Deck>): RecyclerSwipeAdapter<DeckViewHolder>(){
+
+
+class DeckListAdapter(decks: MutableList<Deck>): RecyclerView.Adapter<DeckViewHolder>(){
 
     private val mDecks = decks
 
@@ -24,16 +22,22 @@ class DeckListAdapter(decks: MutableList<Deck>): RecyclerSwipeAdapter<DeckViewHo
     }
 
     override fun onBindViewHolder(holder: DeckViewHolder?, position: Int) {
+        Log.d(TAG, "onBindViewHolder $position")
         val deck = mDecks[position]
         holder?.bind(deck)
-        val deckDelete = holder?.itemView?.findViewById(R.id.deckDelete) as ImageView?
-        deckDelete?.setOnClickListener { view ->
-            mItemManger.removeShownLayouts(holder?.swipeLayout)
-            mDecks.removeAt(position)
-            notifyItemRemoved(position)
-            notifyItemRangeChanged(position, mDecks.size)
-            mItemManger.closeAllItems()
-            Toast.makeText(view?.context, "${deck.name} Deleted", Toast.LENGTH_SHORT).show()
+        holder?.itemView?.setOnLongClickListener {
+            val alertDialogBuilder = AlertDialog.Builder(holder.itemView?.context!!)
+            alertDialogBuilder.setMessage("Delete Deck ${deck.name}?")
+            alertDialogBuilder.setPositiveButton("Yes", { dialog, which ->
+                mDecks.removeAt(position)
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(position, mDecks.size)
+            })
+            alertDialogBuilder.setNegativeButton("No", { dialog, which ->
+                Log.d(TAG, "Add deck cancelled")
+            })
+            alertDialogBuilder.create().show()
+            true
         }
     }
 
@@ -41,16 +45,6 @@ class DeckListAdapter(decks: MutableList<Deck>): RecyclerSwipeAdapter<DeckViewHo
         val layoutInflater = LayoutInflater.from(parent?.context)
         val itemBinding = ItemDeckRowBinding.inflate(layoutInflater, parent, false)
         return DeckViewHolder(itemBinding)
-    }
-
-    override fun getSwipeLayoutResourceId(position: Int): Int {
-        Log.d(TAG, "getswipelayoutid")
-        return position
-    }
-
-    override fun openItem(position: Int) {
-        super.openItem(position)
-        Log.d(TAG, "Open Items ${openItems.size}")
     }
 
 }
