@@ -9,10 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import io.magicthegathering.javasdk.resource.Card
@@ -48,10 +45,10 @@ class CardFragment : Fragment(), View.OnClickListener {
     private var mDatabase: DatabaseReference? = null
 
     /*Reference to the add Button in the view itself*/
-    private var addButton: Button? = null
+    private var addButton: ImageButton? = null
 
     /*Reference to the favorites buttuon in the view itself*/
-    private var favButton: Button? = null
+    private var favButton: ImageButton? = null
 
     /*Reference to the card set Text*/
     private var setText: TextView? = null
@@ -79,7 +76,6 @@ class CardFragment : Fragment(), View.OnClickListener {
     /*Reference to the Log Tag String for debugging*/
     val TAG: String = "CardFragment"
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -91,8 +87,8 @@ class CardFragment : Fragment(), View.OnClickListener {
         val rootView = inflater!!.inflate(R.layout.fragment_card, container, false)
         (activity as AppCompatActivity).supportActionBar?.title = card?.name
 
-        addButton = rootView.findViewById(R.id.addButton) as Button
-        favButton = rootView.findViewById(R.id.favoriteButton) as Button
+        addButton = rootView.findViewById(R.id.addButton) as ImageButton
+        favButton = rootView.findViewById(R.id.favoriteButton) as ImageButton
 
         //Set up the on click listeners
         addButton?.setOnClickListener(this)
