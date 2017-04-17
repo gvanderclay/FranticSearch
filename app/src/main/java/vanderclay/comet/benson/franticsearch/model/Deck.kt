@@ -57,9 +57,8 @@ class Deck(val name: String, deckKey:String? = null) {
     }
 
     companion object {
-        fun loadInstance(name: String, key: String, cards: MutableList<Card>): Deck {
+        fun loadInstance(name: String, key: String): Deck {
             val deck = Deck(name, key)
-            deck.cards = cards
             return deck
 
         }

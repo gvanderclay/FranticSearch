@@ -98,10 +98,7 @@ class DeckListFragment : Fragment() {
                     val decks = dataSnapshot?.value as Map<String, Map<String, Object>>
                     decks.map {
                         val name = it.value["deckName"].toString()
-                        val cards = (it.value["cards"] as Map<String, Long>).map {
-                            CardAPI.getCard(it.value.toInt())
-                        }.toMutableList()
-                        val deck = Deck.loadInstance(name, it.key, cards)
+                        val deck = Deck.loadInstance(name, it.key)
                         deckModel.add(deck)
                     }
                     uiThread {
