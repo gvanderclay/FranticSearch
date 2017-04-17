@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import vanderclay.comet.benson.franticsearch.databinding.ItemDeckRowBinding
 import vanderclay.comet.benson.franticsearch.model.Deck
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.DeckViewHolder
@@ -29,7 +31,15 @@ class DeckListAdapter(decks: MutableList<Deck>): RecyclerView.Adapter<DeckViewHo
             val alertDialogBuilder = AlertDialog.Builder(holder.itemView?.context!!)
             alertDialogBuilder.setMessage("Delete Deck ${deck.name}?")
             alertDialogBuilder.setPositiveButton("Yes", { dialog, which ->
-                mDecks.removeAt(position)
+                val deck = mDecks.removeAt(position)
+
+                FirebaseDatabase
+                        .getInstance()
+                        .getReference("Decks")
+                        .child(FirebaseAuth.getInstance().currentUser?.uid)
+                        .child(deck.key)
+                        .removeValue()
+
                 notifyItemRemoved(position)
                 notifyItemRangeChanged(position, mDecks.size)
             })
@@ -46,5 +56,6 @@ class DeckListAdapter(decks: MutableList<Deck>): RecyclerView.Adapter<DeckViewHo
         val itemBinding = ItemDeckRowBinding.inflate(layoutInflater, parent, false)
         return DeckViewHolder(itemBinding)
     }
+
 
 }

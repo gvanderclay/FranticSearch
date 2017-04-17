@@ -9,6 +9,12 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import android.widget.EditText
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import io.magicthegathering.javasdk.api.CardAPI
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.doAsyncResult
+import org.jetbrains.anko.uiThread
 
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.model.Deck
@@ -20,15 +26,17 @@ import vanderclay.comet.benson.franticsearch.ui.adapters.DeckListAdapter
  * create an instance of this fragment.
  */
 class DeckListFragment : Fragment() {
+
     private val TAG = "DeckListFragment"
 
-
-    private var deckModel = mutableListOf(Deck("1"),Deck("2"),Deck("3"))
+    private var deckModel = arrayListOf<Deck>()
     private var deckAdapter = DeckListAdapter(deckModel)
     private var deckList: RecyclerView? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loadCards()
         setHasOptionsMenu(true)
     }
 
@@ -73,7 +81,42 @@ class DeckListFragment : Fragment() {
 
     }
 
+    private fun loadCards() {
+        val deckDatabaseRef = FirebaseDatabase
+                .getInstance()
+                .getReference("Decks")
+                .child(FirebaseAuth.getInstance().currentUser?.uid)
+
+        val valueEventListener = object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                Log.d(TAG, "HERE")
+                doAsync {
+                    val decks = dataSnapshot?.value as Map<String, Map<String, Object>>
+                    decks.map {
+                        val name = it.value["deckName"].toString()
+                        val cards = (it.value["cards"] as Map<String, Long>).map {
+                            CardAPI.getCard(it.value.toInt())
+                        }.toMutableList()
+                        val deck = Deck.loadInstance(name, it.key, cards)
+                        deckModel.add(deck)
+                    }
+                    uiThread {
+                        deckAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
+
+        }
+
+        deckDatabaseRef.addListenerForSingleValueEvent(valueEventListener)
+
+    }
     companion object {
+
 
         /**
          * Use this factory method to create a new instance of

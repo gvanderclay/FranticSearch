@@ -5,6 +5,8 @@ import io.magicthegathering.javasdk.api.CardAPI
 import io.magicthegathering.javasdk.api.SetAPI
 import io.magicthegathering.javasdk.resource.Card
 import io.magicthegathering.javasdk.resource.MtgSet
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.doAsyncResult
 import org.joda.time.DateTime
 import vanderclay.comet.benson.franticsearch.commons.convertStringToDateTime
 
@@ -70,6 +72,10 @@ class MtgAPI {
         fun searchForCards(name: String?):List<Card> {
             return getCards("name=$name")
         }
+
+        fun getCard(id: Int): Card = doAsyncResult {
+                CardAPI.getCard(id)
+            }.get()
 
         /**
         *
