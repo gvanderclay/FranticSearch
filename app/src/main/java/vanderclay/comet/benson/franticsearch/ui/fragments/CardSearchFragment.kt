@@ -92,6 +92,7 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
         return true
     }
 
+
     private fun loadNextDataFromApi(page: Int) {
         doAsync {
             val cards = MtgAPI.getCards(page, "name=$cardFilter", "orderBy=name")

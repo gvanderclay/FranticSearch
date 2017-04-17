@@ -23,8 +23,10 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
 
     private val reg = Regex("[\\{\\}]")
 
+
     // Bind a card to the ItemCardRow
     fun bind(card: Card) {
+
         mBinding.root.setOnClickListener(this)
         mBinding.card = card
         mBinding.manaContainer.removeAllViews()
