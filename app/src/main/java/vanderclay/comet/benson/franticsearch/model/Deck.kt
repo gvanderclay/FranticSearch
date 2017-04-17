@@ -4,8 +4,10 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import io.magicthegathering.javasdk.api.CardAPI
 import io.magicthegathering.javasdk.resource.Card
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import vanderclay.comet.benson.franticsearch.api.MtgAPI
 
 /**
@@ -27,6 +29,9 @@ class Deck(val name: String, deckKey:String? = null) {
     var key: String? = deckKey
 
     var cards = mutableListOf<Card>()
+
+    // list of card ids
+    var cardIds = mutableListOf<Long>()
 
     // index of the card that will be used for the cover
     var coverCardIndex = 0
@@ -54,6 +59,13 @@ class Deck(val name: String, deckKey:String? = null) {
 
     fun deleteCard(index: Int): Card {
         return cards.removeAt(index)
+    }
+
+    fun loadCards() {
+        val apiCards = cardIds.map {
+            CardAPI.getCard(it.toInt())
+        }
+        cards = apiCards.toMutableList()
     }
 
     companion object {

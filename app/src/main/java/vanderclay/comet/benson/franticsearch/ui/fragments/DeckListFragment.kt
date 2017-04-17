@@ -93,13 +93,20 @@ class DeckListFragment : Fragment() {
             }
 
             override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                Log.d(TAG, "HERE")
                 doAsync {
                     val decks = dataSnapshot?.value as Map<String, Map<String, Object>>
+                    val cards = mutableListOf<Long>()
                     decks.map {
+                        if(it.value.containsKey("cards")) {
+                            (it.value["cards"] as Map<String, Long>).forEach{
+                                cards.add(it.value)
+                            }
+                        }
                         val name = it.value["deckName"].toString()
                         val deck = Deck.loadInstance(name, it.key)
+                        deck.cardIds = cards
                         deckModel.add(deck)
+
                     }
                     uiThread {
                         deckAdapter.notifyDataSetChanged()
