@@ -49,6 +49,7 @@ class DeckListAdapter(decks: MutableList<Deck>): RecyclerView.Adapter<DeckViewHo
             alertDialogBuilder.create().show()
             true
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): DeckViewHolder {

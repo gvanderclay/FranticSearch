@@ -2,13 +2,15 @@ package vanderclay.comet.benson.franticsearch.model
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import io.magicthegathering.javasdk.api.CardAPI
 import io.magicthegathering.javasdk.resource.Card
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.doAsyncResult
 import org.jetbrains.anko.uiThread
 import vanderclay.comet.benson.franticsearch.api.MtgAPI
+import vanderclay.comet.benson.franticsearch.ui.adapters.DeckListAdapter
+import java.util.concurrent.Future
 
 /**
  * Created by gclay on 4/14/17.
@@ -37,11 +39,13 @@ class Deck(val name: String, deckKey:String? = null) {
     var coverCardIndex = 0
 
     init {
+        // if key is already defined, the deck is already in firebase
         if(key != null) {
             deckReference = mDeckDatabase.child(key)
             cardListReference = deckReference.child("cards")
         }
         else {
+            // else create a new deck and add it to firebase
             deckReference = mDeckDatabase.push()
             key = deckReference.key
             deckReference.child("deckName").setValue(name)
@@ -53,7 +57,17 @@ class Deck(val name: String, deckKey:String? = null) {
 
     fun addCard(card: Card) {
         val cardKey = cardListReference.push().key
-        cardListReference.child(cardKey).setValue(card.multiverseid)
+        val cardReference = cardListReference.child(cardKey)
+        with(card) {
+            cardReference.child("multiverse").setValue(multiverseid.toString())
+            cardReference.child("id").setValue(id)
+            cardReference.child("mana").setValue(manaCost)
+            cardReference.child("name").setValue(name)
+            cardReference.child("type").setValue(type)
+            cardReference.child("set").setValue(set)
+            cardReference.child("rarity").setValue(rarity)
+            cardReference.child("imageUrl").setValue(imageUrl)
+        }
         cards.add(card)
     }
 
@@ -73,6 +87,49 @@ class Deck(val name: String, deckKey:String? = null) {
             val deck = Deck(name, key)
             return deck
 
+        }
+
+        fun getAllDecks(decks: MutableList<Deck>, deckListAdapter: DeckListAdapter? = null) {
+            val deckDatabaseRef = FirebaseDatabase
+                    .getInstance()
+                    .getReference("Decks")
+                    .child(FirebaseAuth.getInstance().currentUser?.uid)
+
+            val valueEventListener = object: ValueEventListener {
+                override fun onCancelled(p0: DatabaseError?) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    doAsync {
+                        for(snapshot: DataSnapshot in dataSnapshot.children) {
+                            val deckMap = snapshot.value as Map<String, *>
+                            val deck = Deck.loadInstance(deckMap["deckName"] as String, snapshot.key)
+                            if(deckMap.containsKey("cards")) {
+                                (deckMap["cards"] as Map<String, Map<String, String>>).forEach {
+                                    val card = Card()
+                                    with(it) {
+                                        card.id = value["id"]
+                                        card.multiverseid = value["multiverse"]!!.toInt()
+                                        card.manaCost = value["mana"]
+                                        card.name = value["name"]
+                                        card.type = value["type"]
+                                        card.set = value["set"]
+                                        card.rarity = value["rarity"]
+                                        card.imageUrl = value["imageUrl"]
+                                    }
+                                    deck.addCard(card)
+                                }
+                            }
+                            decks.add(deck)
+                        }
+                        uiThread {
+                            deckListAdapter?.notifyDataSetChanged()
+                        }
+                    }
+                }
+            }
+            deckDatabaseRef.addListenerForSingleValueEvent(valueEventListener)
         }
     }
 
