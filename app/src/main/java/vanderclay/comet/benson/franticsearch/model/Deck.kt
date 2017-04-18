@@ -38,6 +38,13 @@ class Deck(val name: String, deckKey:String? = null) {
     // index of the card that will be used for the cover
     var coverCardIndex = 0
 
+    val coverCardImageUrl: String?
+    get() = if(coverCardIndex < cards.size && coverCardIndex > 0) {
+        cards[coverCardIndex].imageUrl
+    } else {
+        null
+    }
+
     init {
         // if key is already defined, the deck is already in firebase
         if(key != null) {
@@ -81,6 +88,7 @@ class Deck(val name: String, deckKey:String? = null) {
         }
         cards = apiCards.toMutableList()
     }
+
 
     companion object {
         fun loadInstance(name: String, key: String): Deck {

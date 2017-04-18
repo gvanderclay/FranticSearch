@@ -7,6 +7,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import vanderclay.comet.benson.franticsearch.ui.fragments.CardSearchFragment
@@ -15,6 +16,9 @@ import vanderclay.comet.benson.franticsearch.commons.SetCache
 import vanderclay.comet.benson.franticsearch.ui.fragments.DeckListFragment
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private val TAG = "MainActivity"
+
     var mDrawer: DrawerLayout? = null
     var nvDrawer: NavigationView? = null
     var drawerToggle: ActionBarDrawerToggle? = null
@@ -62,7 +66,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         menuItem.isChecked = true
 
-        title = menuItem.title
+        supportActionBar?.title = menuItem.title
+        Log.d(TAG, "Transitioning to ${(menuItem.title as String)}")
         mDrawer?.closeDrawers()
     }
 
