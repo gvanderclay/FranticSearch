@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import io.magicthegathering.javasdk.resource.Card
-import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardViewHolder
 import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
 
@@ -14,7 +13,6 @@ import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
  */
 
 class CardListAdapter(val cards: MutableList<Card>): RecyclerView.Adapter<CardViewHolder>() {
-
 
     private var mCards = cards
 
