@@ -1,6 +1,8 @@
 package vanderclay.comet.benson.franticsearch.ui.fragments
 
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -9,10 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import io.magicthegathering.javasdk.resource.Card
@@ -24,6 +23,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.toolbar.view.*
 import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardImageTransform
+import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
 
 /**
  * A simple [Fragment] subclass.
@@ -48,10 +48,10 @@ class CardFragment : Fragment(), View.OnClickListener {
     private var mDatabase: DatabaseReference? = null
 
     /*Reference to the add Button in the view itself*/
-    private var addButton: Button? = null
+    private var addButton: ImageButton? = null
 
     /*Reference to the favorites buttuon in the view itself*/
-    private var favButton: Button? = null
+    private var favButton: ImageButton? = null
 
     /*Reference to the card set Text*/
     private var setText: TextView? = null
@@ -68,6 +68,9 @@ class CardFragment : Fragment(), View.OnClickListener {
     /*Reference to the card Image View*/
     private var cardImage: ImageView? = null
 
+    /*Reference to the shopping cart add Button*/
+    private var cardButton: ImageButton? = null
+
     /*Reference to the user currently signed in user*/
     private var user: FirebaseUser? = null
 
@@ -76,9 +79,14 @@ class CardFragment : Fragment(), View.OnClickListener {
 
     private var manaContainer: LinearLayout? = null
 
+    //Tcg player link
+    private val tcgPlayer = "http://shop.tcgplayer.com/magic/product/show?ProductName="
+
+    /*End of the string for tcg player links*/
+    private val productType = "newSearch=false&ProductType=All&IsProductNameExact=true"
+
     /*Reference to the Log Tag String for debugging*/
     val TAG: String = "CardFragment"
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,27 +99,32 @@ class CardFragment : Fragment(), View.OnClickListener {
         val rootView = inflater!!.inflate(R.layout.fragment_card, container, false)
         (activity as AppCompatActivity).supportActionBar?.title = card?.name
 
-        addButton = rootView.findViewById(R.id.addButton) as Button
-        favButton = rootView.findViewById(R.id.favoriteButton) as Button
+        addButton = rootView.findViewById(R.id.addButton) as ImageButton
+        favButton = rootView.findViewById(R.id.favoriteButton) as ImageButton
+        cardButton = rootView.findViewById(R.id.cartButton) as ImageButton
 
         //Set up the on click listeners
         addButton?.setOnClickListener(this)
         favButton?.setOnClickListener(this)
+        cardButton?.setOnClickListener(this)
 
         setText = rootView.findViewById(R.id.cardSetText) as TextView
         cmcText = rootView.findViewById(R.id.cmcText) as TextView
         collectorText = rootView.findViewById(R.id.collectorText) as TextView
         ptText = rootView.findViewById(R.id.ptText) as TextView
         cardImage = rootView.findViewById(R.id.specificCardImage) as ImageView
-//        cardImage = view?.findViewById(R.id.imageView) as ImageView
         abilityText = rootView.findViewById(R.id.abilityText) as TextView
         manaContainer = rootView.findViewById(R.id.cardManaContainer) as LinearLayout
 
         setText?.text = card?.set
-        collectorText?.text = card?.number
+
+        if (card?.number != null) {
+            collectorText?.text = card?.number
+        } else {
+            collectorText?.text = "n/a"
+        }
 
         addManaSymbols(card, context, manaContainer)
-
         loadCardImage()
 
         if (card?.cmc != null) {
@@ -123,7 +136,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         if (card?.power != null && card?.toughness != null) {
             ptText?.text = card?.power + "/" + card?.toughness
         } else {
-            cmcText?.text = "0/0"
+            ptText?.text = "0/0"
         }
 
         if (card?.originalText != null) {
@@ -184,25 +197,35 @@ class CardFragment : Fragment(), View.OnClickListener {
         val i = view?.id
         if (i == R.id.addButton) {
             Log.d(TAG, " Add Button Pressed... ")
-
         } else if (i == R.id.favoriteButton) {
-
             Log.d(TAG, " favorite Button Pressed ")
-
+        } else if (i == R.id.cartButton) {
+            cartButtonPressed()
         }
     }
 
-    private fun addButtonPressed() {
+    private fun cartButtonPressed() {
+        val user = mAuth?.currentUser
         if (user != null) {
-
+            var buyCardIntent = Intent(Intent.ACTION_VIEW)
+            buyCardIntent.setData(Uri.parse(tcgPlayer + generateCardUri() + productType))
+            startActivity(buyCardIntent)
         } else {
             showSnackBar("Wait a second for us to sign you in")
         }
     }
 
+    private fun generateCardUri(): String {
+        //split the string on every space in the anem
+        val tokenizedName = card?.name?.split("\\s+")
+        var resultString = tokenizedName?.joinToString("+")
+        resultString += "&"
+        return resultString!!
+    }
+
     private fun showSnackBar(message: String) {
-//        @+id/CardFragment
-        //Dunno why I had to add an extra line in this version of the snackbar ???
+//        @+id/CardFragmen
+// Dunno why I had to add an extra line in this version of the snackbar ???
 //        val snackbar = Snackbar.make(CardFragment.rootView.findViewById(R.id.CardFragment),
 //                message,
 //                Snackbar.LENGTH_LONG)
