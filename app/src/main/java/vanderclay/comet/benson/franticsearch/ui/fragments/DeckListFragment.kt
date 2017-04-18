@@ -82,43 +82,9 @@ class DeckListFragment : Fragment() {
     }
 
     private fun loadCards() {
-        val deckDatabaseRef = FirebaseDatabase
-                .getInstance()
-                .getReference("Decks")
-                .child(FirebaseAuth.getInstance().currentUser?.uid)
-
-        val valueEventListener = object: ValueEventListener {
-            override fun onCancelled(p0: DatabaseError?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                doAsync {
-                    val decks = dataSnapshot?.value as Map<String, Map<String, Object>>
-                    val cards = mutableListOf<Long>()
-                    decks.map {
-                        if(it.value.containsKey("cards")) {
-                            (it.value["cards"] as Map<String, Long>).forEach{
-                                cards.add(it.value)
-                            }
-                        }
-                        val name = it.value["deckName"].toString()
-                        val deck = Deck.loadInstance(name, it.key)
-                        deck.cardIds = cards
-                        deckModel.add(deck)
-
-                    }
-                    uiThread {
-                        deckAdapter.notifyDataSetChanged()
-                    }
-                }
-            }
-
-        }
-
-        deckDatabaseRef.addListenerForSingleValueEvent(valueEventListener)
-
+        Deck.getAllDecks(deckModel, deckAdapter)
     }
+
     companion object {
 
 

@@ -2,6 +2,8 @@ package vanderclay.comet.benson.franticsearch.ui.adapters.viewholder
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import com.squareup.picasso.Picasso
+import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.databinding.ItemDeckRowBinding
 import vanderclay.comet.benson.franticsearch.model.Deck
 
