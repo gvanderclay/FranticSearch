@@ -1,11 +1,11 @@
 package vanderclay.comet.benson.franticsearch.ui.fragments
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.support.annotation.Nullable
 import android.support.v4.app.Fragment
 import android.support.v4.view.MenuItemCompat
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -18,7 +18,6 @@ import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
 
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.api.MtgAPI
-import vanderclay.comet.benson.franticsearch.commons.SetCache
 import vanderclay.comet.benson.franticsearch.ui.adapters.CardListAdapter
 import vanderclay.comet.benson.franticsearch.ui.adapters.listeners.EndlessRecyclerViewScrollListener
 
@@ -43,6 +42,7 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        loadNextDataFromApi(1)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -59,7 +59,6 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater!!.inflate(R.layout.fragment_card_search, container, false)
         rootView.tag = TAG
-
         cardList = rootView.findViewById(R.id.cardList) as RecyclerView
 
         val layoutManager = LinearLayoutManager(activity.applicationContext)
@@ -71,10 +70,14 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
             }
         }
         cardList?.addOnScrollListener(scrollListener)
-        loadNextDataFromApi(1)
         cardList?.setHasFixedSize(true)
         cardList?.adapter = cardAdapter
         return rootView
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity).supportActionBar?.title = activity.getString(R.string.card_search)
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
@@ -103,6 +106,7 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
             }
         }
     }
+
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         return false
