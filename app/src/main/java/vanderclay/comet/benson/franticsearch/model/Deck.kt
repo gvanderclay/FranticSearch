@@ -10,13 +10,15 @@ import org.jetbrains.anko.doAsyncResult
 import org.jetbrains.anko.uiThread
 import vanderclay.comet.benson.franticsearch.api.MtgAPI
 import vanderclay.comet.benson.franticsearch.ui.adapters.DeckListAdapter
+import java.util.*
 import java.util.concurrent.Future
+import kotlin.collections.HashMap
 
 /**
  * Created by gclay on 4/14/17.
  */
 
-class Deck(val name: String, deckKey:String? = null) {
+class Deck(val name: String, deckKey: String? = null) {
     private val TAG = "Deck"
 
     private val mDeckDatabase = FirebaseDatabase.getInstance()
@@ -40,11 +42,10 @@ class Deck(val name: String, deckKey:String? = null) {
 
     init {
         // if key is already defined, the deck is already in firebase
-        if(key != null) {
+        if (key != null) {
             deckReference = mDeckDatabase.child(key)
             cardListReference = deckReference.child("cards")
-        }
-        else {
+        } else {
             // else create a new deck and add it to firebase
             deckReference = mDeckDatabase.push()
             key = deckReference.key
@@ -95,17 +96,17 @@ class Deck(val name: String, deckKey:String? = null) {
                     .getReference("Decks")
                     .child(FirebaseAuth.getInstance().currentUser?.uid)
 
-            val valueEventListener = object: ValueEventListener {
+            val valueEventListener = object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError?) {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     doAsync {
-                        for(snapshot: DataSnapshot in dataSnapshot.children) {
+                        for (snapshot: DataSnapshot in dataSnapshot.children) {
                             val deckMap = snapshot.value as Map<String, *>
                             val deck = Deck.loadInstance(deckMap["deckName"] as String, snapshot.key)
-                            if(deckMap.containsKey("cards")) {
+                            if (deckMap.containsKey("cards")) {
                                 (deckMap["cards"] as Map<String, Map<String, String>>).forEach {
                                     val card = Card()
                                     with(it) {
