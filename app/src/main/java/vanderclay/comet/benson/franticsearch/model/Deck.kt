@@ -14,9 +14,6 @@ import java.util.*
 import java.util.concurrent.Future
 import kotlin.collections.HashMap
 
-/**
- * Created by gclay on 4/14/17.
- */
 
 class Deck(val name: String, deckKey: String? = null) {
     private val TAG = "Deck"
@@ -34,11 +31,15 @@ class Deck(val name: String, deckKey: String? = null) {
 
     var cards = mutableListOf<Card>()
 
-    // list of card ids
-    var cardIds = mutableListOf<Long>()
-
     // index of the card that will be used for the cover
     var coverCardIndex = 0
+
+    val coverCardImageUrl: String?
+    get() = if(coverCardIndex < cards.size && coverCardIndex > 0) {
+        cards[coverCardIndex].imageUrl
+    } else {
+        null
+    }
 
     init {
         // if key is already defined, the deck is already in firebase
@@ -72,16 +73,31 @@ class Deck(val name: String, deckKey: String? = null) {
         cards.add(card)
     }
 
+    fun getManaTypes(): MutableSet<String> {
+        val reg = Regex("[\\{\\}]")
+        val manaSymbols = mutableSetOf<String>()
+        cards.forEach {
+            val cardManaSymbols = reg.split(it.manaCost).filter(String::isNotEmpty)
+            cardManaSymbols.map {
+                if(it.toIntOrNull() == null) {
+                    manaSymbols.add(it)
+                }
+            }
+        }
+        return manaSymbols
+    }
+
     fun deleteCard(index: Int): Card {
         return cards.removeAt(index)
     }
 
     fun loadCards() {
-        val apiCards = cardIds.map {
-            CardAPI.getCard(it.toInt())
+        val apiCards = cards.map {
+            CardAPI.getCard(it.multiverseid)
         }
         cards = apiCards.toMutableList()
     }
+
 
     companion object {
         fun loadInstance(name: String, key: String): Deck {

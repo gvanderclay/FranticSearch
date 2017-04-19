@@ -58,7 +58,6 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
         transaction.replace(R.id.flContent, newFragment)
         transaction.addToBackStack(null)
         transaction.commit()
-        Log.d(TAG, "Set ${getSetCode()}:${mBinding.card.set} rarity ${mBinding.card.rarity}")
     }
 
     private fun getSetCode(): String? {

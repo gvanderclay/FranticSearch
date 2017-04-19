@@ -145,7 +145,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         loadCardImage()
 
         if (card?.cmc != null) {
-            cmcText?.text = round(card!!.cmc, Integer(2))
+            cmcText?.text = round(card!!.cmc, 2)
         } else {
             cmcText?.text = "0"
         }
@@ -177,7 +177,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         return rootView
     }
 
-    private fun round(value: Double, places: Integer): String {
+    private fun round(value: Double, places: Int): String {
         var tempValue = value
         val factor: Long = Math.pow(10.0, places.toDouble()).toLong()
         tempValue *= factor
@@ -226,7 +226,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         val user = mAuth?.currentUser
         if (user != null) {
             var buyCardIntent = Intent(Intent.ACTION_VIEW)
-            buyCardIntent.setData(Uri.parse(tcgPlayer + generateCardUri() + productType))
+            buyCardIntent.data = Uri.parse(tcgPlayer + generateCardUri() + productType)
             startActivity(buyCardIntent)
         } else {
 //            showSnackBar("Wait a second for us to sign you in")
