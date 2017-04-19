@@ -9,12 +9,6 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import android.widget.EditText
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
-import io.magicthegathering.javasdk.api.CardAPI
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.doAsyncResult
-import org.jetbrains.anko.uiThread
 
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.model.Deck
