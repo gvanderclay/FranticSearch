@@ -4,4 +4,13 @@
     android:layout_height="match_parent"
     tools:context="vanderclay.comet.benson.franticsearch.ui.fragments.DeckFragment">
 
+    <LinearLayout
+        android:id="@+id/deckManaContainer"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#D3D3D3"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="8dp">
+    </LinearLayout>
 </FrameLayout>

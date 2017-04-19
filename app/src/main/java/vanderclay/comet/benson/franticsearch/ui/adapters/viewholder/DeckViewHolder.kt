@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import com.squareup.picasso.Picasso
 import vanderclay.comet.benson.franticsearch.R
+import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
 import vanderclay.comet.benson.franticsearch.databinding.ItemDeckRowBinding
 import vanderclay.comet.benson.franticsearch.model.Deck
 import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity

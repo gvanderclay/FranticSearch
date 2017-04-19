@@ -64,14 +64,14 @@ class DeckListFragment : Fragment() {
             val alertDialogBuilder = AlertDialog.Builder(activity)
             val input = EditText(activity)
             alertDialogBuilder.setView(input)
-            alertDialogBuilder.setPositiveButton("Add Deck", { dialog, which ->
+            alertDialogBuilder.setPositiveButton("Add Deck", { _, _ ->
                 if(input.text.isEmpty()) return@setPositiveButton
                 val newDeck = Deck(input.text.toString())
                 deckModel.add(newDeck)
                 deckAdapter.notifyDataSetChanged()
                 Log.d(TAG, "Add deck clicked")
             })
-            alertDialogBuilder.setNegativeButton("Cancel", { dialog, which ->
+            alertDialogBuilder.setNegativeButton("Cancel", { _, _ ->
                 Log.d(TAG, "Add deck cancelled")
             })
             alertDialogBuilder.create().show()

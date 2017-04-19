@@ -6,10 +6,15 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
+import io.magicthegathering.javasdk.api.CardAPI
 import kotlinx.android.synthetic.main.toolbar.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 import vanderclay.comet.benson.franticsearch.R
+import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
 import vanderclay.comet.benson.franticsearch.model.Deck
 
 
@@ -20,17 +25,15 @@ class DeckFragment : Fragment() {
 
     var deck: Deck? = null
 
-    var deckName: TextView? = null
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val rootView = inflater!!.inflate(R.layout.fragment_deck, container, false)
 
-        deckName = rootView.findViewById(R.id.deckName) as TextView
         activity.toolbar.title = deck?.name
-
-
+        addManaSymbols(deck?.getManaTypes()!!,
+                rootView.context,
+                (rootView.findViewById(R.id.deckManaContainer) as LinearLayout))
 
         return rootView
     }
