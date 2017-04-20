@@ -1,14 +1,11 @@
 package vanderclay.comet.benson.franticsearch.ui.fragments
 
 
-import android.app.ActionBar
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -19,23 +16,12 @@ import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import io.magicthegathering.javasdk.resource.Card
-import kotlinx.android.synthetic.main.fragment_card.*
 import vanderclay.comet.benson.franticsearch.R
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.toolbar.view.*
 import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
-import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardImageTransform
-import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
-import android.provider.SyncStateContract.Helpers.update
-import android.view.Gravity
-import android.widget.PopupWindow
-import android.databinding.adapters.TextViewBindingAdapter.setText
 import android.widget.TextView
-import com.android.databinding.library.baseAdapters.BR.deck
 import com.google.firebase.database.*
 import vanderclay.comet.benson.franticsearch.model.Deck
-import java.util.*
-import kotlin.collections.HashMap
 
 
 /**
@@ -92,14 +78,15 @@ class CardFragment : Fragment(), View.OnClickListener {
 
     private var manaContainer: LinearLayout? = null
 
-    /*Reference to all of the user's current decks. Used in adding a card to deck button*/
-    private var decks: Deck? = null
-
     //Tcg player link
     private val tcgPlayer = "http://shop.tcgplayer.com/magic/product/show?ProductName="
 
     /*End of the string for tcg player links*/
     private val productType = "newSearch=false&ProductType=All&IsProductNameExact=true"
+
+    private var arrayAdapter: ArrayAdapter<Deck>? = null
+
+    private var decks: MutableList<Deck>? = null
 
     /*Reference to the Log Tag String for debugging*/
     val TAG: String = "CardFragment"
@@ -114,7 +101,6 @@ class CardFragment : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         val rootView = inflater!!.inflate(R.layout.fragment_card, container, false)
         (activity as AppCompatActivity).supportActionBar?.title = card?.name
-        decks = Deck("name")
 
         addButton = rootView.findViewById(R.id.addButton) as ImageButton
         favButton = rootView.findViewById(R.id.favoriteButton) as ImageButton
@@ -132,6 +118,9 @@ class CardFragment : Fragment(), View.OnClickListener {
         cardImage = rootView.findViewById(R.id.specificCardImage) as ImageView
         abilityText = rootView.findViewById(R.id.abilityText) as TextView
         manaContainer = rootView.findViewById(R.id.cardManaContainer) as LinearLayout
+
+        decks = mutableListOf()
+        arrayAdapter = ArrayAdapter(activity, android.R.layout.select_dialog_singlechoice, decks!!)
 
         setText?.text = card?.set
 
@@ -234,12 +223,11 @@ class CardFragment : Fragment(), View.OnClickListener {
     }
 
     private fun addButtonPressed(){
-        var  builderSingle: AlertDialog.Builder  = AlertDialog.Builder(activity)
+        var  builderSingle: AlertDialog.Builder = AlertDialog.Builder(activity)
         builderSingle.setTitle("Choose a Deck to add To")
 
-        var arrayAdapter: ArrayAdapter<String> = ArrayAdapter(activity, android.R.layout.select_dialog_singlechoice)
-        var userSelectedDeckToAddCardTo: HashMap<String, String> = HashMap<String, String>()
-        getAllDecksForCardFragment(arrayAdapter, userSelectedDeckToAddCardTo)
+        decks?.clear()
+        Deck.getAllDecks(decks!!, arrayAdapter)
 
         builderSingle.setNegativeButton("cancel", object: DialogInterface.OnClickListener {
              override fun onClick(dialog: DialogInterface?, which: Int) {
@@ -247,61 +235,11 @@ class CardFragment : Fragment(), View.OnClickListener {
             }
         })
 
-        builderSingle.setAdapter(arrayAdapter, object: DialogInterface.OnClickListener{
-            override fun onClick(dialog: DialogInterface?, which: Int) {
-                val selection = arrayAdapter.getItem(which)
-                val inner: AlertDialog.Builder = AlertDialog.Builder(activity)
-                inner.setMessage(selection)
-                inner.setTitle("You selected: ")
-                addCardToDeck(userSelectedDeckToAddCardTo.get(arrayAdapter.getItem(which))!!,card?.multiverseid.toString() )
-                inner.setPositiveButton("Ok!", object: DialogInterface.OnClickListener{
-                    override fun onClick(dialog2: DialogInterface?, which: Int) {
-
-                        dialog2?.dismiss()
-                    }
-                })
-                inner.show()
-            }
-        })
-        builderSingle.show()
-    }
-
-    fun addCardToDeck(key: String, cardMultiVerseId: String){
-
-        val deckDatabaseRef = FirebaseDatabase
-                .getInstance()
-                .getReference("Decks")
-                .child(FirebaseAuth.getInstance().currentUser?.uid)
-                .child(key).push().setValue(cardMultiVerseId)
-
-    }
-
-    //Gets all the decks in a key value pair manner
-    fun getAllDecksForCardFragment(arrayAdapter: ArrayAdapter<String>, whatDeckToAddTo: HashMap<String, String>){
-
-        val deckDatabaseRef = FirebaseDatabase
-                .getInstance()
-                .getReference("Decks")
-                .child(FirebaseAuth.getInstance().currentUser?.uid)
-        val resultSet = LinkedList<String>()
-
-        val valueEventListener = object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (snapshot: DataSnapshot in dataSnapshot.children) {
-                    val deckKey: String = snapshot.key
-                    val map: HashMap<String, *> = snapshot.value as HashMap<String, *>
-                    if(map.containsKey("deckName")){
-                        whatDeckToAddTo.put( map.get("deckName") as String, deckKey)
-                        arrayAdapter.add(map.get("deckName") as String)
-                    }
-                }
-            }
+        builderSingle.setAdapter(arrayAdapter) { _, which ->
+            val deck = arrayAdapter?.getItem(which)
+            deck?.addCard(card!!)
         }
-        deckDatabaseRef.addListenerForSingleValueEvent(valueEventListener)
+        builderSingle.show()
     }
 
     private fun generateCardUri(): String {

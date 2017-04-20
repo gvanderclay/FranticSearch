@@ -3,19 +3,19 @@ package vanderclay.comet.benson.franticsearch.ui.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TextView
-import io.magicthegathering.javasdk.api.CardAPI
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import kotlinx.android.synthetic.main.toolbar.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
 import vanderclay.comet.benson.franticsearch.model.Deck
+import vanderclay.comet.benson.franticsearch.ui.adapters.DeckCardSection
 
 
 /**
@@ -24,6 +24,7 @@ import vanderclay.comet.benson.franticsearch.model.Deck
 class DeckFragment : Fragment() {
 
     var deck: Deck? = null
+    var sectionAdapter = SectionedRecyclerViewAdapter()
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -34,6 +35,15 @@ class DeckFragment : Fragment() {
         addManaSymbols(deck?.getManaTypes()!!,
                 rootView.context,
                 (rootView.findViewById(R.id.deckManaContainer) as LinearLayout))
+
+        val deckCardSection = DeckCardSection("Test", deck)
+
+        sectionAdapter.addSection(deckCardSection)
+
+        val recyclerView = rootView.findViewById(R.id.cardDeckRecyclerView) as RecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = sectionAdapter
+
 
         return rootView
     }

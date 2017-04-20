@@ -39,12 +39,13 @@ class DeckListAdapter(decks: MutableList<Deck>): RecyclerView.Adapter<DeckViewHo
                         .child(FirebaseAuth.getInstance().currentUser?.uid)
                         .child(deck.key)
                         .removeValue()
+                Log.d(TAG, "Removing deck ${deck.name}")
 
                 notifyItemRemoved(position)
                 notifyItemRangeChanged(position, mDecks.size)
             })
             alertDialogBuilder.setNegativeButton("No", { _, _ ->
-                Log.d(TAG, "Add deck cancelled")
+                Log.d(TAG, "Remove deck cancelled")
             })
             alertDialogBuilder.create().show()
             true
