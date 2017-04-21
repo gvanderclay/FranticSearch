@@ -1,12 +1,9 @@
 package vanderclay.comet.benson.franticsearch.model
 
-import android.renderscript.Sampler
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.BaseAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import io.magicthegathering.javasdk.api.CardAPI
 import io.magicthegathering.javasdk.resource.Card
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -105,7 +102,7 @@ class Deck(val name: String, deckKey: String? = null) {
             }
             val cardManaSymbols = reg.split(it.manaCost).filter(String::isNotEmpty)
             cardManaSymbols.map {
-                if(it.toIntOrNull() == null || it.equals("X")) {
+                if(it.toIntOrNull() == null && !it.equals("X")) {
                     manaSymbols.add(it)
                 }
             }
@@ -124,9 +121,9 @@ class Deck(val name: String, deckKey: String? = null) {
             if(!cardsByType[type]?.containsKey(it)!!) {
                 cardsByType[type]?.set(it, 0L)
             }
-            val cardCount = cardsByType[type]?.get(it)
+            val cardCount = cards[it]
             if (cardCount != null) {
-                cardsByType[type]?.set(it, cardCount.plus(1))!!
+                cardsByType[type]?.set(it, cardCount)!!
             }
         }
         return cardsByType
