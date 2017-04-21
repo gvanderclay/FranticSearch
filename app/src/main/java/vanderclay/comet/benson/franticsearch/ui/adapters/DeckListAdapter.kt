@@ -30,7 +30,7 @@ class DeckListAdapter(decks: MutableList<Deck>): RecyclerView.Adapter<DeckViewHo
         holder?.itemView?.setOnLongClickListener {
             val alertDialogBuilder = AlertDialog.Builder(holder.itemView?.context!!)
             alertDialogBuilder.setMessage("Delete Deck ${deck.name}?")
-            alertDialogBuilder.setPositiveButton("Yes", { dialog, which ->
+            alertDialogBuilder.setPositiveButton("Yes", { _, _ ->
                 val deck = mDecks.removeAt(position)
 
                 FirebaseDatabase
@@ -39,12 +39,13 @@ class DeckListAdapter(decks: MutableList<Deck>): RecyclerView.Adapter<DeckViewHo
                         .child(FirebaseAuth.getInstance().currentUser?.uid)
                         .child(deck.key)
                         .removeValue()
+                Log.d(TAG, "Removing deck ${deck.name}")
 
                 notifyItemRemoved(position)
                 notifyItemRangeChanged(position, mDecks.size)
             })
-            alertDialogBuilder.setNegativeButton("No", { dialog, which ->
-                Log.d(TAG, "Add deck cancelled")
+            alertDialogBuilder.setNegativeButton("No", { _, _ ->
+                Log.d(TAG, "Remove deck cancelled")
             })
             alertDialogBuilder.create().show()
             true

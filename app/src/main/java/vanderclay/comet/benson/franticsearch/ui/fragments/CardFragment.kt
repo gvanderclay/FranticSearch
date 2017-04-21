@@ -1,10 +1,11 @@
 package vanderclay.comet.benson.franticsearch.ui.fragments
 
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -15,15 +16,13 @@ import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import io.magicthegathering.javasdk.resource.Card
-import kotlinx.android.synthetic.main.fragment_card.*
 import vanderclay.comet.benson.franticsearch.R
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.toolbar.view.*
 import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
-import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardImageTransform
-import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
+import android.widget.TextView
+import com.google.firebase.database.*
+import vanderclay.comet.benson.franticsearch.model.Deck
+
 
 /**
  * A simple [Fragment] subclass.
@@ -85,6 +84,10 @@ class CardFragment : Fragment(), View.OnClickListener {
     /*End of the string for tcg player links*/
     private val productType = "newSearch=false&ProductType=All&IsProductNameExact=true"
 
+    private var arrayAdapter: ArrayAdapter<Deck>? = null
+
+    private var decks: MutableList<Deck>? = null
+
     /*Reference to the Log Tag String for debugging*/
     val TAG: String = "CardFragment"
 
@@ -116,6 +119,9 @@ class CardFragment : Fragment(), View.OnClickListener {
         abilityText = rootView.findViewById(R.id.abilityText) as TextView
         manaContainer = rootView.findViewById(R.id.cardManaContainer) as LinearLayout
 
+        decks = mutableListOf()
+        arrayAdapter = ArrayAdapter(activity, android.R.layout.select_dialog_singlechoice, decks!!)
+
         setText?.text = card?.set
 
         if (card?.number != null) {
@@ -128,7 +134,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         loadCardImage()
 
         if (card?.cmc != null) {
-            cmcText?.text = round(card!!.cmc, Integer(2))
+            cmcText?.text = round(card!!.cmc, 2)
         } else {
             cmcText?.text = "0"
         }
@@ -160,7 +166,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         return rootView
     }
 
-    private fun round(value: Double, places: Integer): String {
+    private fun round(value: Double, places: Int): String {
         var tempValue = value
         val factor: Long = Math.pow(10.0, places.toDouble()).toLong()
         tempValue *= factor
@@ -196,6 +202,7 @@ class CardFragment : Fragment(), View.OnClickListener {
     override fun onClick(view: View?) {
         val i = view?.id
         if (i == R.id.addButton) {
+            addButtonPressed()
             Log.d(TAG, " Add Button Pressed... ")
         } else if (i == R.id.favoriteButton) {
             Log.d(TAG, " favorite Button Pressed ")
@@ -208,11 +215,31 @@ class CardFragment : Fragment(), View.OnClickListener {
         val user = mAuth?.currentUser
         if (user != null) {
             var buyCardIntent = Intent(Intent.ACTION_VIEW)
-            buyCardIntent.setData(Uri.parse(tcgPlayer + generateCardUri() + productType))
+            buyCardIntent.data = Uri.parse(tcgPlayer + generateCardUri() + productType)
             startActivity(buyCardIntent)
         } else {
-            showSnackBar("Wait a second for us to sign you in")
+//            showSnackBar("Wait a second for us to sign you in")
         }
+    }
+
+    private fun addButtonPressed(){
+        var  builderSingle: AlertDialog.Builder = AlertDialog.Builder(activity)
+        builderSingle.setTitle("Choose a Deck to add To")
+
+        decks?.clear()
+        Deck.getAllDecks(decks!!, arrayAdapter)
+
+        builderSingle.setNegativeButton("cancel", object: DialogInterface.OnClickListener {
+             override fun onClick(dialog: DialogInterface?, which: Int) {
+               dialog?.dismiss()
+            }
+        })
+
+        builderSingle.setAdapter(arrayAdapter) { _, which ->
+            val deck = arrayAdapter?.getItem(which)
+            deck?.addCard(card!!)
+        }
+        builderSingle.show()
     }
 
     private fun generateCardUri(): String {
@@ -223,14 +250,6 @@ class CardFragment : Fragment(), View.OnClickListener {
         return resultString!!
     }
 
-    private fun showSnackBar(message: String) {
-//        @+id/CardFragmen
-// Dunno why I had to add an extra line in this version of the snackbar ???
-//        val snackbar = Snackbar.make(CardFragment.rootView.findViewById(R.id.CardFragment),
-//                message,
-//                Snackbar.LENGTH_LONG)
-//        snackbar.show()
-    }
 
     companion object {
         fun newInstance(card: Card): CardFragment {
@@ -238,5 +257,6 @@ class CardFragment : Fragment(), View.OnClickListener {
             fragment.card = card
             return fragment
         }
+
     }
 }

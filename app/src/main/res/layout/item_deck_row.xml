@@ -1,24 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="deck"
             type="vanderclay.comet.benson.franticsearch.model.Deck"/>
     </data>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:clickable="true">
 
-            <TextView
-                android:id="@+id/cardText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@{deck.name}"
-                />
+        <ImageView
+            android:id="@+id/cardImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/no_card"
+            android:contentDescription="@string/deck_cover_card" />
+
+        <TextView
+            android:id="@+id/deckText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/cardImage"
+            android:padding="8dp"
+            android:text="@{deck.name}"
+            />
+
+
     </RelativeLayout>
+
 
 </layout>
