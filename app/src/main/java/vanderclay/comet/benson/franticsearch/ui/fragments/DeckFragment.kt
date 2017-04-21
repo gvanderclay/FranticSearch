@@ -35,10 +35,12 @@ class DeckFragment : Fragment() {
         addManaSymbols(deck?.getManaTypes()!!,
                 rootView.context,
                 (rootView.findViewById(R.id.deckManaContainer) as LinearLayout))
+        
 
-        val deckCardSection = DeckCardSection("Test", deck)
-
-        sectionAdapter.addSection(deckCardSection)
+        deck?.sortByType()?.forEach {
+            val deckCardSection = DeckCardSection(it.key, it.value)
+            sectionAdapter.addSection(deckCardSection)
+        }
 
         val recyclerView = rootView.findViewById(R.id.cardDeckRecyclerView) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)

@@ -77,6 +77,7 @@ class Deck(val name: String, deckKey: String? = null) {
                             child("mana").setValue(manaCost)
                             child("name").setValue(name)
                             child("type").setValue(type)
+                            child("types").setValue(types.joinToString(separator = " "))
                             child("set").setValue(set)
                             child("rarity").setValue(rarity)
                             child("imageUrl").setValue(imageUrl)
@@ -104,12 +105,31 @@ class Deck(val name: String, deckKey: String? = null) {
             }
             val cardManaSymbols = reg.split(it.manaCost).filter(String::isNotEmpty)
             cardManaSymbols.map {
-                if(it.toIntOrNull() == null) {
+                if(it.toIntOrNull() == null || it.equals("X")) {
                     manaSymbols.add(it)
                 }
             }
         }
         return manaSymbols
+    }
+
+    fun sortByType(): Map<String, Map<Card, Long>> {
+        val cardsByType = mutableMapOf<String, MutableMap<Card, Long>>()
+
+        cards.keys.forEach {
+            val type = it.types.joinToString(separator = " ")
+            if(!cardsByType.containsKey(type)) {
+                cardsByType[type] = mutableMapOf<Card, Long>()
+            }
+            if(!cardsByType[type]?.containsKey(it)!!) {
+                cardsByType[type]?.set(it, 0L)
+            }
+            val cardCount = cardsByType[type]?.get(it)
+            if (cardCount != null) {
+                cardsByType[type]?.set(it, cardCount.plus(1))!!
+            }
+        }
+        return cardsByType
     }
 
     fun deleteCard(card: Card, firebase: Boolean=true): Card? {
@@ -147,6 +167,7 @@ class Deck(val name: String, deckKey: String? = null) {
     }
 
     companion object {
+
         fun loadInstance(name: String, key: String): Deck {
             val deck = Deck(name, key)
             return deck
@@ -179,11 +200,12 @@ class Deck(val name: String, deckKey: String? = null) {
                                         card.manaCost = value["mana"] as String?
                                         card.name = value["name"] as String?
                                         card.type = value["type"] as String?
+                                        card.types = (value["types"] as String?)?.split(' ')?.toTypedArray()
                                         card.set = value["set"] as String?
                                         card.rarity = value["rarity"] as String?
                                         card.imageUrl = value["imageUrl"] as String?
                                     }
-                                    for(i in 0..(it.value["count"] as Long)) {
+                                    for(i in 1..(it.value["count"] as Long)) {
                                         deck.addCard(card, false)
                                     }
                                 }
