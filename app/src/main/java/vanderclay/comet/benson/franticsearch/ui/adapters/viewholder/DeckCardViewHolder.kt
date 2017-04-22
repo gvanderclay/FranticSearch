@@ -13,9 +13,6 @@ import vanderclay.comet.benson.franticsearch.R
  */
 
 class DeckCardViewHolder(cardDeckRow: View): ViewHolder(cardDeckRow) {
-
     val cardText: TextView = cardDeckRow.findViewById(R.id.deckCardText) as TextView
     val cardCountText: TextView = cardDeckRow.findViewById(R.id.cardCount) as TextView
-
-
 }

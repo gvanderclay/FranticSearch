@@ -14,6 +14,7 @@ import vanderclay.comet.benson.franticsearch.ui.fragments.CardSearchFragment
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.commons.SetCache
 import vanderclay.comet.benson.franticsearch.ui.fragments.DeckListFragment
+import vanderclay.comet.benson.franticsearch.ui.fragments.FavoriteFragment
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -58,6 +59,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.decks -> {
                 DeckListFragment.newInstance()
+            }
+            R.id.favorites -> {
+                FavoriteFragment.newInstance()
             }
             else -> CardSearchFragment.newInstance()
         }

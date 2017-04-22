@@ -11,6 +11,10 @@
         android:icon="@drawable/ic_search_black_24dp"
         android:title="@string/card_search" />
     <item
+        android:id="@+id/favorites"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="Favorites"/>
+    <item
         android:id="@+id/card_scan"
         android:icon="@drawable/ic_menu_camera"
         android:title="Card Scan" />
@@ -18,6 +22,7 @@
         android:id="@+id/settings_item"
         android:icon="@drawable/ic_settings_black_24dp"
         android:title="Settings" />
+
 </group>
 
 

@@ -239,6 +239,7 @@ class CardFragment : Fragment(), View.OnClickListener {
             val deck = arrayAdapter?.getItem(which)
             deck?.addCard(card!!)
         }
+
         builderSingle.show()
     }
 
