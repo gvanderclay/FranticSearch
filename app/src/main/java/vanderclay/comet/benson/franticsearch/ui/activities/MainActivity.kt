@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.toolbar.*
 import vanderclay.comet.benson.franticsearch.ui.fragments.CardSearchFragment
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.commons.SetCache
+import vanderclay.comet.benson.franticsearch.ui.fragments.CardScanFragment
 import vanderclay.comet.benson.franticsearch.ui.fragments.DeckListFragment
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -58,6 +59,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.decks -> {
                 DeckListFragment.newInstance()
+            }
+            R.id.card_scan -> {
+                CardScanFragment.newInstance()
             }
             else -> CardSearchFragment.newInstance()
         }
