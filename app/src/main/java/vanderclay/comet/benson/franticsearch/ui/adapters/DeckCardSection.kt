@@ -5,7 +5,6 @@ import android.view.View
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.R
-import vanderclay.comet.benson.franticsearch.model.Deck
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.DeckCardHeaderViewHolder
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.DeckCardViewHolder
 

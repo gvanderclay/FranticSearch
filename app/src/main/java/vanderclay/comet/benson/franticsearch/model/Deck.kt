@@ -1,12 +1,9 @@
 package vanderclay.comet.benson.franticsearch.model
 
-import android.renderscript.Sampler
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.BaseAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import io.magicthegathering.javasdk.api.CardAPI
 import io.magicthegathering.javasdk.resource.Card
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread

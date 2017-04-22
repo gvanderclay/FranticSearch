@@ -15,12 +15,12 @@ import android.view.ViewGroup
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.squareup.picasso.Picasso
 import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.R
-import com.squareup.picasso.Picasso
 import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
-import android.widget.TextView
-import com.google.firebase.database.*
 import vanderclay.comet.benson.franticsearch.model.Deck
 
 
