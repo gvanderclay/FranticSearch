@@ -22,7 +22,7 @@ import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
 import vanderclay.comet.benson.franticsearch.model.Deck
-
+import vanderclay.comet.benson.franticsearch.model.Favorite
 
 /**
  * A simple [Fragment] subclass.
@@ -78,6 +78,9 @@ class CardFragment : Fragment(), View.OnClickListener {
 
     private var manaContainer: LinearLayout? = null
 
+    /**/
+    private var favorites: Favorite? = null
+
     //Tcg player link
     private val tcgPlayer = "http://shop.tcgplayer.com/magic/product/show?ProductName="
 
@@ -121,6 +124,8 @@ class CardFragment : Fragment(), View.OnClickListener {
 
         decks = mutableListOf()
         arrayAdapter = ArrayAdapter(activity, android.R.layout.select_dialog_singlechoice, decks!!)
+
+        favorites = Favorite()
 
         setText?.text = card?.set
 
@@ -205,7 +210,10 @@ class CardFragment : Fragment(), View.OnClickListener {
             addButtonPressed()
             Log.d(TAG, " Add Button Pressed... ")
         } else if (i == R.id.favoriteButton) {
+            favorites?.addFavorite(card!!, true)
+            Favorite.getAllFavorites()
             Log.d(TAG, " favorite Button Pressed ")
+
         } else if (i == R.id.cartButton) {
             cartButtonPressed()
         }

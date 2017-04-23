@@ -31,10 +31,15 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
     private val TAG = "CardSearchFragment"
 
     private var cardModel = mutableListOf<Card>()
+
     private var cardAdapter = CardListAdapter(cardModel)
+
     private var scrollListener: EndlessRecyclerViewScrollListener? = null
+
     private var cardFilter: String? = ""
+
     private val handler = Handler()
+
     private var cardList: RecyclerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
