@@ -42,32 +42,36 @@ class FavoriteListAdapter(val cards: MutableList<Card>): RecyclerView.Adapter<Ca
                         .getInstance()
                         .getReference("Favorites")
                         .child(FirebaseAuth.getInstance().currentUser?.uid)
-                        .orderByChild("name")
-                        .equalTo(card.name)
+                        .child(card.id)
+                        .removeValue()
+                val cardRemoved = cards.removeAt(position)
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(position, cards.size)
+                notifyDataSetChanged()
 
-                val valueEventListener = object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        for (postSnapshot in dataSnapshot.children) {
-                            FirebaseDatabase
-                                    .getInstance()
-                                    .getReference("Favorites")
-                                    .child(FirebaseAuth.getInstance().currentUser?.uid)
-                                    .child(postSnapshot.key)
-                                    .removeValue()
-                            val cardRemoved = cards.removeAt(position)
-                            Log.d(TAG, cardRemoved.toString())
-                            notifyItemRemoved(position)
-                            notifyItemRangeChanged(position, cards.size)
-                            notifyDataSetChanged()
-                        }
-
-                    }
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        Log.d(TAG, databaseError.toString())
-                    }
-                }
-
-                favoriteCardReference.addValueEventListener(valueEventListener)
+//                val valueEventListener = object : ValueEventListener {
+//                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                        for (postSnapshot in dataSnapshot.children) {
+//                            FirebaseDatabase
+//                                    .getInstance()
+//                                    .getReference("Favorites")
+//                                    .child(FirebaseAuth.getInstance().currentUser?.uid)
+//                                    .child(postSnapshot.key)
+//                                    .removeValue()
+//                            val cardRemoved = cards.removeAt(position)
+//                            Log.d(TAG, cardRemoved.toString())
+//                            notifyItemRemoved(position)
+//                            notifyItemRangeChanged(position, cards.size)
+//                            notifyDataSetChanged()
+//                        }
+//
+//                    }
+//                    override fun onCancelled(databaseError: DatabaseError) {
+//                        Log.d(TAG, databaseError.toString())
+//                    }
+//                }
+//
+//                favoriteCardReference.addValueEventListener(valueEventListener)
             })
             alertDialogBuilder.setNegativeButton("No", { _, _ ->
                 Log.d(TAG, "Remove deck cancelled")

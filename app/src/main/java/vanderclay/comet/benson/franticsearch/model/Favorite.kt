@@ -29,7 +29,7 @@ class Favorite {
 
     fun addFavorite(card: Card, firebase: Boolean = true) {
         if (firebase) {
-            mFavoriteDatabase.push().setValue(CardDO(card).toMap())
+            mFavoriteDatabase.child(card.id).setValue(CardDO(card).toMap())
         }
     }
 
