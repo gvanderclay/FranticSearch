@@ -54,6 +54,8 @@ class FavoriteListAdapter(val cards: MutableList<Card>): RecyclerView.Adapter<Ca
                                     .child(FirebaseAuth.getInstance().currentUser?.uid)
                                     .child(postSnapshot.key)
                                     .removeValue()
+                            val cardRemoved = cards.removeAt(position)
+                            Log.d(TAG, cardRemoved.toString())
                             notifyItemRemoved(position)
                             notifyItemRangeChanged(position, cards.size)
                             notifyDataSetChanged()
