@@ -147,12 +147,5 @@ class Favorite {
 
             favoritesDatabaseRef.addListenerForSingleValueEvent(valueEventListener)
         }
-
-//        fu
-//n getAllFavorites(decks: MutableList<Deck>, favoriteListAdapter: CardListAdapter?) {
-//            getAllFavorites(decks, {
-//                favoriteListAdapter?.notifyDataSetChanged()
-//            })
-//        }
     }
 }

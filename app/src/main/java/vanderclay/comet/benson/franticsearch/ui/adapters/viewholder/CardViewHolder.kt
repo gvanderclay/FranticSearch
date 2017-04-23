@@ -17,12 +17,12 @@ import vanderclay.comet.benson.franticsearch.ui.fragments.CardFragment
  * Created by gclay on 4/5/17.
  */
 
-class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(binding.root),
+        View.OnClickListener {
+
     private val mBinding: ItemCardRowBinding = binding
 
     private val TAG = "CardViewHolder"
-
-
 
     // Bind a card to the ItemCardRow
     fun bind(card: Card) {

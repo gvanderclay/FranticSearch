@@ -3,22 +3,13 @@ package vanderclay.comet.benson.franticsearch.ui.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
-import android.support.v4.view.MenuItemCompat
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.*
-import android.widget.SearchView
 import io.magicthegathering.javasdk.resource.Card
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import vanderclay.comet.benson.franticsearch.R
-import vanderclay.comet.benson.franticsearch.api.MtgAPI
 import vanderclay.comet.benson.franticsearch.model.Favorite
-import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
-import vanderclay.comet.benson.franticsearch.ui.adapters.CardListAdapter
-import vanderclay.comet.benson.franticsearch.ui.adapters.DeckListAdapter
+import vanderclay.comet.benson.franticsearch.ui.adapters.FavoriteListAdapter
 import vanderclay.comet.benson.franticsearch.ui.adapters.listeners.EndlessRecyclerViewScrollListener
 
 /**
@@ -29,7 +20,7 @@ import vanderclay.comet.benson.franticsearch.ui.adapters.listeners.EndlessRecycl
  * Use the [CardSearchFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FavoriteFragment : Fragment(), SearchView.OnQueryTextListener {
+class FavoriteFragment : Fragment(){
 
     /*Reference to the Card Favorite Fragment*/
     private val TAG = "CardFavoriteFragment"
@@ -38,7 +29,7 @@ class FavoriteFragment : Fragment(), SearchView.OnQueryTextListener {
     private var cardModel = mutableListOf<Card>()
 
     /*The adapter for the recycler view*/
-    private var cardAdapter = CardListAdapter(cardModel)
+    private var cardAdapter = FavoriteListAdapter(cardModel)
 
     /*Listener for the users endless scrolling*/
     private var scrollListener: EndlessRecyclerViewScrollListener? = null
@@ -61,14 +52,6 @@ class FavoriteFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        menu?.clear()
-        inflater?.inflate(R.menu.search_menu, menu)
-
-        /*References to the menu for searching for specific cards.*/
-        val item = menu?.findItem(R.id.action_search)
-        val searchView = SearchView((context as MainActivity).supportActionBar?.themedContext)
-        MenuItemCompat.setActionView(item, searchView)
-        searchView.setOnQueryTextListener(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -90,30 +73,9 @@ class FavoriteFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onResume()
     }
 
-    override fun onQueryTextChange(newText: String?): Boolean {
-        cardFilter = newText
-        handler.removeCallbacksAndMessages(null)
-        handler.postDelayed({
-            cardAdapter.notifyDataSetChanged()
-            loadNextDataFromApi(1)
-            cardModel.clear()
-            scrollListener?.resetState()
-
-            cardList?.scrollToPosition(0)
-        }, 500)
-
-        return true
-    }
-
-
     private fun loadNextDataFromApi(page: Int) {
         Favorite.getAllFavorites(cardModel, cardAdapter)
         cardAdapter.notifyDataSetChanged()
-    }
-
-
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        return false
     }
 
     companion object {
