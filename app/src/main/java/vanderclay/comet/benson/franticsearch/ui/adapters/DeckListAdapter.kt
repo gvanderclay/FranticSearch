@@ -7,8 +7,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.squareup.picasso.Picasso
+import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.databinding.ItemDeckRowBinding
 import vanderclay.comet.benson.franticsearch.model.Deck
+import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardImageTransform
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.DeckViewHolder
 
 
@@ -50,7 +53,6 @@ class DeckListAdapter(decks: MutableList<Deck>): RecyclerView.Adapter<DeckViewHo
             alertDialogBuilder.create().show()
             true
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): DeckViewHolder {

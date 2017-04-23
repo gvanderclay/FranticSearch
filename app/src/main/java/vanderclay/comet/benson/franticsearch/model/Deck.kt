@@ -1,12 +1,9 @@
 package vanderclay.comet.benson.franticsearch.model
 
-import android.renderscript.Sampler
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.BaseAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import io.magicthegathering.javasdk.api.CardAPI
 import io.magicthegathering.javasdk.resource.Card
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -33,7 +30,7 @@ class Deck(val name: String, deckKey: String? = null) {
     var coverCardIndex = 0
 
     val coverCardImageUrl: String?
-        get() = if(coverCardIndex < cards.size && coverCardIndex > 0) {
+        get() = if(coverCardIndex < cards.size && coverCardIndex >= 0) {
             cards.keys.toList()[coverCardIndex].imageUrl
         } else {
             null
@@ -55,7 +52,7 @@ class Deck(val name: String, deckKey: String? = null) {
         Log.d(TAG, "Deck created")
     }
 
-    fun addCard(card: Card, firebase: Boolean=true) {
+    fun addCard(card: Card, amount: Long=1, firebase: Boolean=true) {
         if(firebase) {
 
             val cardReference = cardListReference.child(card.id)
@@ -81,7 +78,7 @@ class Deck(val name: String, deckKey: String? = null) {
                             child("set").setValue(set)
                             child("rarity").setValue(rarity)
                             child("imageUrl").setValue(imageUrl)
-                            child("count").setValue(1)
+                            child("count").setValue(amount)
                         }
                     }
                 }
@@ -89,9 +86,9 @@ class Deck(val name: String, deckKey: String? = null) {
             })
         }
         if(cards.containsKey(card)){
-            cards[card] = cards[card]!! + 1
+            cards[card] = cards[card]!! + amount
         } else {
-            cards[card] = 1
+            cards[card] = amount
         }
         Log.d(TAG, "${card.name} Added to deck $name")
     }
@@ -105,7 +102,7 @@ class Deck(val name: String, deckKey: String? = null) {
             }
             val cardManaSymbols = reg.split(it.manaCost).filter(String::isNotEmpty)
             cardManaSymbols.map {
-                if(it.toIntOrNull() == null || it.equals("X")) {
+                if(it.toIntOrNull() == null && !it.equals("X")) {
                     manaSymbols.add(it)
                 }
             }
@@ -124,25 +121,24 @@ class Deck(val name: String, deckKey: String? = null) {
             if(!cardsByType[type]?.containsKey(it)!!) {
                 cardsByType[type]?.set(it, 0L)
             }
-            val cardCount = cardsByType[type]?.get(it)
+            val cardCount = cards[it]
             if (cardCount != null) {
-                cardsByType[type]?.set(it, cardCount.plus(1))!!
+                cardsByType[type]?.set(it, cardCount)!!
             }
         }
         return cardsByType
     }
 
-    fun deleteCard(card: Card, firebase: Boolean=true): Card? {
+    fun deleteCard(card: Card, amount: Long=1): Card? {
 
-        if(firebase) {
-
-        }
         if(cards.containsKey(card)) {
-            if(cards[card] == 1L){
+            if(cards[card]!! <= amount){
                 cards.remove(card)
+                cardListReference.child(card.id).removeValue()
             }
             else {
-                cards[card] = cards[card]!! - 1
+                cards[card] = cards[card]!! - amount
+                cardListReference.child(card.id).child("count").setValue(cards[card])
             }
             return card
         }
@@ -205,9 +201,7 @@ class Deck(val name: String, deckKey: String? = null) {
                                         card.rarity = value["rarity"] as String?
                                         card.imageUrl = value["imageUrl"] as String?
                                     }
-                                    for(i in 1..(it.value["count"] as Long)) {
-                                        deck.addCard(card, false)
-                                    }
+                                    deck.addCard(card, it.value["count"] as Long, false)
                                 }
                             }
                             decks.add(deck)
