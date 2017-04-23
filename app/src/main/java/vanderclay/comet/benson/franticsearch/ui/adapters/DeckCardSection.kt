@@ -2,10 +2,13 @@ package vanderclay.comet.benson.franticsearch.ui.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.ImageView
+import com.squareup.picasso.Picasso
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.model.Deck
+import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardImageTransform
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.DeckCardHeaderViewHolder
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.DeckCardViewHolder
 
@@ -22,7 +25,12 @@ class DeckCardSection(val title: String, val cards: Map<Card, Long>?): Stateless
 
         deckCardView.cardText.text = card.name
         deckCardView.cardCountText.text = cards[card].toString()
-
+        Picasso.with(deckCardView.itemView.context)
+                .load(card.imageUrl)
+                .transform(CardImageTransform())
+                .placeholder(R.drawable.no_card)
+                .into(deckCardView.cardImage)
+        deckCardView.cardImage.scaleType = ImageView.ScaleType.FIT_XY
     }
 
     override fun getItemViewHolder(view: View?): RecyclerView.ViewHolder {

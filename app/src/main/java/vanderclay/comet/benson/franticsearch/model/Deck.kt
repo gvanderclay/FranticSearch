@@ -30,7 +30,7 @@ class Deck(val name: String, deckKey: String? = null) {
     var coverCardIndex = 0
 
     val coverCardImageUrl: String?
-        get() = if(coverCardIndex < cards.size && coverCardIndex > 0) {
+        get() = if(coverCardIndex < cards.size && coverCardIndex >= 0) {
             cards.keys.toList()[coverCardIndex].imageUrl
         } else {
             null
