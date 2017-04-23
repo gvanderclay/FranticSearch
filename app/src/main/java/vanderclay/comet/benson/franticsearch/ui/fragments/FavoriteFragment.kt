@@ -15,8 +15,10 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.api.MtgAPI
+import vanderclay.comet.benson.franticsearch.model.Favorite
 import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
 import vanderclay.comet.benson.franticsearch.ui.adapters.CardListAdapter
+import vanderclay.comet.benson.franticsearch.ui.adapters.DeckListAdapter
 import vanderclay.comet.benson.franticsearch.ui.adapters.listeners.EndlessRecyclerViewScrollListener
 
 /**
@@ -54,7 +56,7 @@ class FavoriteFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         /*TODO implment getting the first List of card from the favorites list*/
-//        loadNextDataFromApi(1)
+        loadNextDataFromApi(1)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -76,17 +78,16 @@ class FavoriteFragment : Fragment(), SearchView.OnQueryTextListener {
 
         cardList = rootView.findViewById(R.id.cardFavoriteList) as RecyclerView
         val layoutManager = LinearLayoutManager(activity.applicationContext)
-        cardList?.layoutManager = layoutManager
 
-        scrollListener = object: EndlessRecyclerViewScrollListener(layoutManager) {
-            override fun onLoadMore(currentPage: Int): Boolean {
-                //TODO get the next current data from the page.
-//                loadNextDataFromApi(currentPage)
-                return true
-            }
-        }
+//        scrollListener = object: EndlessRecyclerViewScrollListener(layoutManager) {
+//            override fun onLoadMore(currentPage: Int): Boolean {
+//                //TODO get the next current data from the page.
+////                loadNextDataFromApi(currentPage)
+//                return true
+//            }
+//        }
 
-        cardList?.addOnScrollListener(scrollListener)
+//        cardList?.addOnScrollListener(scrollListener)
         cardList?.setHasFixedSize(true)
         cardList?.adapter = cardAdapter
         return rootView
@@ -94,11 +95,10 @@ class FavoriteFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onResume() {
         super.onResume()
-        (activity as AppCompatActivity).supportActionBar?.title = activity.getString(R.string.card_search)
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        cardFilter =  newText
+        cardFilter = newText
         handler.removeCallbacksAndMessages(null)
         handler.postDelayed({
             cardAdapter.notifyDataSetChanged()
@@ -114,14 +114,7 @@ class FavoriteFragment : Fragment(), SearchView.OnQueryTextListener {
 
 
     private fun loadNextDataFromApi(page: Int) {
-        doAsync {
-            val cards = MtgAPI.getCards(page, "name=$cardFilter", "orderBy=name")
-            uiThread {
-                cardModel.addAll(cards)
-                Log.d(TAG, "Elements in array after search change ${cardModel.size}")
-                cardAdapter.notifyDataSetChanged()
-            }
-        }
+        Favorite.getAllFavorites(cardModel, cardAdapter)
     }
 
 
@@ -130,13 +123,6 @@ class FavoriteFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-
-         * @return A new instance of fragment FavoriteCardFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         fun newInstance(): FavoriteFragment {
             val fragment = FavoriteFragment()
 //            val args = Bundle()

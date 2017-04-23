@@ -72,7 +72,6 @@ class DeckListFragment : Fragment() {
             true
 
         }
-
     }
 
     private fun loadCards() {

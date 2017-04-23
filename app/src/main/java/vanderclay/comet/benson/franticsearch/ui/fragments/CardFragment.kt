@@ -211,7 +211,6 @@ class CardFragment : Fragment(), View.OnClickListener {
             Log.d(TAG, " Add Button Pressed... ")
         } else if (i == R.id.favoriteButton) {
             favorites?.addFavorite(card!!, true)
-            Favorite.getAllFavorites()
             Log.d(TAG, " favorite Button Pressed ")
 
         } else if (i == R.id.cartButton) {
