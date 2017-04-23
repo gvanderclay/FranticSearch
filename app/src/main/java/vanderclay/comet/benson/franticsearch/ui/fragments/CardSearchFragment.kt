@@ -72,6 +72,7 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
                 return true
             }
         }
+
         cardList?.addOnScrollListener(scrollListener)
         cardList?.setHasFixedSize(true)
         cardList?.adapter = cardAdapter

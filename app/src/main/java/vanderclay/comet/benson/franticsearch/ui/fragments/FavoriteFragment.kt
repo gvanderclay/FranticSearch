@@ -73,24 +73,17 @@ class FavoriteFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
         val rootView = inflater!!.inflate(R.layout.fragment_favorite_cards, container, false)
         rootView.tag = TAG
-
         cardList = rootView.findViewById(R.id.cardFavoriteList) as RecyclerView
+
         val layoutManager = LinearLayoutManager(activity.applicationContext)
-
-//        scrollListener = object: EndlessRecyclerViewScrollListener(layoutManager) {
-//            override fun onLoadMore(currentPage: Int): Boolean {
-//                //TODO get the next current data from the page.
-////                loadNextDataFromApi(currentPage)
-//                return true
-//            }
-//        }
-
-//        cardList?.addOnScrollListener(scrollListener)
+        cardList?.layoutManager = layoutManager
         cardList?.setHasFixedSize(true)
         cardList?.adapter = cardAdapter
         return rootView
+
     }
 
     override fun onResume() {
@@ -115,6 +108,7 @@ class FavoriteFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun loadNextDataFromApi(page: Int) {
         Favorite.getAllFavorites(cardModel, cardAdapter)
+        cardAdapter.notifyDataSetChanged()
     }
 
 
