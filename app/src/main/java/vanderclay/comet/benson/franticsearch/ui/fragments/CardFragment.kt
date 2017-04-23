@@ -4,10 +4,12 @@ package vanderclay.comet.benson.franticsearch.ui.fragments
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -229,15 +231,27 @@ class CardFragment : Fragment(), View.OnClickListener {
         decks?.clear()
         Deck.getAllDecks(decks!!, arrayAdapter)
 
-        builderSingle.setNegativeButton("cancel", object: DialogInterface.OnClickListener {
-             override fun onClick(dialog: DialogInterface?, which: Int) {
-               dialog?.dismiss()
-            }
-        })
-
-        builderSingle.setAdapter(arrayAdapter) { _, which ->
+        builderSingle.setAdapter(arrayAdapter) { dialog, which ->
             val deck = arrayAdapter?.getItem(which)
-            deck?.addCard(card!!)
+            val innerDialog = AlertDialog.Builder(activity)
+            val amountInput = EditText(activity)
+            innerDialog.setTitle("Enter number of cards to add")
+            amountInput.inputType = InputType.TYPE_CLASS_NUMBER
+            amountInput.setRawInputType(Configuration.KEYBOARD_12KEY)
+            amountInput.setText("")
+            amountInput.append("1")
+            innerDialog.setView(amountInput)
+            innerDialog.setPositiveButton("Add", { _, _ ->
+                if(amountInput.text.isEmpty()) {
+                    return@setPositiveButton
+                }
+                deck?.addCard(card!!, amountInput.text.toString().toLong())
+            })
+            innerDialog.setNegativeButton("Cancel", { _, _ ->
+                dialog.dismiss()
+                Log.d(TAG, "Add card cancelled")
+            })
+            innerDialog.show()
         }
         builderSingle.show()
     }
