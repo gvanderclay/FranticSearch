@@ -209,7 +209,9 @@ class CardFragment : Fragment(), View.OnClickListener {
             addButtonPressed()
             Log.d(TAG, " Add Button Pressed... ")
         } else if (i == R.id.favoriteButton) {
-            Favorite.findCardById(card?.id.toString())
+            Favorite.findCardById(card?.id.toString(), {
+                // TODO highlight shit
+            })
             favorites?.addFavorite(card!!, true)
             Log.d(TAG, " favorite Button Pressed ")
 

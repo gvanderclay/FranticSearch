@@ -194,7 +194,7 @@ class Favorite {
             favoritesDatabaseRef.addListenerForSingleValueEvent(valueEventListener)
         }
 
-        fun findCardById(primaryKey: String){
+        fun findCardById(primaryKey: String, callback: () -> Unit){
             var result = false
             val favoritesDatabaseRef = FirebaseDatabase
                     .getInstance()
@@ -210,7 +210,7 @@ class Favorite {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     Log.d("Favorites", dataSnapshot.value.toString())
                     if(dataSnapshot.value != null){
-                        //there's a card that' you've already favorited.
+                        callback()
                     }
                     result = true
                 }
