@@ -12,6 +12,8 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.ui.fragments.CardSearchFragment
+import vanderclay.comet.benson.franticsearch.commons.SetCache
+import vanderclay.comet.benson.franticsearch.ui.fragments.CardScanFragment
 import vanderclay.comet.benson.franticsearch.ui.fragments.DeckListFragment
 import vanderclay.comet.benson.franticsearch.ui.fragments.FavoriteFragment
 
@@ -61,6 +63,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.favorites -> {
                 FavoriteFragment.newInstance()
+            }
+            R.id.card_scan -> {
+                CardScanFragment.newInstance()
             }
             else -> CardSearchFragment.newInstance()
         }
