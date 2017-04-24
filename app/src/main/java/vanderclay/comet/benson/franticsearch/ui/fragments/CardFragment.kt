@@ -167,7 +167,6 @@ class CardFragment : Fragment(), View.OnClickListener {
                 user = firebaseAuth.currentUser
             }
         }
-
         return rootView
     }
 
@@ -210,6 +209,7 @@ class CardFragment : Fragment(), View.OnClickListener {
             addButtonPressed()
             Log.d(TAG, " Add Button Pressed... ")
         } else if (i == R.id.favoriteButton) {
+            Favorite.findCardById(card?.id.toString())
             favorites?.addFavorite(card!!, true)
             Log.d(TAG, " favorite Button Pressed ")
 

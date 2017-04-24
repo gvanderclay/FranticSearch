@@ -11,6 +11,7 @@ import org.jetbrains.anko.uiThread
 import vanderclay.comet.benson.franticsearch.ui.adapters.CardListAdapter
 import vanderclay.comet.benson.franticsearch.ui.adapters.DeckListAdapter
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardViewHolder
+import kotlin.jvm.internal.Ref
 
 /**
  * Created by Ben on 4/22/2017.
@@ -191,6 +192,32 @@ class Favorite {
             }
 
             favoritesDatabaseRef.addListenerForSingleValueEvent(valueEventListener)
+        }
+
+        fun findCardById(primaryKey: String){
+            var result = false
+            val favoritesDatabaseRef = FirebaseDatabase
+                    .getInstance()
+                    .getReference("Favorites")
+                    .child(FirebaseAuth.getInstance().currentUser?.uid)
+                    .child(primaryKey)
+
+            val valueEventListener = object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError?) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    Log.d("Favorites", dataSnapshot.value.toString())
+                    if(dataSnapshot.value != null){
+                        //there's a card that' you've already favorited.
+                    }
+                    result = true
+                }
+            }
+
+            favoritesDatabaseRef.addListenerForSingleValueEvent(valueEventListener)
+//            return result
         }
     }
 }
