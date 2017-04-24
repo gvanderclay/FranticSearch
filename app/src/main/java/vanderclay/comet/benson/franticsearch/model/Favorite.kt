@@ -43,27 +43,59 @@ class Favorite {
         var set: String? = null
         var rarity: String? = null
         var imageUrl: String? = null
+        var power: String? = null
+        var toughness: String? = null
+        var abiltity: String? = null
 
         init {
             this.id = card.id
-            this.imageUrl = card.imageUrl
+            if (card?.originalText != null) {
+                this.abiltity = card.originalText
+            } else {
+                this.abiltity = " no ability "
+            }
+
+            //Some cards don't load in image urls which
+            //causes the application to crash when the user taps favorites
+            if(card.imageUrl != null){
+                this.imageUrl = card.imageUrl
+            }else{
+                this.imageUrl = ""
+            }
+
+            if(card.toughness != null){
+                this.toughness = card.toughness.toString()
+            }else{
+                this.toughness = ""
+            }
+
+            if(card.power != null){
+                this.power = card.power
+            }else{
+                this.power = ""
+            }
+
+            //Lands Don't have a Mana cost
             if (card.manaCost != null) {
                 this.manaCost = card.manaCost
             } else {
                 this.manaCost = ""
             }
 
+            //Don't need to worry about it, since it's initialized to -1
             this.multiverseid = card.multiverseid.toString()
 
+            //Every card has a name
             this.name = card.name
             this.type = card.type
 
+            //Not all cards have types.
             if (card.types != null) {
                 this.types = card.types.joinToString(" ")
             } else {
                 this.types = ""
             }
-
+            //Every card has a set and rarity so we don't need to check
             this.set = card.set
             this.rarity = card.rarity
         }
@@ -75,12 +107,15 @@ class Favorite {
             map.put("id", id!!)
             map.put("mana", manaCost!!)
             map.put("multiverseid", multiverseid!!)
+            map.put("power", power!!)
+            map.put("toughness", toughness!!)
             map.put("name", name!!)
             map.put("type", type!!)
             map.put("types", types!!)
             map.put("set", set!!)
             map.put("rarity", rarity!!)
             map.put("imageUrl", imageUrl!!)
+            map.put("originalText", abiltity!!)
             return map
         }
 
@@ -88,6 +123,8 @@ class Favorite {
             var empty: CardDO = CardDO()
             empty.id = map["id"] as String
             empty.multiverseid = map["multiverseid"] as String
+            empty.power = map["power"] as String
+            empty.toughness = map["toughness"] as String
             empty.manaCost = map["mana"] as String
             empty.name = map["name"] as String
             empty.type = map["type"] as String
@@ -95,6 +132,11 @@ class Favorite {
             empty.set = map["set"] as String
             empty.rarity = map["rarity"] as String
             empty.imageUrl = map["imageUrl"] as String
+            empty.abiltity = map["originalText"] as String
+            if(empty.imageUrl.equals("")){
+                empty.imageUrl = null
+            }
+
             return empty
         }
 
@@ -105,10 +147,13 @@ class Favorite {
             card.manaCost = this.manaCost
             card.name = this.name
             card.type = this.type
+            card.power = this.power
+            card.toughness = this.toughness
             card.types = types?.split("\\s+")?.toTypedArray()
             card.set = this.set
             card.rarity = this.rarity
             card.imageUrl = this.imageUrl
+            card.originalText = this.abiltity
             return card
         }
     }
