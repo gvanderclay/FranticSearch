@@ -1,5 +1,6 @@
 package vanderclay.comet.benson.franticsearch.ui.activities
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -9,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.toolbar.*
 import vanderclay.comet.benson.franticsearch.ui.fragments.CardSearchFragment
 import vanderclay.comet.benson.franticsearch.R
@@ -25,6 +27,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var drawerToggle: ActionBarDrawerToggle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if(FirebaseAuth.getInstance().currentUser == null) {
+            val loginIntent = Intent(baseContext, LoginActivity::class.java)
+            startActivity(loginIntent)
+            finish()
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

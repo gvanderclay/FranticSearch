@@ -100,20 +100,19 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private fun signIn(email: String, password: String) {
         Log.w(TAG, "signIn: " + email)
         val intent = Intent(baseContext, MainActivity::class.java)
-        if(true) {
-            startActivity(intent)
-        }
         if(!isValideForm()){
             showSnackBar("Password or Email had Invalid Format")
             return
         }
+        signInButton?.isEnabled = false
         mAuth!!.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
-//            if (task.isSuccessful) {
-            if(true){
+            if (task.isSuccessful) {
                 Log.w(TAG, "Sign In Complete" + task.isSuccessful)
                 showSnackBar("Successfully Signed In")
                 startActivity(intent)
-            } else if (!task.isSuccessful) {
+                finish()
+            } else {
+                signInButton?.isEnabled = true
                 showSnackBar("Login Unsuccessful")
             }
         }
@@ -130,8 +129,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun isValideForm(): Boolean{
-        val emailText = mEmailView?.getText().toString()
-        val passwordText = mPasswordView?.getText().toString()
+        val emailText = mEmailView?.text.toString()
+        val passwordText = mPasswordView?.text.toString()
         if(!isEmailValid(emailText) || !isPasswordValid(passwordText)){
             return false
         }
@@ -141,7 +140,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         val i = v.id
         if (i == R.id.email_sign_in_button) {
-            signIn(mEmailView?.getText().toString(), mPasswordView?.text.toString())
+            signIn(mEmailView?.text.toString(), mPasswordView?.text.toString())
         }
         else if(i == R.id.create_account_button){
             transferToCreateAccount()
