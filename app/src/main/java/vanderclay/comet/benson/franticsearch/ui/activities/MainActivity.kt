@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     CardSearchFragment.newInstance()).commit()
             title = getString(R.string.card_search)
         }
+        intent.action = ""
     }
 
     private fun setUpDrawerToggle(): ActionBarDrawerToggle {
