@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="main"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_camera"
+        android:shortcutShortLabel="@string/card_scan_shortcut"
+        android:shortcutDisabledMessage="@string/card_scan_shortcut_disabled">
+        <intent
+            android:action="SHORTCUT_INTENT"
+            android:targetPackage="vanderclay.comet.benson.franticsearch"
+            android:targetClass="vanderclay.comet.benson.franticsearch.ui.activities.MainActivity" />
+        <!-- If your shortcut is associated with multiple intents, include them
+             here. The last intent in the list determines what the user sees when
+             they launch this shortcut. -->
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>

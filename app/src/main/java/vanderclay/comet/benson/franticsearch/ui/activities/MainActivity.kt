@@ -1,5 +1,6 @@
 package vanderclay.comet.benson.franticsearch.ui.activities
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -14,13 +15,14 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.toolbar.*
 import vanderclay.comet.benson.franticsearch.ui.fragments.CardSearchFragment
 import vanderclay.comet.benson.franticsearch.R
-import vanderclay.comet.benson.franticsearch.commons.SetCache
 import vanderclay.comet.benson.franticsearch.ui.fragments.CardScanFragment
 import vanderclay.comet.benson.franticsearch.ui.fragments.DeckListFragment
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val TAG = "MainActivity"
+
+    private val SHORTCUT_INTENT = "SHORTCUT_INTENT"
 
     var mDrawer: DrawerLayout? = null
     var nvDrawer: NavigationView? = null
@@ -42,10 +44,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mDrawer?.addDrawerListener(drawerToggle as DrawerLayout.DrawerListener)
 
         setupDrawerContent(nvDrawer)
-        supportFragmentManager.beginTransaction().replace(R.id.flContent,
-                CardSearchFragment.newInstance()).commit()
 
-        title = getString(R.string.card_search)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val action = intent.action
+        if(intent.action.equals(SHORTCUT_INTENT)) {
+            supportFragmentManager.beginTransaction().replace(R.id.flContent,
+                    CardScanFragment.newInstance()).commit()
+            title = getString(R.string.card_scan_shortcut)
+        }
+        else {
+
+            supportFragmentManager.beginTransaction().replace(R.id.flContent,
+                    CardSearchFragment.newInstance()).commit()
+            title = getString(R.string.card_search)
+        }
     }
 
     private fun setUpDrawerToggle(): ActionBarDrawerToggle {
