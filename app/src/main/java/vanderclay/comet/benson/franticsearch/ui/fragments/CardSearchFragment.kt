@@ -38,11 +38,12 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
     private var cardFilter: String? = ""
     private val handler = Handler()
     private var cardList: RecyclerView? = null
+    private var searchView: SearchView? = null
+    private var searchText = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        loadNextDataFromApi(1)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -50,9 +51,15 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
         menu?.clear()
         inflater?.inflate(R.menu.search_menu, menu)
         val item = menu?.findItem(R.id.action_search)
-        val searchView = SearchView((context as MainActivity).supportActionBar?.themedContext)
+        searchView = SearchView((context as MainActivity).supportActionBar?.themedContext)
         MenuItemCompat.setActionView(item, searchView)
-        searchView.setOnQueryTextListener(this)
+        searchView?.setOnQueryTextListener(this)
+        if(searchText.isNotEmpty()) {
+            searchView?.setQuery(searchText, true)
+            cardModel.clear()
+            cardAdapter.notifyDataSetChanged()
+        }
+        loadNextDataFromApi(1)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -84,9 +91,9 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
         cardFilter =  newText
         handler.removeCallbacksAndMessages(null)
         handler.postDelayed({
+            cardModel.clear()
             cardAdapter.notifyDataSetChanged()
             loadNextDataFromApi(1)
-            cardModel.clear()
             scrollListener?.resetState()
 
             cardList?.scrollToPosition(0)
@@ -123,6 +130,13 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
         fun newInstance(): CardSearchFragment {
             val fragment = CardSearchFragment()
 //            val args = Bundle()
+            return fragment
+        }
+
+        fun newInstance(searchText: String): CardSearchFragment {
+            val fragment = CardSearchFragment()
+
+            fragment.searchText = searchText
             return fragment
         }
     }
