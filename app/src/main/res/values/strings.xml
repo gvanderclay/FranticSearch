@@ -16,6 +16,8 @@
     <string name="card_scan_shortcut">Card Scan</string>
     <string name="card_scan_shortcut_disabled">Card Scan Shortcut Disabled</string>
 
+    <string name="decks">Decks</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>

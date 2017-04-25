@@ -22,7 +22,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private val TAG = "MainActivity"
 
-    private val SHORTCUT_INTENT = "SHORTCUT_INTENT"
+    private val SCAN_INTENT = "SCAN_INTENT"
+    private val DECK_INTENT = "DECK_INTENT"
+    private val SEARCH_INTENT = "SEARCH_INTENT"
 
     var mDrawer: DrawerLayout? = null
     var nvDrawer: NavigationView? = null
@@ -49,11 +51,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onResume() {
         super.onResume()
-        val action = intent.action
-        if(intent.action.equals(SHORTCUT_INTENT)) {
+        if(intent.action == SCAN_INTENT) {
             supportFragmentManager.beginTransaction().replace(R.id.flContent,
                     CardScanFragment.newInstance()).commit()
             title = getString(R.string.card_scan_shortcut)
+        }
+        else if(intent.action == SEARCH_INTENT) {
+            supportFragmentManager.beginTransaction().replace(R.id.flContent,
+                    CardSearchFragment.newInstance()).commit()
+            title = getString(R.string.card_search)
+        }
+        else if(intent.action == DECK_INTENT) {
+            supportFragmentManager.beginTransaction().replace(R.id.flContent,
+                    DeckListFragment.newInstance()).commit()
+            title = getString(R.string.deck)
         }
         else {
 
