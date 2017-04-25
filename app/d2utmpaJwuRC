@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "606635698993",
+    "firebase_url": "https://franticsearch-228c1.firebaseio.com",
+    "project_id": "franticsearch-228c1",
+    "storage_bucket": "franticsearch-228c1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606635698993:android:2e4412760d60c799",
+        "android_client_info": {
+          "package_name": "vanderclay.comet.benson.franticsearch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606635698993-k88q0c9aumkejded7q963vmsvite2uaf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD14G_sfwHO72FJljv07guRKgmPPF1nioA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

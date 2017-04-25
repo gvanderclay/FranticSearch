@@ -1,6 +1,5 @@
 package vanderclay.comet.benson.franticsearch.ui.activities
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -15,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.toolbar.*
 import vanderclay.comet.benson.franticsearch.ui.fragments.CardSearchFragment
 import vanderclay.comet.benson.franticsearch.R
-import vanderclay.comet.benson.franticsearch.ui.fragments.CardScanFragment
+import com.google.android.gms.common.api.CommonStatusCodes
 import vanderclay.comet.benson.franticsearch.ui.fragments.DeckListFragment
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -29,6 +28,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var mDrawer: DrawerLayout? = null
     var nvDrawer: NavigationView? = null
     var drawerToggle: ActionBarDrawerToggle? = null
+    private val RC_OCR_CAPTURE = 9003
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if(FirebaseAuth.getInstance().currentUser == null) {
@@ -52,8 +52,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onResume() {
         super.onResume()
         if(intent.action == SCAN_INTENT) {
-            supportFragmentManager.beginTransaction().replace(R.id.flContent,
-                    CardScanFragment.newInstance()).commit()
+            val intent = Intent(this, CardScanActivity::class.java)
+            this.startActivityForResult(intent, RC_OCR_CAPTURE)
             title = getString(R.string.card_scan_shortcut)
         }
         else if(intent.action == SEARCH_INTENT) {
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         else if(intent.action == DECK_INTENT) {
             supportFragmentManager.beginTransaction().replace(R.id.flContent,
                     DeckListFragment.newInstance()).commit()
-            title = getString(R.string.deck)
+            title = getString(R.string.decks)
         }
         else {
 
@@ -94,17 +94,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 DeckListFragment.newInstance()
             }
             R.id.card_scan -> {
-                CardScanFragment.newInstance()
+                val intent = Intent(this, CardScanActivity::class.java)
+                this.startActivityForResult(intent, RC_OCR_CAPTURE)
+                null
             }
             else -> CardSearchFragment.newInstance()
         }
+        if(fragment != null) {
+            supportFragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit()
 
-        supportFragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit()
+            menuItem.isChecked = true
 
-        menuItem.isChecked = true
-
-        supportActionBar?.title = menuItem.title
-        Log.d(TAG, "Transitioning to ${(menuItem.title as String)}")
+            supportActionBar?.title = menuItem.title
+            Log.d(TAG, "Transitioning to ${(menuItem.title as String)}")
+        }
         mDrawer?.closeDrawers()
     }
 
@@ -149,5 +152,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
         drawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RC_OCR_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    val menuItem = nvDrawer?.menu?.findItem(R.id.card_scan)
+                    val text = data.getStringExtra(CardScanActivity.TextBlockObject)
+                    Log.d(TAG, "Text read: " + text)
+                    val cardSearchFragment = CardSearchFragment.newInstance(text)
+                    supportFragmentManager.beginTransaction().replace(R.id.flContent, cardSearchFragment).commitAllowingStateLoss()
+                    menuItem?.isChecked = true
+                    supportActionBar?.title = menuItem?.title
+                } else {
+                    Log.d(TAG, "No Text captured, intent data is null")
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 }
