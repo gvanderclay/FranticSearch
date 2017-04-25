@@ -55,22 +55,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val intent = Intent(this, CardScanActivity::class.java)
             this.startActivityForResult(intent, RC_OCR_CAPTURE)
             title = getString(R.string.card_scan_shortcut)
-        }
-        else if(intent.action == SEARCH_INTENT) {
-            supportFragmentManager.beginTransaction().replace(R.id.flContent,
-                    CardSearchFragment.newInstance()).commit()
-            title = getString(R.string.card_search)
+            nvDrawer?.setCheckedItem(R.id.card_scan)
         }
         else if(intent.action == DECK_INTENT) {
             supportFragmentManager.beginTransaction().replace(R.id.flContent,
                     DeckListFragment.newInstance()).commit()
             title = getString(R.string.decks)
+            nvDrawer?.setCheckedItem(R.id.decks)
         }
         else {
-
             supportFragmentManager.beginTransaction().replace(R.id.flContent,
                     CardSearchFragment.newInstance()).commit()
             title = getString(R.string.card_search)
+            nvDrawer?.setCheckedItem(R.id.card_search)
         }
         intent.action = ""
     }
