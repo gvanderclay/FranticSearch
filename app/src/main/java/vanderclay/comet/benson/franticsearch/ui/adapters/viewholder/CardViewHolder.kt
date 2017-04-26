@@ -1,32 +1,28 @@
 package vanderclay.comet.benson.franticsearch.ui.adapters.viewholder
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
 import io.magicthegathering.javasdk.resource.Card
-import vanderclay.comet.benson.franticsearch.ui.fragments.CardFragment
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.commons.SetCache
+import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
 import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
 import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
-import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardImageTransform
-import android.app.Activity
-import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
+import vanderclay.comet.benson.franticsearch.ui.fragments.CardFragment
 
 
 /**
  * Created by gclay on 4/5/17.
  */
 
-class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(binding.root),
+        View.OnClickListener {
+
     private val mBinding: ItemCardRowBinding = binding
 
     private val TAG = "CardViewHolder"
-
-
 
     // Bind a card to the ItemCardRow
     fun bind(card: Card) {

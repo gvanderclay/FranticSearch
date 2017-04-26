@@ -12,10 +12,13 @@ import android.util.Log
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.toolbar.*
-import vanderclay.comet.benson.franticsearch.ui.fragments.CardSearchFragment
 import vanderclay.comet.benson.franticsearch.R
+import vanderclay.comet.benson.franticsearch.ui.fragments.CardSearchFragment
+import vanderclay.comet.benson.franticsearch.commons.SetCache
+import vanderclay.comet.benson.franticsearch.ui.fragments.CardScanFragment
 import com.google.android.gms.common.api.CommonStatusCodes
 import vanderclay.comet.benson.franticsearch.ui.fragments.DeckListFragment
+import vanderclay.comet.benson.franticsearch.ui.fragments.FavoriteFragment
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -90,6 +93,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.decks -> {
                 DeckListFragment.newInstance()
+            }
+            R.id.favorites -> {
+                FavoriteFragment.newInstance()
             }
             R.id.card_scan -> {
                 val intent = Intent(this, CardScanActivity::class.java)

@@ -2,7 +2,6 @@ package vanderclay.comet.benson.franticsearch.ui.fragments
 
 import android.os.Bundle
 import android.os.Handler
-import android.support.annotation.Nullable
 import android.support.v4.app.Fragment
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
@@ -14,10 +13,9 @@ import android.widget.SearchView
 import io.magicthegathering.javasdk.resource.Card
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
-
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.api.MtgAPI
+import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
 import vanderclay.comet.benson.franticsearch.ui.adapters.CardListAdapter
 import vanderclay.comet.benson.franticsearch.ui.adapters.listeners.EndlessRecyclerViewScrollListener
 
@@ -33,10 +31,15 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
     private val TAG = "CardSearchFragment"
 
     private var cardModel = mutableListOf<Card>()
+
     private var cardAdapter = CardListAdapter(cardModel)
+
     private var scrollListener: EndlessRecyclerViewScrollListener? = null
+
     private var cardFilter: String? = ""
+
     private val handler = Handler()
+
     private var cardList: RecyclerView? = null
     private var searchView: SearchView? = null
     private var searchText = ""
@@ -76,6 +79,7 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
                 return true
             }
         }
+
         cardList?.addOnScrollListener(scrollListener)
         cardList?.setHasFixedSize(true)
         cardList?.adapter = cardAdapter

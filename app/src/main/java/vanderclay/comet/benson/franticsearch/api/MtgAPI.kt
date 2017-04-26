@@ -5,7 +5,6 @@ import io.magicthegathering.javasdk.api.CardAPI
 import io.magicthegathering.javasdk.api.SetAPI
 import io.magicthegathering.javasdk.resource.Card
 import io.magicthegathering.javasdk.resource.MtgSet
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.doAsyncResult
 import org.joda.time.DateTime
 import vanderclay.comet.benson.franticsearch.commons.convertStringToDateTime
