@@ -28,10 +28,12 @@ class Favorite {
             .child("Favorites")
             .child(FirebaseAuth.getInstance().currentUser?.uid)
 
-    fun addFavorite(card: Card, firebase: Boolean = true) {
-        if (firebase) {
-            mFavoriteDatabase.child(card.id).setValue(CardDO(card).toMap())
-        }
+    fun addFavorite(card: Card) {
+        mFavoriteDatabase.child(card.id).setValue(CardDO(card).toMap())
+    }
+
+    fun removeFavorite(card: Card) {
+        mFavoriteDatabase.child(card.id).removeValue()
     }
 
     private class CardDO(card: Card) {
@@ -194,7 +196,7 @@ class Favorite {
             favoritesDatabaseRef.addListenerForSingleValueEvent(valueEventListener)
         }
 
-        fun findCardById(primaryKey: String, callback: () -> Unit){
+        fun findCardById(primaryKey: String, callback: (favorited: Boolean) -> Unit){
             var result = false
             val favoritesDatabaseRef = FirebaseDatabase
                     .getInstance()
@@ -208,15 +210,17 @@ class Favorite {
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    Log.d("Favorites", dataSnapshot.value.toString())
                     if(dataSnapshot.value != null){
-                        callback()
+                        Log.d("Favorites", dataSnapshot.value.toString())
+                        callback(true)
+                    }else {
+                        callback(false)
                     }
                     result = true
                 }
             }
 
-            favoritesDatabaseRef.addListenerForSingleValueEvent(valueEventListener)
+            favoritesDatabaseRef.addValueEventListener(valueEventListener)
 //            return result
         }
     }

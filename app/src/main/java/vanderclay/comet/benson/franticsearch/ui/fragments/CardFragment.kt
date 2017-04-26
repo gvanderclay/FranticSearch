@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.media.Image
 import android.content.res.Configuration
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -95,6 +96,8 @@ class CardFragment : Fragment(), View.OnClickListener {
 
     private var decks: MutableList<Deck>? = null
 
+    private var favorited = false
+
     /*Reference to the Log Tag String for debugging*/
     val TAG: String = "CardFragment"
 
@@ -172,17 +175,28 @@ class CardFragment : Fragment(), View.OnClickListener {
             }
         }
 
+        setFavoriteButton()
+
         return rootView
     }
 
-    private fun isCardFavorited(){
-        Favorite.findCardById(card?.id.toString(), {
-            favButton?.setImageDrawable(null)
-            favButton?.setBackgroundResource(R.drawable.yellow_star)
-            favButton?.isEnabled = false
-            val snackbar = Snackbar.make(activity.findViewById(android.R.id.content),
-                    "You've favorited this card!",
-                    Snackbar.LENGTH_LONG)
+    private fun setFavoriteButton(){
+        Favorite.findCardById(card?.id.toString(), { favorited ->
+            var snackbar: Snackbar? = null
+            if(favorited) {
+                favButton?.setImageResource(android.R.drawable.star_on)
+                this.favorited = true
+                snackbar = Snackbar.make(activity.findViewById(android.R.id.content),
+                        "You've favorited this card!",
+                        Snackbar.LENGTH_LONG)
+            }
+            else {
+                favButton?.setImageResource(android.R.drawable.star_off)
+                this.favorited = false
+                snackbar = Snackbar.make(activity.findViewById(android.R.id.content),
+                        "You've unfavorited this card!",
+                        Snackbar.LENGTH_LONG)
+            }
             snackbar.show()
         })
     }
@@ -200,7 +214,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         super.onDetach()
     }
 
-    override public fun setUserVisibleHint(isVisibleToUser: Boolean) {
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (isVisibleToUser) {
             val a = getActivity()
@@ -226,8 +240,13 @@ class CardFragment : Fragment(), View.OnClickListener {
             addButtonPressed()
             Log.d(TAG, " Add Button Pressed... ")
         } else if (i == R.id.favoriteButton) {
-            isCardFavorited()
-            favorites?.addFavorite(card!!, true)
+            if(favorited) {
+                favorites?.removeFavorite(card!!)
+            }
+            else {
+                favorites?.addFavorite(card!!)
+            }
+
             Log.d(TAG, " favorite Button Pressed ")
 
         } else if (i == R.id.cartButton) {
@@ -238,7 +257,7 @@ class CardFragment : Fragment(), View.OnClickListener {
     private fun cartButtonPressed() {
         val user = mAuth?.currentUser
         if (user != null) {
-            var buyCardIntent = Intent(Intent.ACTION_VIEW)
+            val buyCardIntent = Intent(Intent.ACTION_VIEW)
             buyCardIntent.data = Uri.parse(tcgPlayer + generateCardUri() + productType)
             startActivity(buyCardIntent)
         } else {

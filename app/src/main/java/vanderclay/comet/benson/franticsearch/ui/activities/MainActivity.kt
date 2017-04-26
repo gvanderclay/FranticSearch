@@ -14,8 +14,6 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.toolbar.*
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.ui.fragments.CardSearchFragment
-import vanderclay.comet.benson.franticsearch.commons.SetCache
-import vanderclay.comet.benson.franticsearch.ui.fragments.CardScanFragment
 import com.google.android.gms.common.api.CommonStatusCodes
 import vanderclay.comet.benson.franticsearch.ui.fragments.DeckListFragment
 import vanderclay.comet.benson.franticsearch.ui.fragments.FavoriteFragment
@@ -26,7 +24,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private val SCAN_INTENT = "SCAN_INTENT"
     private val DECK_INTENT = "DECK_INTENT"
-    private val SEARCH_INTENT = "SEARCH_INTENT"
 
     var mDrawer: DrawerLayout? = null
     var nvDrawer: NavigationView? = null
