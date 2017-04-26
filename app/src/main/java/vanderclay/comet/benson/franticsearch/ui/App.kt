@@ -2,6 +2,7 @@ package vanderclay.comet.benson.franticsearch.ui
 
 import android.app.Application
 import com.google.firebase.database.FirebaseDatabase
+import shortbread.Shortbread
 
 /**
  * Created by gclay on 4/5/17.
@@ -17,5 +18,6 @@ class App: Application() {
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         instance = this
+        Shortbread.create(this)
     }
 }
