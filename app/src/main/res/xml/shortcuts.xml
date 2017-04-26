@@ -34,4 +34,15 @@
             android:targetClass="vanderclay.comet.benson.franticsearch.ui.activities.MainActivity" />
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
+    <shortcut
+        android:shortcutId="settings"
+        android:enabled="true"
+        android:icon="@drawable/ic_star_black_24dp"
+        android:shortcutShortLabel="@string/favorites">
+        <intent
+            android:action="FAVORITES_INTENT"
+            android:targetPackage="vanderclay.comet.benson.franticsearch"
+            android:targetClass="vanderclay.comet.benson.franticsearch.ui.activities.MainActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
 </shortcuts>

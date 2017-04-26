@@ -97,6 +97,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private fun signIn(email: String, password: String) {
         Log.w(TAG, "signIn: " + email)
         val intent = Intent(baseContext, MainActivity::class.java)
+        intent.action = "SEARCH_INTENT"
         if(!isValideForm()){
             showSnackBar("Password or Email had Invalid Format")
             return

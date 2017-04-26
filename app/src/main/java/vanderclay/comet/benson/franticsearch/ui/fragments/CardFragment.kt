@@ -182,22 +182,14 @@ class CardFragment : Fragment(), View.OnClickListener {
 
     private fun setFavoriteButton(){
         Favorite.findCardById(card?.id.toString(), { favorited ->
-            var snackbar: Snackbar? = null
             if(favorited) {
                 favButton?.setImageResource(android.R.drawable.star_on)
                 this.favorited = true
-                snackbar = Snackbar.make(activity.findViewById(android.R.id.content),
-                        "You've favorited this card!",
-                        Snackbar.LENGTH_LONG)
             }
             else {
                 favButton?.setImageResource(android.R.drawable.star_off)
                 this.favorited = false
-                snackbar = Snackbar.make(activity.findViewById(android.R.id.content),
-                        "You've unfavorited this card!",
-                        Snackbar.LENGTH_LONG)
             }
-            snackbar.show()
         })
     }
 

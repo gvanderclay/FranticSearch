@@ -17,6 +17,7 @@
     <string name="card_scan_shortcut_disabled">Card Scan Shortcut Disabled</string>
 
     <string name="decks">Decks</string>
+    <string name="favorites">Favorites</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -35,6 +36,11 @@
     <string name="drawer_close">drawer close</string>
     <string name="seticon">setIcon</string>
 
+    <!-- Settings fragment Strings -->
+    <string name="about_info">The Frantic Search application is an app that allows magic the gathering
+players to look up cards and add them to their virtual decks. The application also allows users to
+keep a list of their cards available to them anytime with the cloud.</string>
+    <string name="authors"><b>Created by:</b> Benjamin Benson, Benjamin Commet, Gage Vanderclay</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="delete_deck">delete deck</string>

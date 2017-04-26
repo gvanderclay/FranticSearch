@@ -310,6 +310,7 @@ public class CardScanActivity extends AppCompatActivity {
             text = graphic.getTextBlock();
             if (text != null && text.getValue() != null) {
                 Intent data = new Intent();
+                data.setAction("SCAN_SUCCESS");
                 data.putExtra(TextBlockObject, text.getValue());
                 setResult(CommonStatusCodes.SUCCESS, data);
                 finish();

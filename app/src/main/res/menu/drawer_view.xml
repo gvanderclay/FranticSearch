@@ -12,7 +12,7 @@
         android:title="@string/card_search" />
     <item
         android:id="@+id/favorites"
-        android:icon="@drawable/ic_settings_black_24dp"
+        android:icon="@drawable/ic_star_black_24dp"
         android:title="Favorites"/>
     <item
         android:id="@+id/card_scan"

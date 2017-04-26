@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.toolbar.*
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.ui.fragments.CardSearchFragment
+import vanderclay.comet.benson.franticsearch.ui.fragments.SettingsFragment
 import com.google.android.gms.common.api.CommonStatusCodes
 import vanderclay.comet.benson.franticsearch.ui.fragments.DeckListFragment
 import vanderclay.comet.benson.franticsearch.ui.fragments.FavoriteFragment
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private val SCAN_INTENT = "SCAN_INTENT"
     private val DECK_INTENT = "DECK_INTENT"
+    private val FAVORITES_INTENT = "FAVORITES_INTENT"
 
     var mDrawer: DrawerLayout? = null
     var nvDrawer: NavigationView? = null
@@ -32,9 +34,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if(FirebaseAuth.getInstance().currentUser == null) {
-            val loginIntent = Intent(baseContext, LoginActivity::class.java)
-            startActivity(loginIntent)
-            finish()
+            goToLoginActivity()
         }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -51,6 +51,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onResume() {
         super.onResume()
+        if(intent.action == "SCAN_SUCCESS") {
+            nvDrawer?.setCheckedItem(R.id.card_search)
+            return
+        }
         if(intent.action == SCAN_INTENT) {
             val intent = Intent(this, CardScanActivity::class.java)
             this.startActivityForResult(intent, RC_OCR_CAPTURE)
@@ -61,6 +65,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             supportFragmentManager.beginTransaction().replace(R.id.flContent,
                     DeckListFragment.newInstance()).commit()
             title = getString(R.string.decks)
+            nvDrawer?.setCheckedItem(R.id.decks)
+        }
+        else if(intent.action == FAVORITES_INTENT) {
+            supportFragmentManager.beginTransaction().replace(R.id.flContent,
+                    FavoriteFragment.newInstance()).commit()
+            title = getString(R.string.favorites)
             nvDrawer?.setCheckedItem(R.id.decks)
         }
         else {
@@ -87,6 +97,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val fragment = when(menuItem.itemId) {
             R.id.card_search -> {
                 CardSearchFragment.newInstance()
+            }
+            R.id.settings_item -> {
+                SettingsFragment.newInstance()
             }
             R.id.decks -> {
                 DeckListFragment.newInstance()
@@ -166,6 +179,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     supportFragmentManager.beginTransaction().replace(R.id.flContent, cardSearchFragment).commitAllowingStateLoss()
                     menuItem?.isChecked = true
                     supportActionBar?.title = menuItem?.title
+                    intent.action = "SCAN_SUCCESS"
                 } else {
                     Log.d(TAG, "No Text captured, intent data is null")
                 }
@@ -173,5 +187,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    private fun goToLoginActivity() {
+        val loginIntent = Intent(baseContext, LoginActivity::class.java)
+        startActivity(loginIntent)
+        finish()
+    }
+
+    fun logout() {
+        FirebaseAuth.getInstance().signOut()
+        goToLoginActivity()
     }
 }
