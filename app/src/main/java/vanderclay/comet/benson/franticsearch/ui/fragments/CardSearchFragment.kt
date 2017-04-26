@@ -44,6 +44,7 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        loadNextDataFromApi(1)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -59,7 +60,6 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
             cardModel.clear()
             cardAdapter.notifyDataSetChanged()
         }
-        loadNextDataFromApi(1)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,

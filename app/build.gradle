@@ -52,8 +52,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     androidTestCompile 'junit:junit:4.12'
     kapt 'com.android.databinding:compiler:2.3.0'
-    compile 'com.github.matthiasrobbers:shortbread:1.0.1'
-    annotationProcessor 'com.github.matthiasrobbers:shortbread-compiler:1.0.1'
 }
 
 kapt {
