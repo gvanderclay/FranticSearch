@@ -38,7 +38,7 @@ class DeckFragment : Fragment() {
         
 
         deck?.sortByType()?.forEach {
-            val deckCardSection = DeckCardSection(it.key, it.value)
+            val deckCardSection = DeckCardSection(it.key, it.value.toMutableMap(), deck!!, sectionAdapter)
             sectionAdapter.addSection(deckCardSection)
         }
 

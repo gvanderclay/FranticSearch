@@ -14,7 +14,7 @@
         android:clickable="true">
 
         <ImageView
-            android:id="@+id/cardImage"
+            android:id="@+id/deckListCardImage"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
@@ -26,10 +26,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/cardImage"
+            android:layout_toEndOf="@+id/deckListCardImage"
             android:padding="8dp"
             android:text="@{deck.name}"
             />
+
+        <LinearLayout
+            android:id="@+id/deckListManaContainer"
+            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:layout_alignBottom="@+id/deckListCardImage"
+            android:layout_below="@+id/deckText"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/deckListCardImage"/>
 
 
     </RelativeLayout>

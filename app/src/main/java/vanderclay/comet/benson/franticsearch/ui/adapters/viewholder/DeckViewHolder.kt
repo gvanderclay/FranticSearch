@@ -2,6 +2,7 @@ package vanderclay.comet.benson.franticsearch.ui.adapters.viewholder
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.ImageView
 import com.squareup.picasso.Picasso
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.databinding.ItemDeckRowBinding
@@ -21,13 +22,15 @@ class DeckViewHolder(binding: ItemDeckRowBinding): RecyclerView.ViewHolder(bindi
     fun bind(deck: Deck) {
         mBinding.root.setOnClickListener(this)
         mBinding.deck = deck
-        if(deck.coverCardIndex < deck.cards.size && deck.cards.size > 0) {
+        if(deck.coverCardIndex < deck.cards.size && deck.cards.size >= 0) {
             val imageUrl = deck.coverCardImageUrl
             Picasso.with(mBinding.root.context)
                     .load(imageUrl)
                     .transform(CardImageTransform())
                     .placeholder(R.drawable.no_card)
-                    .into(mBinding.cardImage)
+                    .into(mBinding.deckListCardImage)
+            mBinding.deckListCardImage.scaleType = ImageView.ScaleType.FIT_XY
+            addManaSymbols(deck.getManaTypes(), mBinding.root.context, mBinding.deckListManaContainer)
         }
     }
 

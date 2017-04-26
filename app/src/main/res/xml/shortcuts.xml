@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="scan"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_camera"
+        android:shortcutShortLabel="@string/card_scan_shortcut"
+        android:shortcutDisabledMessage="@string/card_scan_shortcut_disabled">
+        <intent
+            android:action="SCAN_INTENT"
+            android:targetPackage="vanderclay.comet.benson.franticsearch"
+            android:targetClass="vanderclay.comet.benson.franticsearch.ui.activities.MainActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="search"
+        android:enabled="true"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:shortcutShortLabel="@string/card_search">
+        <intent
+            android:action="SEARCH_INTENT"
+            android:targetPackage="vanderclay.comet.benson.franticsearch"
+            android:targetClass="vanderclay.comet.benson.franticsearch.ui.activities.MainActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="deck"
+        android:enabled="true"
+        android:icon="@drawable/ic_folder_black_24dp"
+        android:shortcutShortLabel="@string/decks">
+        <intent
+            android:action="DECK_INTENT"
+            android:targetPackage="vanderclay.comet.benson.franticsearch"
+            android:targetClass="vanderclay.comet.benson.franticsearch.ui.activities.MainActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>
