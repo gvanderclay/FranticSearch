@@ -1,13 +1,8 @@
 package vanderclay.comet.benson.franticsearch.commons
 
-import android.content.Context
-import android.preference.PreferenceManager
-import com.google.gson.Gson
 import io.magicthegathering.javasdk.api.SetAPI
 import io.magicthegathering.javasdk.resource.MtgSet
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import java.io.Serializable
 
 /**
  * This class will cache all set data from the

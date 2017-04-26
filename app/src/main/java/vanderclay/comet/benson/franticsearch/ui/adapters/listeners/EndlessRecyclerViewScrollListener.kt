@@ -2,7 +2,6 @@ package vanderclay.comet.benson.franticsearch.ui.adapters.listeners
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.widget.AbsListView
 
 /**
  * Created by gclay on 4/10/17.

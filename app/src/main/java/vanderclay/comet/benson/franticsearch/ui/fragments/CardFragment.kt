@@ -4,9 +4,11 @@ package vanderclay.comet.benson.franticsearch.ui.fragments
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.media.Image
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
@@ -17,14 +19,14 @@ import android.view.ViewGroup
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.squareup.picasso.Picasso
 import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.R
-import com.squareup.picasso.Picasso
 import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
-import android.widget.TextView
-import com.google.firebase.database.*
 import vanderclay.comet.benson.franticsearch.model.Deck
-
+import vanderclay.comet.benson.franticsearch.model.Favorite
 
 /**
  * A simple [Fragment] subclass.
@@ -80,6 +82,9 @@ class CardFragment : Fragment(), View.OnClickListener {
 
     private var manaContainer: LinearLayout? = null
 
+    /**/
+    private var favorites: Favorite? = null
+
     //Tcg player link
     private val tcgPlayer = "http://shop.tcgplayer.com/magic/product/show?ProductName="
 
@@ -123,6 +128,8 @@ class CardFragment : Fragment(), View.OnClickListener {
 
         decks = mutableListOf()
         arrayAdapter = ArrayAdapter(activity, android.R.layout.select_dialog_singlechoice, decks!!)
+
+        favorites = Favorite()
 
         setText?.text = card?.set
 
@@ -168,6 +175,18 @@ class CardFragment : Fragment(), View.OnClickListener {
         return rootView
     }
 
+    private fun isCardFavorited(){
+        Favorite.findCardById(card?.id.toString(), {
+            favButton?.setImageDrawable(null)
+            favButton?.setBackgroundResource(R.drawable.yellow_star)
+            favButton?.isEnabled = false
+            val snackbar = Snackbar.make(activity.findViewById(android.R.id.content),
+                    "You've favorited this card!",
+                    Snackbar.LENGTH_LONG)
+            snackbar.show()
+        })
+    }
+
     private fun round(value: Double, places: Int): String {
         var tempValue = value
         val factor: Long = Math.pow(10.0, places.toDouble()).toLong()
@@ -207,7 +226,10 @@ class CardFragment : Fragment(), View.OnClickListener {
             addButtonPressed()
             Log.d(TAG, " Add Button Pressed... ")
         } else if (i == R.id.favoriteButton) {
+            isCardFavorited()
+            favorites?.addFavorite(card!!, true)
             Log.d(TAG, " favorite Button Pressed ")
+
         } else if (i == R.id.cartButton) {
             cartButtonPressed()
         }
@@ -253,6 +275,7 @@ class CardFragment : Fragment(), View.OnClickListener {
             })
             innerDialog.show()
         }
+
         builderSingle.show()
     }
 

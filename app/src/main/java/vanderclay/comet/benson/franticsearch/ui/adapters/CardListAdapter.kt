@@ -1,12 +1,11 @@
 package vanderclay.comet.benson.franticsearch.ui.adapters
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import io.magicthegathering.javasdk.resource.Card
-import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardViewHolder
 import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
+import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardViewHolder
 
 /**
  * Created by gclay on 4/5/17.
