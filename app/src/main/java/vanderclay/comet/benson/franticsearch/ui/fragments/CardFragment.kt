@@ -4,8 +4,10 @@ package vanderclay.comet.benson.franticsearch.ui.fragments
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.media.Image
 import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -167,7 +169,20 @@ class CardFragment : Fragment(), View.OnClickListener {
                 user = firebaseAuth.currentUser
             }
         }
+
         return rootView
+    }
+
+    private fun isCardFavorited(){
+        Favorite.findCardById(card?.id.toString(), {
+            favButton?.setImageDrawable(null)
+            favButton?.setBackgroundResource(R.drawable.yellow_star)
+            favButton?.isEnabled = false
+            val snackbar = Snackbar.make(activity.findViewById(android.R.id.content),
+                    "You've favorited this card!",
+                    Snackbar.LENGTH_LONG)
+            snackbar.show()
+        })
     }
 
     private fun round(value: Double, places: Int): String {
@@ -209,9 +224,7 @@ class CardFragment : Fragment(), View.OnClickListener {
             addButtonPressed()
             Log.d(TAG, " Add Button Pressed... ")
         } else if (i == R.id.favoriteButton) {
-            Favorite.findCardById(card?.id.toString(), {
-                // TODO highlight shit
-            })
+            isCardFavorited()
             favorites?.addFavorite(card!!, true)
             Log.d(TAG, " favorite Button Pressed ")
 
