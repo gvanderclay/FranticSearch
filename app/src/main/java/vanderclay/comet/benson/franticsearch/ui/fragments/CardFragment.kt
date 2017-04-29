@@ -2,14 +2,10 @@ package vanderclay.comet.benson.franticsearch.ui.fragments
 
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
-import android.media.Image
 import android.content.res.Configuration
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
@@ -20,14 +16,13 @@ import android.view.ViewGroup
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
+import vanderclay.comet.benson.franticsearch.commons.cardToMap
 import vanderclay.comet.benson.franticsearch.model.Deck
-import vanderclay.comet.benson.franticsearch.model.Favorite
 
 /**
  * A simple [Fragment] subclass.
@@ -98,6 +93,11 @@ class CardFragment : Fragment(), View.OnClickListener {
 
     private var favorited = false
 
+    private val mFavoriteDatabase = FirebaseDatabase.getInstance()
+            .reference
+            .child("Favorites")
+            .child(FirebaseAuth.getInstance().currentUser?.uid)
+
     /*Reference to the Log Tag String for debugging*/
     val TAG: String = "CardFragment"
 
@@ -160,7 +160,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         if (card?.originalText != null) {
             abilityText?.text = card?.originalText
         } else {
-            abilityText?.text = " no ability "
+            abilityText?.text = "No ability"
         }
 
         //Firebase Setup
@@ -179,7 +179,7 @@ class CardFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setFavoriteButton(){
-        Favorite.findCardById(card?.id.toString(), { favorited ->
+        findCardById(card?.id.toString(), { favorited ->
             if(favorited) {
                 favButton?.setImageResource(android.R.drawable.star_on)
                 this.favorited = true
@@ -231,10 +231,10 @@ class CardFragment : Fragment(), View.OnClickListener {
             Log.d(TAG, " Add Button Pressed... ")
         } else if (i == R.id.favoriteButton) {
             if(favorited) {
-                favorites?.removeFavorite(card!!)
+                removeFavorite(card!!)
             }
             else {
-                favorites?.addFavorite(card!!)
+                addFavorite(card!!)
             }
 
             Log.d(TAG, " favorite Button Pressed ")
@@ -296,6 +296,41 @@ class CardFragment : Fragment(), View.OnClickListener {
         return resultString!!
     }
 
+    private fun addFavorite(card: Card) {
+        mFavoriteDatabase.child(card.id).setValue(cardToMap(card))
+    }
+
+    private fun removeFavorite(card: Card) {
+        mFavoriteDatabase.child(card.id).removeValue()
+    }
+
+    private fun findCardById(primaryKey: String, callback: (favorited: Boolean) -> Unit) {
+        var result = false
+        val favoritesDatabaseRef = FirebaseDatabase
+                .getInstance()
+                .getReference("Favorites")
+                .child(FirebaseAuth.getInstance().currentUser?.uid)
+                .child(primaryKey)
+
+        val valueEventListener = object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if(dataSnapshot.value != null){
+                    Log.d("Favorites", dataSnapshot.value.toString())
+                    callback(true)
+                }else {
+                    callback(false)
+                }
+                result = true
+            }
+        }
+
+        favoritesDatabaseRef.addValueEventListener(valueEventListener)
+//            return result
+    }
 
     companion object {
         fun newInstance(card: Card): CardFragment {
