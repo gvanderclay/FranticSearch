@@ -78,14 +78,6 @@ class CardFragment : Fragment(), View.OnClickListener {
 
     private var manaContainer: LinearLayout? = null
 
-    /**/
-    private var favorites: Favorite? = null
-
-    //Tcg player link
-    private val tcgPlayer = "http://shop.tcgplayer.com/magic/product/show?ProductName="
-
-    /*End of the string for tcg player links*/
-    private val productType = "newSearch=false&ProductType=All&IsProductNameExact=true"
 
     private var arrayAdapter: ArrayAdapter<Deck>? = null
 
@@ -131,8 +123,6 @@ class CardFragment : Fragment(), View.OnClickListener {
 
         decks = mutableListOf()
         arrayAdapter = ArrayAdapter(activity, android.R.layout.select_dialog_singlechoice, decks!!)
-
-        favorites = Favorite()
 
         setText?.text = card?.set
 
@@ -248,12 +238,15 @@ class CardFragment : Fragment(), View.OnClickListener {
         val user = mAuth?.currentUser
         if (user != null) {
             val buyCardIntent = Intent(Intent.ACTION_VIEW)
-            buyCardIntent.data = Uri.parse(tcgPlayer + generateCardUri() + productType)
+            buyCardIntent.data = tcgPlayerLink()
             startActivity(buyCardIntent)
         } else {
 //            showSnackBar("Wait a second for us to sign you in")
         }
     }
+
+    private fun tcgPlayerLink() =
+            Uri.parse("http://shop.tcgplayer.com/magic/product/show?ProductName=${generateCardUri()}newSearch=false&ProductType=All&IsProductNameExact=true")
 
     private fun addButtonPressed(){
         var  builderSingle: AlertDialog.Builder = AlertDialog.Builder(activity)
