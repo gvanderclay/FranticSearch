@@ -245,8 +245,16 @@ class CardFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun tcgPlayerLink() =
-            Uri.parse("http://shop.tcgplayer.com/magic/product/show?ProductName=${generateCardUri()}newSearch=false&ProductType=All&IsProductNameExact=true")
+    private fun tcgPlayerLink() = Uri.Builder()
+            .scheme("http")
+            .authority("shop.tcgplayer.com")
+            .appendPath("magic")
+            .appendPath("product")
+            .appendPath("show")
+            .appendQueryParameter("ProductName", card?.name)
+            .appendQueryParameter("newSearch", "false")
+            .appendQueryParameter("ProductType", "ALL")
+            .appendQueryParameter("IsProductName", "ALL").build()
 
     private fun addButtonPressed(){
         var  builderSingle: AlertDialog.Builder = AlertDialog.Builder(activity)
@@ -281,13 +289,6 @@ class CardFragment : Fragment(), View.OnClickListener {
         builderSingle.show()
     }
 
-    private fun generateCardUri(): String {
-        //split the string on every space in the name
-        val tokenizedName = card?.name?.split("\\s+")
-        var resultString = tokenizedName?.joinToString("+")
-        resultString += "&"
-        return resultString!!
-    }
 
     private fun addFavorite(card: Card) {
         mFavoriteDatabase.child(card.id).setValue(cardToMap(card))
