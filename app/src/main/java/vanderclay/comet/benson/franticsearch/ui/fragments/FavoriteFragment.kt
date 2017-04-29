@@ -31,15 +31,6 @@ class FavoriteFragment : Fragment(){
     /*The adapter for the recycler view*/
     private var cardAdapter = FavoriteListAdapter(cardModel)
 
-    /*Listener for the users endless scrolling*/
-    private var scrollListener: EndlessRecyclerViewScrollListener? = null
-
-    /*Search parameter for the top of the Fragment*/
-    private var cardFilter: String? = ""
-
-    /*bound to the message qeue or to the Thread */
-    private val handler = Handler()
-
     /*Reference to the Recycler View*/
     private var cardList: RecyclerView? = null
 

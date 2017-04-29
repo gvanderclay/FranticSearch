@@ -15,10 +15,6 @@ import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardViewHolder
 
 
-/**
- * Created by gclay on 4/5/17.
- */
-
 class FavoriteListAdapter(val cards: MutableList<Card>): RecyclerView.Adapter<CardViewHolder>() {
 
     private var mCards = cards

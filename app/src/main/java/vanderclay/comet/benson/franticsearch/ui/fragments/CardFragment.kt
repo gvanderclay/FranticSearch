@@ -167,12 +167,10 @@ class CardFragment : Fragment(), View.OnClickListener {
         this.mAuth = FirebaseAuth.getInstance()
         this.mDatabase = FirebaseDatabase.getInstance().getReference()
 
-        mAuthListener = object : FirebaseAuth.AuthStateListener {
-            override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
-                //Create a reference to the current user to get access to there UID
-                //Used for database insertions and such
-                user = firebaseAuth.currentUser
-            }
+        mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            //Create a reference to the current user to get access to there UID
+            //Used for database insertions and such
+            user = firebaseAuth.currentUser
         }
 
         setFavoriteButton()
@@ -198,7 +196,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         val factor: Long = Math.pow(10.0, places.toDouble()).toLong()
         tempValue *= factor
         var temp: Long = Math.round(tempValue)
-        temp = temp / factor
+        temp /= factor
         return temp.toString()
     }
 
@@ -209,7 +207,7 @@ class CardFragment : Fragment(), View.OnClickListener {
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (isVisibleToUser) {
-            val a = getActivity()
+            val a = activity
             if (a != null) {
             }
         }
@@ -291,7 +289,7 @@ class CardFragment : Fragment(), View.OnClickListener {
     }
 
     private fun generateCardUri(): String {
-        //split the string on every space in the anem
+        //split the string on every space in the name
         val tokenizedName = card?.name?.split("\\s+")
         var resultString = tokenizedName?.joinToString("+")
         resultString += "&"
