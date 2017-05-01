@@ -33,6 +33,8 @@ import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import vanderclay.comet.benson.franticsearch.R;
 import vanderclay.comet.benson.franticsearch.vision.OcrDetectorProcessor;
 import vanderclay.comet.benson.franticsearch.vision.OcrGraphic;
@@ -40,7 +42,7 @@ import vanderclay.comet.benson.franticsearch.vision.OcrGraphic;
 public class CardScanActivity extends AppCompatActivity {
 
     private static final String TAG = "OcrCaptureActivity";
-
+    public ArrayList<String> ocrDetections = new ArrayList<String>();
     // Intent request code to handle updating play services if needed.
     private static final int RC_HANDLE_GMS = 9001;
 
@@ -149,7 +151,21 @@ public class CardScanActivity extends AppCompatActivity {
         // is set to receive the text recognition results and display graphics for each text block
         // on screen.
         TextRecognizer textRecognizer = new TextRecognizer.Builder(context).build();
-        textRecognizer.setProcessor(new OcrDetectorProcessor(mGraphicOverlay));
+        OcrDetectorProcessor ocrProcessor = new OcrDetectorProcessor(mGraphicOverlay, ocrDetections);
+        textRecognizer.setProcessor(ocrProcessor);
+        ocrProcessor.setListener(new OcrDetectorProcessor.ConsecutiveTextMatchesListener() {
+                                     @Override
+                                     public void onConsecutiveMatches(String newText) {
+                                         Log.d("V", "Successful match");
+                                         Intent data = new Intent();
+                                         data.setAction("SCAN_SUCCESS");
+                                         data.putExtra(TextBlockObject, newText);
+                                         setResult(CommonStatusCodes.SUCCESS, data);
+                                         finish();
+                                         Log.d("V", "Successful match");
+                                     }
+                                 }
+        );
 
         if (!textRecognizer.isOperational()) {
             // Note: The first time that an app using a Vision API is installed on a
@@ -180,7 +196,7 @@ public class CardScanActivity extends AppCompatActivity {
                 new CameraSource.Builder(getApplicationContext(), textRecognizer)
                         .setFacing(CameraSource.CAMERA_FACING_BACK)
                         .setRequestedPreviewSize(1280, 1024)
-                        .setRequestedFps(60.0f)
+                        .setRequestedFps(20.0f)
                         .setFlashMode(false ? Camera.Parameters.FLASH_MODE_TORCH : null)
                         .setFocusMode(true ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE : null)
                         .build();

@@ -20,10 +20,13 @@ package vanderclay.comet.benson.franticsearch.vision;
  * limitations under the License.
  */
 
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
+
+import java.util.ArrayList;
 
 
 /**
@@ -31,11 +34,12 @@ import com.google.android.gms.vision.text.TextBlock;
  * as OcrGraphics.
  */
 public class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
-
     private GraphicOverlay<OcrGraphic> mGraphicOverlay;
-
-    public OcrDetectorProcessor(GraphicOverlay<OcrGraphic> ocrGraphicOverlay) {
+    private ConsecutiveTextMatchesListener listener;
+    public ArrayList<String> ocrDetections = new ArrayList<String>();
+    public OcrDetectorProcessor(GraphicOverlay<OcrGraphic> ocrGraphicOverlay, ArrayList<String> _ocrDetections) {
         mGraphicOverlay = ocrGraphicOverlay;
+//        ocrDetections = _ocrDetections;
     }
 
     /**
@@ -49,9 +53,40 @@ public class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
     public void receiveDetections(Detector.Detections<TextBlock> detections) {
         mGraphicOverlay.clear();
         SparseArray<TextBlock> items = detections.getDetectedItems();
+        //Make sure we actually have items avaliable for us to detect before we try to draw them.
+        if(items.size() != 0) {
             TextBlock item = items.valueAt(0);
             OcrGraphic graphic = new OcrGraphic(mGraphicOverlay, item);
             mGraphicOverlay.add(graphic);
+            checkMatches(items.valueAt(0).getValue());
+        }
+    }
+
+    private void checkMatches(String newText){
+        ocrDetections.add(newText);
+        if(ocrDetections.size() == 5){
+            ocrDetections.remove(0);
+        }
+        if(listener != null && ocrDetections.size() == 4){
+            int flag = 0;
+            for(String scannedText : ocrDetections){
+                Log.d("V", newText + " : " + scannedText);
+                if(!scannedText.equals(newText)){
+                    flag ++;
+                }
+            }
+            if(flag < 2) {
+                listener.onConsecutiveMatches(newText);
+            }
+        }
+    }
+
+    public void setListener(ConsecutiveTextMatchesListener listener){
+        this.listener = listener;
+    }
+
+    public interface ConsecutiveTextMatchesListener{
+        public void onConsecutiveMatches(String newText);
     }
 
     /**
