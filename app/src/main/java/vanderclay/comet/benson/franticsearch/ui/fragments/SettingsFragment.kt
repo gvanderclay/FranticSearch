@@ -2,12 +2,12 @@ package vanderclay.comet.benson.franticsearch.ui.fragments
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.Nullable
+import androidx.fragment.app.Fragment
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -30,16 +30,21 @@ class SettingsFragment : Fragment(), View.OnClickListener{
     private var TAG = "SETTINGS"
 
     @Nullable
-    override fun onCreateView(inflater: LayoutInflater?, @Nullable container: ViewGroup?, @Nullable savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val rootView = inflater!!.inflate(R.layout.fragment_settings, container, false)
 
         expandableLayout1 = rootView.findViewById(R.id.expandable_layout_1) as ExpandableLayout
-        rootView.findViewById(R.id.expand_button).setOnClickListener(this)
-
-        rootView.findViewById(R.id.logoutBtn).setOnClickListener {
-            logout()
-            Log.d(TAG, "logout")
-        }
+        // TODO: implement this later.
+//        rootView.findViewById(R.id.expand_button).setOnClickListener(this)
+//
+//        rootView.findViewById(R.id.logoutBtn).setOnClickListener {
+//            logout()
+//            Log.d(TAG, "logout")
+//        }
 
         return rootView
     }

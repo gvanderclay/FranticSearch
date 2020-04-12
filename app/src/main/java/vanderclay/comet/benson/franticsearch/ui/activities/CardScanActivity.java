@@ -12,16 +12,16 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -31,6 +31,7 @@ import vanderclay.comet.benson.franticsearch.vision.CameraSourcePreview;
 import vanderclay.comet.benson.franticsearch.vision.GraphicOverlay;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.ArrayList;

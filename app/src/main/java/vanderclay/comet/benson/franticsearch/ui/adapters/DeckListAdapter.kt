@@ -1,20 +1,14 @@
 package vanderclay.comet.benson.franticsearch.ui.adapters
 
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.squareup.picasso.Picasso
-import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.databinding.ItemDeckRowBinding
 import vanderclay.comet.benson.franticsearch.model.Deck
-import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardImageTransform
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.DeckViewHolder
-
-
 
 class DeckListAdapter(decks: MutableList<Deck>): RecyclerView.Adapter<DeckViewHolder>(){
 
@@ -46,6 +40,7 @@ class DeckListAdapter(decks: MutableList<Deck>): RecyclerView.Adapter<DeckViewHo
 
                 notifyItemRemoved(position)
                 notifyItemRangeChanged(position, mDecks.size)
+
             })
             alertDialogBuilder.setNegativeButton("No", { _, _ ->
                 Log.d(TAG, "Remove deck cancelled")
@@ -55,10 +50,22 @@ class DeckListAdapter(decks: MutableList<Deck>): RecyclerView.Adapter<DeckViewHo
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): DeckViewHolder {
+    private fun notifyItemRangeChanged(position: Int, size: Int) {
+
+    }
+
+    private fun notifyItemRemoved(position: Int) {
+
+    }
+
+    fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): DeckViewHolder {
         val layoutInflater = LayoutInflater.from(parent?.context)
         val itemBinding = ItemDeckRowBinding.inflate(layoutInflater, parent, false)
         return DeckViewHolder(itemBinding)
+    }
+
+    fun notifyDataSetChanged() {
+        TODO("Not yet implemented")
     }
 
 
