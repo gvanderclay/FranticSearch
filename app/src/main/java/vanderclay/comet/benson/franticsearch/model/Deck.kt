@@ -10,19 +10,18 @@ import org.jetbrains.anko.uiThread
 import vanderclay.comet.benson.franticsearch.ui.adapters.DeckListAdapter
 
 class Deck(val name: String, deckKey: String? = null) {
-    private val tag = "Deck"
 
-    private val mDeckDatabase = FirebaseDatabase.getInstance()
+    private val mDeckDatabase = FirebaseAuth.getInstance().currentUser?.uid?.let {
+        FirebaseDatabase.getInstance()
             .reference
             .child("Decks")
-            .child(FirebaseAuth.getInstance().currentUser?.uid)
+            .child(it)
+    }
 
-    private val deckReference: DatabaseReference
-
+    private var deckReference: DatabaseReference? = null
     private val cardListReference: DatabaseReference
 
     var key: String? = deckKey
-
     var cards = mutableMapOf<Card, Long>()
 
     // index of the card that will be used for the cover
@@ -38,17 +37,18 @@ class Deck(val name: String, deckKey: String? = null) {
     init {
         // if key is already defined, the deck is already in firebase
         if (key != null) {
-            deckReference = mDeckDatabase.child(key)
-            cardListReference = deckReference.child("cards")
+            if (mDeckDatabase != null) {
+                deckReference = mDeckDatabase.child(key!!)
+            }
+            cardListReference = deckReference?.child("cards")
         } else {
             // else create a new deck and add it to firebase
-            deckReference = mDeckDatabase.push()
-            key = deckReference.key
-            deckReference.child("deckName").setValue(name)
+            deckReference = mDeckDatabase?.push()
+            key = deckReference?.key
+            deckReference?.child("deckName")?.setValue(name)
             cardListReference = deckReference.child("cards")
             cardListReference.setValue(arrayListOf<String>())
         }
-        Log.d(tag, "Deck created")
     }
 
     fun addCard(card: Card, amount: Long=1, firebase: Boolean=true) {
@@ -56,16 +56,16 @@ class Deck(val name: String, deckKey: String? = null) {
 
             val cardReference = cardListReference.child(card.id)
             cardReference.addListenerForSingleValueEvent(object: ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) { }
+                override fun onCancelled(snapshot: DatabaseError) { }
 
-                override fun onDataChange(snapshot: DataSnapshot?) {
-                    if(snapshot?.child("count")?.value != null) {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.child("count")?.value != null) {
                         val count = snapshot.child("count").value as Long
                         snapshot.ref.child("count").setValue(count + 1)
                         return
                     }
                     with(card) {
-                        with(snapshot?.ref!!) {
+                        with(snapshot.ref!!) {
                             child("multiverse").setValue(multiverseid.toString())
                             child("id").setValue(id)
                             child("mana").setValue(manaCost)
@@ -87,7 +87,6 @@ class Deck(val name: String, deckKey: String? = null) {
         } else {
             cards[card] = amount
         }
-        Log.d(tag, "${card.name} Added to deck $name")
     }
 
     fun getManaTypes(): MutableSet<String> {
@@ -153,19 +152,25 @@ class Deck(val name: String, deckKey: String? = null) {
         }
 
         private fun getAllDecks(decks: MutableList<Deck>, callback:() -> Unit) {
-            val deckDatabaseRef = FirebaseDatabase
+            val deckDatabaseRef = FirebaseAuth.getInstance().currentUser?.uid?.let {
+                FirebaseDatabase
                     .getInstance()
                     .getReference("Decks")
-                    .child(FirebaseAuth.getInstance().currentUser?.uid)
+                    .child(it)
+            }
 
             val valueEventListener = object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) { }
+                override fun onCancelled(p0: DatabaseError) { }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     doAsync {
                         for (snapshot: DataSnapshot in dataSnapshot.children) {
                             val deckMap = snapshot.value as Map<*, *>
-                            val deck = loadInstance(deckMap["deckName"] as String, snapshot.key)
+                            val deck = snapshot.key?.let {
+                                    loadInstance(deckMap["deckName"] as String,
+                                        it
+                                    )
+                                }
                             if (deckMap.containsKey("cards")) {
                                 (deckMap["cards"] as Map<String, Map<String, *>>).forEach {
                                     val card = Card()
@@ -181,10 +186,12 @@ class Deck(val name: String, deckKey: String? = null) {
                                         card.rarity = value["rarity"] as String?
                                         card.imageUrl = value["imageUrl"] as String?
                                     }
-                                    deck.addCard(card, it.value["count"] as Long, false)
+                                    deck?.addCard(card, it.value["count"] as Long, false)
                                 }
                             }
-                            decks.add(deck)
+                            if (deck != null) {
+                                decks.add(deck)
+                            }
                         }
                         uiThread {
                             callback.invoke()
@@ -192,7 +199,7 @@ class Deck(val name: String, deckKey: String? = null) {
                     }
                 }
             }
-            deckDatabaseRef.addListenerForSingleValueEvent(valueEventListener)
+            deckDatabaseRef?.addListenerForSingleValueEvent(valueEventListener)
 
         }
 

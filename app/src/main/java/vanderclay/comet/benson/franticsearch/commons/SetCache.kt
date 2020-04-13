@@ -12,8 +12,8 @@ class SetCache {
 
         fun getSets(): Map<String, MtgSet>? {
             if(!loaded) {
-                saveSets()
             }
+            saveSets()
             while(!loaded);
             return setMap
         }

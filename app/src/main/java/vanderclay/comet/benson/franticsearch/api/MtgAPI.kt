@@ -41,10 +41,6 @@ class MtgAPI {
             return getCards()
         }
 
-        /**
-         * Get all cards passed date
-         * @param after All cards recieved will be released after this date
-         */
         fun getAllCards(after: DateTime): List<Card> {
             var cardList = mutableListOf<Card>()
             var sets = getAllSets(after)
@@ -54,20 +50,12 @@ class MtgAPI {
             return cardList
         }
 
-
-        /**
-         * Search for cards by name
-         * @param cardName name of the card
-         */
         fun searchForCards(name: String?):List<Card> {
             return getCards("name=$name")
         }
 
         fun getCard(id: Int): Card = doAsyncResult { CardAPI.getCard(id) }.get()
 
-        /**
-        *
-         */
         fun getCardsInSet(setCode: String): List<Card> {
             return getCards("set=$setCode")
         }
@@ -84,14 +72,6 @@ class MtgAPI {
             return CardAPI.getAllCardSubtypes()
         }
 
-        /**
-         *
-         *
-         * SET API Calls
-         *  - All api calls related to sets
-         *
-         *
-         */
         fun getSets(vararg extraFilters: String): List<MtgSet> {
             val setList = mutableListOf<MtgSet>()
             var page = 1
@@ -115,8 +95,6 @@ class MtgAPI {
                 releaseDate?.isAfter(after)!!
             }
         }
-
     }
-
 
 }
