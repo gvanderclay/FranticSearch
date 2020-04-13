@@ -1,5 +1,6 @@
 package vanderclay.comet.benson.franticsearch.ui.adapters
 
+import android.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,59 +15,46 @@ class DeckListAdapter(decks: MutableList<Deck>): RecyclerView.Adapter<DeckViewHo
 
     private val mDecks = decks
 
-    private val TAG = "DeckListAdapter"
+    private val deckListTag = "DeckListAdapter"
 
     override fun getItemCount(): Int {
         return mDecks.size
     }
 
-    override fun onBindViewHolder(holder: DeckViewHolder?, position: Int) {
-        Log.d(TAG, "onBindViewHolder $position")
+    override fun onBindViewHolder(holder: DeckViewHolder, position: Int) {
+        Log.d(deckListTag, "onBindViewHolder $position")
         val deck = mDecks[position]
-        holder?.bind(deck)
-        holder?.itemView?.setOnLongClickListener {
-            val alertDialogBuilder = AlertDialog.Builder(holder.itemView?.context!!)
+        holder.bind(deck)
+        holder.itemView.setOnLongClickListener {
+            val alertDialogBuilder = AlertDialog.Builder(holder.itemView.context!!)
             alertDialogBuilder.setMessage("Delete Deck ${deck.name}?")
-            alertDialogBuilder.setPositiveButton("Yes", { _, _ ->
-                val deck = mDecks.removeAt(position)
+            alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+                mDecks.removeAt(position)
 
                 FirebaseDatabase
-                        .getInstance()
-                        .getReference("Decks")
-                        .child(FirebaseAuth.getInstance().currentUser?.uid)
-                        .child(deck.key)
-                        .removeValue()
-                Log.d(TAG, "Removing deck ${deck.name}")
+                    .getInstance()
+                    .getReference("Decks")
+                    .child(FirebaseAuth.getInstance().currentUser?.uid)
+                    .child(deck.key)
+                    .removeValue()
+                Log.d(deckListTag, "Removing deck ${deck.name}")
 
                 notifyItemRemoved(position)
                 notifyItemRangeChanged(position, mDecks.size)
-
-            })
-            alertDialogBuilder.setNegativeButton("No", { _, _ ->
-                Log.d(TAG, "Remove deck cancelled")
-            })
+            }
+            alertDialogBuilder.setNegativeButton("No") { _, _ ->
+                Log.d(deckListTag, "Remove deck cancelled")
+            }
             alertDialogBuilder.create().show()
             true
         }
     }
 
-    private fun notifyItemRangeChanged(position: Int, size: Int) {
 
-    }
-
-    private fun notifyItemRemoved(position: Int) {
-
-    }
-
-    fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): DeckViewHolder {
-        val layoutInflater = LayoutInflater.from(parent?.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeckViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
         val itemBinding = ItemDeckRowBinding.inflate(layoutInflater, parent, false)
         return DeckViewHolder(itemBinding)
     }
-
-    fun notifyDataSetChanged() {
-        TODO("Not yet implemented")
-    }
-
 
 }

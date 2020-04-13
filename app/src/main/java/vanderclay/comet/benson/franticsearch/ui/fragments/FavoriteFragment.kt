@@ -1,21 +1,19 @@
 package vanderclay.comet.benson.franticsearch.ui.fragments
 
 import android.os.Bundle
-import android.os.Handler
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.*
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.model.Favorite
 import vanderclay.comet.benson.franticsearch.ui.adapters.FavoriteListAdapter
-import vanderclay.comet.benson.franticsearch.ui.adapters.listeners.EndlessRecyclerViewScrollListener
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [CardSearchFragment.OnFragmentInteractionListener] interface
+ * [CardSearchFragment] interface
  * to handle interaction events.
  * Use the [CardSearchFragment.newInstance] factory method to
  * create an instance of this fragment.
@@ -23,22 +21,13 @@ import vanderclay.comet.benson.franticsearch.ui.adapters.listeners.EndlessRecycl
 class FavoriteFragment : Fragment(){
 
     /*Reference to the Card Favorite Fragment*/
-    private val TAG = "CardFavoriteFragment"
+    private val favoriteTag = "CardFavoriteFragment"
 
     /*Model of card that are retrieved from firebase*/
     private var cardModel = mutableListOf<Card>()
 
     /*The adapter for the recycler view*/
     private var cardAdapter = FavoriteListAdapter(cardModel)
-
-    /*Listener for the users endless scrolling*/
-    private var scrollListener: EndlessRecyclerViewScrollListener? = null
-
-    /*Search parameter for the top of the Fragment*/
-    private var cardFilter: String? = ""
-
-    /*bound to the message qeue or to the Thread */
-    private val handler = Handler()
 
     /*Reference to the Recycler View*/
     private var cardList: RecyclerView? = null
@@ -47,21 +36,20 @@ class FavoriteFragment : Fragment(){
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         /*TODO implment getting the first List of card from the favorites list*/
-        loadNextDataFromApi(1)
+        loadNextDataFromApi()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-
-        val rootView = inflater!!.inflate(R.layout.fragment_favorite_cards, container, false)
-        rootView.tag = TAG
+        val rootView = inflater.inflate(R.layout.fragment_favorite_cards, container, false)
+        rootView.tag = favoriteTag
         cardList = rootView.findViewById(R.id.cardFavoriteList) as RecyclerView
 
-        val layoutManager = LinearLayoutManager(activity.applicationContext)
+        val layoutManager = LinearLayoutManager(activity?.applicationContext)
         cardList?.layoutManager = layoutManager
         cardList?.setHasFixedSize(true)
         cardList?.adapter = cardAdapter
@@ -69,20 +57,14 @@ class FavoriteFragment : Fragment(){
 
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
-    private fun loadNextDataFromApi(page: Int) {
+    private fun loadNextDataFromApi() {
         Favorite.getAllFavorites(cardModel, cardAdapter)
         cardAdapter.notifyDataSetChanged()
     }
 
     companion object {
         fun newInstance(): FavoriteFragment {
-            val fragment = FavoriteFragment()
-//            val args = Bundle()
-            return fragment
+            return FavoriteFragment()
         }
     }
 }

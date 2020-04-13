@@ -1,14 +1,13 @@
 package vanderclay.comet.benson.franticsearch.ui.fragments
 
-
+import android.app.AlertDialog
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import android.widget.EditText
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.model.Deck
@@ -21,12 +20,11 @@ import vanderclay.comet.benson.franticsearch.ui.adapters.DeckListAdapter
  */
 class DeckListFragment : Fragment() {
 
-    private val TAG = "DeckListFragment"
+    private val deckListTag = "DeckListFragment"
 
     private var deckModel = arrayListOf<Deck>()
     private var deckAdapter = DeckListAdapter(deckModel)
     private var deckList: RecyclerView? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,16 +32,19 @@ class DeckListFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
-        val rootView = inflater!!.inflate(R.layout.fragment_deck_list, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_deck_list, container, false)
 
-        rootView.tag = TAG
+        rootView.tag = deckListTag
 
         deckList = rootView.findViewById(R.id.deckList) as RecyclerView
 
-        deckList?.layoutManager = LinearLayoutManager(activity.applicationContext)
+        deckList?.layoutManager = LinearLayoutManager(activity?.applicationContext)
         deckList?.setHasFixedSize(true)
         deckList?.adapter = deckAdapter
 
@@ -58,16 +59,16 @@ class DeckListFragment : Fragment() {
             val alertDialogBuilder = AlertDialog.Builder(activity)
             val input = EditText(activity)
             alertDialogBuilder.setView(input)
-            alertDialogBuilder.setPositiveButton("Add Deck", { _, _ ->
+            alertDialogBuilder.setPositiveButton("Add Deck") { _, _ ->
                 if(input.text.isEmpty()) return@setPositiveButton
                 val newDeck = Deck(input.text.toString())
                 deckModel.add(newDeck)
                 deckAdapter.notifyDataSetChanged()
-                Log.d(TAG, "Add deck clicked")
-            })
-            alertDialogBuilder.setNegativeButton("Cancel", { _, _ ->
-                Log.d(TAG, "Add deck cancelled")
-            })
+                Log.d(deckListTag, "Add deck clicked")
+            }
+            alertDialogBuilder.setNegativeButton("Cancel") { _, _ ->
+                Log.d(deckListTag, "Add deck cancelled")
+            }
             alertDialogBuilder.create().show()
             true
 
@@ -89,8 +90,7 @@ class DeckListFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         fun newInstance(): DeckListFragment {
-            val fragment = DeckListFragment()
-            return fragment
+            return DeckListFragment()
         }
     }
 

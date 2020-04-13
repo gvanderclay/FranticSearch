@@ -1,33 +1,27 @@
 package vanderclay.comet.benson.franticsearch.ui.fragments
 
-
-import android.os.Bundle;
-import android.util.Log
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
 
-import net.cachapa.expandablelayout.ExpandableLayout;
+import net.cachapa.expandablelayout.ExpandableLayout
 
 import vanderclay.comet.benson.franticsearch.R
-import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
-
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [SettingsFragment.OnFragmentInteractionListener] interface
+ * [SettingsFragment] interface
  * to handle interaction events.
  * Use the [SettingsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class SettingsFragment : Fragment(), View.OnClickListener{
 
-    private var expandableLayout0: ExpandableLayout? = null
     private var expandableLayout1: ExpandableLayout? = null
-    private var TAG = "SETTINGS"
 
     @Nullable
     override fun onCreateView(
@@ -35,7 +29,7 @@ class SettingsFragment : Fragment(), View.OnClickListener{
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater!!.inflate(R.layout.fragment_settings, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_settings, container, false)
 
         expandableLayout1 = rootView.findViewById(R.id.expandable_layout_1) as ExpandableLayout
         // TODO: implement this later.
@@ -57,16 +51,13 @@ class SettingsFragment : Fragment(), View.OnClickListener{
         }
     }
 
-    private fun logout() {
-        (activity as MainActivity).logout()
-    }
-
+//    private fun logout() {
+//        (activity as MainActivity).logout()
+//    }
 
     companion object {
         fun newInstance(): SettingsFragment {
-            val fragment = SettingsFragment()
-//            val args = Bundle()
-            return fragment
+            return SettingsFragment()
         }
     }
 

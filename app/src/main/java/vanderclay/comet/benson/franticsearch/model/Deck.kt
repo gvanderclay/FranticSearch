@@ -9,9 +9,8 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import vanderclay.comet.benson.franticsearch.ui.adapters.DeckListAdapter
 
-
 class Deck(val name: String, deckKey: String? = null) {
-    private val TAG = "Deck"
+    private val tag = "Deck"
 
     private val mDeckDatabase = FirebaseDatabase.getInstance()
             .reference
@@ -49,7 +48,7 @@ class Deck(val name: String, deckKey: String? = null) {
             cardListReference = deckReference.child("cards")
             cardListReference.setValue(arrayListOf<String>())
         }
-        Log.d(TAG, "Deck created")
+        Log.d(tag, "Deck created")
     }
 
     fun addCard(card: Card, amount: Long=1, firebase: Boolean=true) {
@@ -57,9 +56,7 @@ class Deck(val name: String, deckKey: String? = null) {
 
             val cardReference = cardListReference.child(card.id)
             cardReference.addListenerForSingleValueEvent(object: ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
+                override fun onCancelled(p0: DatabaseError?) { }
 
                 override fun onDataChange(snapshot: DataSnapshot?) {
                     if(snapshot?.child("count")?.value != null) {
@@ -90,19 +87,19 @@ class Deck(val name: String, deckKey: String? = null) {
         } else {
             cards[card] = amount
         }
-        Log.d(TAG, "${card.name} Added to deck $name")
+        Log.d(tag, "${card.name} Added to deck $name")
     }
 
     fun getManaTypes(): MutableSet<String> {
-        val reg = Regex("[\\{\\}]")
+        val reg = Regex("[{}]")
         val manaSymbols = mutableSetOf<String>()
-        cards.keys.forEach {
+        cards.keys.forEach { it ->
             if(it.manaCost == null) {
                 return@forEach
             }
             val cardManaSymbols = reg.split(it.manaCost).filter(String::isNotEmpty)
             cardManaSymbols.map {
-                if(it.toIntOrNull() == null && !it.equals("X")) {
+                if(it.toIntOrNull() == null && it != "X") {
                     manaSymbols.add(it)
                 }
             }
@@ -116,7 +113,7 @@ class Deck(val name: String, deckKey: String? = null) {
         cards.keys.forEach {
             val type = it.types.joinToString(separator = " ")
             if(!cardsByType.containsKey(type)) {
-                cardsByType[type] = mutableMapOf<Card, Long>()
+                cardsByType[type] = mutableMapOf()
             }
             if(!cardsByType[type]?.containsKey(it)!!) {
                 cardsByType[type]?.set(it, 0L)
@@ -145,19 +142,6 @@ class Deck(val name: String, deckKey: String? = null) {
         return null
     }
 
-    fun loadCards() {
-        val newCards = mutableMapOf<Card, Long>()
-        cards.keys.forEach {
-            if(cards.containsKey(it)) {
-                cards[it] = cards[it]!! + 1
-            }
-            else {
-                cards[it] = 1
-            }
-        }
-        cards = newCards
-    }
-
     override fun toString(): String {
         return name
     }
@@ -165,27 +149,23 @@ class Deck(val name: String, deckKey: String? = null) {
     companion object {
 
         fun loadInstance(name: String, key: String): Deck {
-            val deck = Deck(name, key)
-            return deck
-
+            return Deck(name, key)
         }
 
-        fun getAllDecks(decks: MutableList<Deck>, callback:() -> Unit) {
+        private fun getAllDecks(decks: MutableList<Deck>, callback:() -> Unit) {
             val deckDatabaseRef = FirebaseDatabase
                     .getInstance()
                     .getReference("Decks")
                     .child(FirebaseAuth.getInstance().currentUser?.uid)
 
             val valueEventListener = object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
+                override fun onCancelled(p0: DatabaseError?) { }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     doAsync {
                         for (snapshot: DataSnapshot in dataSnapshot.children) {
-                            val deckMap = snapshot.value as Map<String, *>
-                            val deck = Deck.loadInstance(deckMap["deckName"] as String, snapshot.key)
+                            val deckMap = snapshot.value as Map<*, *>
+                            val deck = loadInstance(deckMap["deckName"] as String, snapshot.key)
                             if (deckMap.containsKey("cards")) {
                                 (deckMap["cards"] as Map<String, Map<String, *>>).forEach {
                                     val card = Card()
@@ -217,19 +197,15 @@ class Deck(val name: String, deckKey: String? = null) {
         }
 
         fun getAllDecks(decks: MutableList<Deck>, deckListAdapter: DeckListAdapter?) {
-            getAllDecks(decks, {
+            getAllDecks(decks) {
                 deckListAdapter?.notifyDataSetChanged()
-            })
-
+            }
         }
 
         fun getAllDecks(decks: MutableList<Deck>, deckListAdapter: BaseAdapter? = null) {
-            getAllDecks(decks, {
+            getAllDecks(decks) {
                 deckListAdapter?.notifyDataSetChanged()
-            })
+            }
         }
     }
-
-
-
 }

@@ -3,34 +3,35 @@ package vanderclay.comet.benson.franticsearch.ui.activities
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.toolbar.*
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.ui.fragments.CardSearchFragment
 import vanderclay.comet.benson.franticsearch.ui.fragments.SettingsFragment
 import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.toolbar.*
 import vanderclay.comet.benson.franticsearch.ui.fragments.DeckListFragment
 import vanderclay.comet.benson.franticsearch.ui.fragments.FavoriteFragment
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private val TAG = "MainActivity"
+    private val mainActivityTag = "MainActivity"
 
-    private val SCAN_INTENT = "SCAN_INTENT"
-    private val DECK_INTENT = "DECK_INTENT"
-    private val FAVORITES_INTENT = "FAVORITES_INTENT"
+    private val scanIntent = "SCAN_INTENT"
+    private val deckIntent = "DECK_INTENT"
+    private val favoritesIntent = "FAVORITES_INTENT"
 
-    var mDrawer: DrawerLayout? = null
-    var nvDrawer: NavigationView? = null
-    var drawerToggle: ActionBarDrawerToggle? = null
-    private val RC_OCR_CAPTURE = 9003
+    private var mDrawer: DrawerLayout? = null
+    private var nvDrawer: NavigationView? = null
+    private var drawerToggle: ActionBarDrawerToggle? = null
+    private val rcOcrCapture = 9003
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if(FirebaseAuth.getInstance().currentUser == null) {
@@ -39,14 +40,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(toolbar)
-        mDrawer = findViewById(R.id.drawer_layout) as DrawerLayout?
-        nvDrawer = findViewById(R.id.nvView) as NavigationView?
+        setSupportActionBar(toolbar as Toolbar?)
+        mDrawer = findViewById(R.id.drawer_layout)
+        nvDrawer = findViewById(R.id.nvView)
         drawerToggle = setUpDrawerToggle()
         mDrawer?.addDrawerListener(drawerToggle as DrawerLayout.DrawerListener)
 
         setupDrawerContent(nvDrawer)
-
     }
 
     override fun onResume() {
@@ -55,35 +55,37 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             nvDrawer?.setCheckedItem(R.id.card_search)
             return
         }
-        if(intent.action == SCAN_INTENT) {
-            val intent = Intent(this, CardScanActivity::class.java)
-            this.startActivityForResult(intent, RC_OCR_CAPTURE)
-            title = getString(R.string.card_scan_shortcut)
-            nvDrawer?.setCheckedItem(R.id.card_scan)
-        }
-        else if(intent.action == DECK_INTENT) {
-            supportFragmentManager.beginTransaction().replace(R.id.flContent,
+        when (intent.action) {
+            scanIntent -> {
+                val intent = Intent(this, CardScanActivity::class.java)
+                this.startActivityForResult(intent, rcOcrCapture)
+                title = getString(R.string.card_scan_shortcut)
+                nvDrawer?.setCheckedItem(R.id.card_scan)
+            }
+            deckIntent -> {
+                supportFragmentManager.beginTransaction().replace(R.id.flContent,
                     DeckListFragment.newInstance()).commit()
-            title = getString(R.string.decks)
-            nvDrawer?.setCheckedItem(R.id.decks)
-        }
-        else if(intent.action == FAVORITES_INTENT) {
-            supportFragmentManager.beginTransaction().replace(R.id.flContent,
+                title = getString(R.string.decks)
+                nvDrawer?.setCheckedItem(R.id.decks)
+            }
+            favoritesIntent -> {
+                supportFragmentManager.beginTransaction().replace(R.id.flContent,
                     FavoriteFragment.newInstance()).commit()
-            title = getString(R.string.favorites)
-            nvDrawer?.setCheckedItem(R.id.decks)
-        }
-        else {
-            supportFragmentManager.beginTransaction().replace(R.id.flContent,
+                title = getString(R.string.favorites)
+                nvDrawer?.setCheckedItem(R.id.decks)
+            }
+            else -> {
+                supportFragmentManager.beginTransaction().replace(R.id.flContent,
                     CardSearchFragment.newInstance()).commit()
-            title = getString(R.string.card_search)
-            nvDrawer?.setCheckedItem(R.id.card_search)
+                title = getString(R.string.card_search)
+                nvDrawer?.setCheckedItem(R.id.card_search)
+            }
         }
         intent.action = ""
     }
 
     private fun setUpDrawerToggle(): ActionBarDrawerToggle {
-        return ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close)
+        return ActionBarDrawerToggle(this, mDrawer, toolbar as Toolbar?, R.string.drawer_open, R.string.drawer_close)
     }
 
     private fun setupDrawerContent(navigationView: NavigationView?) {
@@ -93,7 +95,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    fun selectDrawerItem(menuItem: MenuItem) {
+    private fun selectDrawerItem(menuItem: MenuItem) {
         val fragment = when(menuItem.itemId) {
             R.id.card_search -> {
                 CardSearchFragment.newInstance()
@@ -109,7 +111,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.card_scan -> {
                 val intent = Intent(this, CardScanActivity::class.java)
-                this.startActivityForResult(intent, RC_OCR_CAPTURE)
+                this.startActivityForResult(intent, rcOcrCapture)
                 null
             }
             else -> CardSearchFragment.newInstance()
@@ -120,7 +122,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             menuItem.isChecked = true
 
             supportActionBar?.title = menuItem.title
-            Log.d(TAG, "Transitioning to ${(menuItem.title as String)}")
+            Log.d(mainActivityTag, "Transitioning to ${(menuItem.title as String)}")
         }
         mDrawer?.closeDrawers()
     }
@@ -151,37 +153,40 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
-        val id = item.itemId
+//        val id = item.itemId
 
-        if (id == R.id.card_search) {
-            // Handle the camera action
-        } else if (id == R.id.decks) {
+//        if (id == R.id.card_search) {
+//            // Handle the camera action
+//        }
 
-        } else if (id == R.id.card_scan) {
+//        else if (id == R.id.decks) {
+//
+//        } else if (id == R.id.card_scan) {
+//
+//        } else if (id == R.id.settings_item) {
+//
+//        }
 
-        } else if (id == R.id.settings_item) {
-
-        }
-
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         drawer.closeDrawer(GravityCompat.START)
         return true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RC_OCR_CAPTURE) {
+        if (requestCode == rcOcrCapture) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
                     val menuItem = nvDrawer?.menu?.findItem(R.id.card_scan)
-                    val text = data.getStringExtra(CardScanActivity.TextBlockObject)
-                    Log.d(TAG, "Text read: " + text)
+                    val text = data.getStringExtra(CardScanActivity.TextBlockObject) ?: ""
+                    Log.d(mainActivityTag, "Text read: $text")
                     val cardSearchFragment = CardSearchFragment.newInstance(text)
-                    supportFragmentManager.beginTransaction().replace(R.id.flContent, cardSearchFragment).commitAllowingStateLoss()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.flContent, cardSearchFragment).commitAllowingStateLoss()
                     menuItem?.isChecked = true
                     supportActionBar?.title = menuItem?.title
                     intent.action = "SCAN_SUCCESS"
                 } else {
-                    Log.d(TAG, "No Text captured, intent data is null")
+                    Log.d(mainActivityTag, "No Text captured, intent data is null")
                 }
             }
         } else {
@@ -195,8 +200,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         finish()
     }
 
-    fun logout() {
-        FirebaseAuth.getInstance().signOut()
-        goToLoginActivity()
-    }
+//    fun logout() {
+//        FirebaseAuth.getInstance().signOut()
+//        goToLoginActivity()
+//    }
 }

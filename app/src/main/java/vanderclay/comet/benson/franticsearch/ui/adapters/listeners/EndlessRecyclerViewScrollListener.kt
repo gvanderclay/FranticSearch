@@ -1,13 +1,9 @@
 package vanderclay.comet.benson.franticsearch.ui.adapters.listeners
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
-/**
- * Created by gclay on 4/10/17.
- */
-
-abstract class EndlessRecyclerViewScrollListener(layoutManager: LinearLayoutManager):
+abstract class EndlessRecyclerViewScrollListener(private val layoutManager: LinearLayoutManager):
         RecyclerView.OnScrollListener() {
 
     private var previousTotal = 0
@@ -19,12 +15,10 @@ abstract class EndlessRecyclerViewScrollListener(layoutManager: LinearLayoutMana
     private var startingPageIndex = 1
 
     private var currentPage = startingPageIndex
-    private val layoutManager = layoutManager
 
-
-    override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
-        visibleItemCount = recyclerView?.childCount
+        visibleItemCount = recyclerView.childCount
         totalItemCount = layoutManager.itemCount
         firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
         if(loading) {

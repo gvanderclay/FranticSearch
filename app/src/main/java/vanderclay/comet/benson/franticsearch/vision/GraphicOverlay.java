@@ -1,18 +1,3 @@
-/*
- * Copyright (C) The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package vanderclay.comet.benson.franticsearch.vision;
 
 import android.content.Context;
@@ -47,7 +32,12 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     private float mWidthScaleFactor = 1.0f;
     private int mPreviewHeight;
     private float mHeightScaleFactor = 1.0f;
-    private int mFacing = CameraSource.CAMERA_FACING_BACK;
+    private int mFacing;
+
+    {
+        mFacing = CameraSource.CAMERA_FACING_BACK;
+    }
+
     private Set<T> mGraphics = new HashSet<>();
 
     /**
@@ -58,7 +48,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     public static abstract class Graphic {
         private GraphicOverlay mOverlay;
 
-        public Graphic(GraphicOverlay overlay) {
+        Graphic(GraphicOverlay overlay) {
             mOverlay = overlay;
         }
 
@@ -85,14 +75,14 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
          * Adjusts a horizontal value of the supplied value from the preview scale to the view
          * scale.
          */
-        public float scaleX(float horizontal) {
+        float scaleX(float horizontal) {
             return horizontal * mOverlay.mWidthScaleFactor;
         }
 
         /**
          * Adjusts a vertical value of the supplied value from the preview scale to the view scale.
          */
-        public float scaleY(float vertical) {
+        float scaleY(float vertical) {
             return vertical * mOverlay.mHeightScaleFactor;
         }
 
@@ -100,7 +90,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
          * Adjusts the x coordinate from the preview's coordinate system to the view coordinate
          * system.
          */
-        public float translateX(float x) {
+        float translateX(float x) {
             if (mOverlay.mFacing == CameraSource.CAMERA_FACING_FRONT) {
                 return mOverlay.getWidth() - scaleX(x);
             } else {
@@ -112,11 +102,11 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
          * Adjusts the y coordinate from the preview's coordinate system to the view coordinate
          * system.
          */
-        public float translateY(float y) {
+        float translateY(float y) {
             return scaleY(y);
         }
 
-        public void postInvalidate() {
+        void postInvalidate() {
             mOverlay.postInvalidate();
         }
     }
@@ -144,16 +134,13 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
         }
         postInvalidate();
     }
-
-    /**
-     * Removes a graphic from the overlay.
-     */
-    public void remove(T graphic) {
-        synchronized (mLock) {
-            mGraphics.remove(graphic);
-        }
-        postInvalidate();
-    }
+    
+//    public void remove(T graphic) {
+//        synchronized (mLock) {
+//            mGraphics.remove(graphic);
+//        }
+//        postInvalidate();
+//    }
 
     /**
      * Returns the first graphic, if any, that exists at the provided absolute screen coordinates.
@@ -196,8 +183,8 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
 
         synchronized (mLock) {
             if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
-                mWidthScaleFactor = (float) canvas.getWidth() / (float) mPreviewWidth;
-                mHeightScaleFactor = (float) canvas.getHeight() / (float) mPreviewHeight;
+                mWidthScaleFactor = (float) getWidth() / (float) mPreviewWidth;
+                mHeightScaleFactor = (float) getHeight() / (float) mPreviewHeight;
             }
 
             for (Graphic graphic : mGraphics) {

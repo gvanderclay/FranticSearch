@@ -1,8 +1,8 @@
 package vanderclay.comet.benson.franticsearch.ui.adapters.viewholder
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
@@ -11,14 +11,9 @@ import vanderclay.comet.benson.franticsearch.model.Deck
 import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
 import vanderclay.comet.benson.franticsearch.ui.fragments.DeckFragment
 
-/**
- * Created by gclay on 4/14/17.
- */
 class DeckViewHolder(binding: ItemDeckRowBinding): RecyclerView.ViewHolder(binding.root), View.OnClickListener {
-    private val TAG = "DeckViewHolder"
 
     private val mBinding = binding
-
 
     fun bind(deck: Deck) {
         mBinding.root.setOnClickListener(this)

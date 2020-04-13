@@ -1,8 +1,8 @@
 package vanderclay.comet.benson.franticsearch.ui.adapters.viewholder
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.R
@@ -12,19 +12,11 @@ import vanderclay.comet.benson.franticsearch.databinding.ItemCardRowBinding
 import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
 import vanderclay.comet.benson.franticsearch.ui.fragments.CardFragment
 
-
-/**
- * Created by gclay on 4/5/17.
- */
-
 class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(binding.root),
         View.OnClickListener {
 
     private val mBinding: ItemCardRowBinding = binding
 
-    private val TAG = "CardViewHolder"
-
-    // Bind a card to the ItemCardRow
     fun bind(card: Card) {
 
         mBinding.root.setOnClickListener(this)
@@ -58,13 +50,12 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
 
     private fun getSetCode(): String? {
         val card = mBinding.card
-        val gathererCode = SetCache.getSets()?.get(card.set)?.gatherercode
-        return gathererCode ?: card.set
+        val gathererCode = SetCache.getSets()?.get(card!!.set)?.gatherercode
+        return gathererCode ?: card!!.set
     }
 
     private fun getRaritySymbol(): String {
-        val rarity = mBinding.card.rarity
-        return when(rarity){
+        return when(val rarity = mBinding.card!!.rarity){
             "Special" -> rarity
             else -> rarity.split(" ").map {
                          it[0]

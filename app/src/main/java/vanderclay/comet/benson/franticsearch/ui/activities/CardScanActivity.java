@@ -28,31 +28,26 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import vanderclay.comet.benson.franticsearch.vision.CameraSource;
 import vanderclay.comet.benson.franticsearch.vision.CameraSourcePreview;
-import vanderclay.comet.benson.franticsearch.vision.GraphicOverlay;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import vanderclay.comet.benson.franticsearch.R;
+import vanderclay.comet.benson.franticsearch.vision.GraphicOverlay;
 import vanderclay.comet.benson.franticsearch.vision.OcrDetectorProcessor;
 import vanderclay.comet.benson.franticsearch.vision.OcrGraphic;
 
 public class CardScanActivity extends AppCompatActivity {
 
     private static final String TAG = "OcrCaptureActivity";
-    public ArrayList<String> ocrDetections = new ArrayList<String>();
-    // Intent request code to handle updating play services if needed.
     private static final int RC_HANDLE_GMS = 9001;
 
     // Permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
     // Constants used to pass extra data in the intent
-    public static final String AutoFocus = "AutoFocus";
-    public static final String UseFlash = "UseFlash";
     public static final String TextBlockObject = "String";
 
     private CameraSource mCameraSource;
@@ -71,18 +66,16 @@ public class CardScanActivity extends AppCompatActivity {
         super.onCreate(icicle);
         setContentView(R.layout.activity_card_scan);
 
-        mPreview = (CameraSourcePreview) findViewById(R.id.preview);
-        mGraphicOverlay = (GraphicOverlay<OcrGraphic>) findViewById(R.id.graphicOverlay);
+        mPreview = findViewById(R.id.preview);
+        mGraphicOverlay = findViewById(R.id.graphicOverlay);
 
         // read parameters from the intent used to launch the activity.
-        boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
-        boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
-            createCameraSource(autoFocus, useFlash);
+            createCameraSource();
         } else {
             requestCameraPermission();
         }
@@ -145,14 +138,14 @@ public class CardScanActivity extends AppCompatActivity {
      * the constant.
      */
     @SuppressLint("InlinedApi")
-    private void createCameraSource(boolean autoFocus, boolean useFlash) {
+    private void createCameraSource() {
         Context context = getApplicationContext();
 
         // A text recognizer is created to find text.  An associated processor instance
         // is set to receive the text recognition results and display graphics for each text block
         // on screen.
         TextRecognizer textRecognizer = new TextRecognizer.Builder(context).build();
-        OcrDetectorProcessor ocrProcessor = new OcrDetectorProcessor(mGraphicOverlay, ocrDetections);
+        OcrDetectorProcessor ocrProcessor = new OcrDetectorProcessor(mGraphicOverlay);
         textRecognizer.setProcessor(ocrProcessor);
         ocrProcessor.setListener(new OcrDetectorProcessor.ConsecutiveTextMatchesListener() {
                                      @Override
@@ -198,8 +191,8 @@ public class CardScanActivity extends AppCompatActivity {
                         .setFacing(CameraSource.CAMERA_FACING_BACK)
                         .setRequestedPreviewSize(1280, 1024)
                         .setRequestedFps(20.0f)
-                        .setFlashMode(false ? Camera.Parameters.FLASH_MODE_TORCH : null)
-                        .setFocusMode(true ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE : null)
+                        .setFlashMode(null)
+                        .setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)
                         .build();
     }
 
@@ -264,9 +257,7 @@ public class CardScanActivity extends AppCompatActivity {
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Camera permission granted - initialize the camera source");
             // We have permission, so create the camerasource
-            boolean autoFocus = getIntent().getBooleanExtra(AutoFocus,false);
-            boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
-            createCameraSource(autoFocus, useFlash);
+            createCameraSource();
             return;
         }
 

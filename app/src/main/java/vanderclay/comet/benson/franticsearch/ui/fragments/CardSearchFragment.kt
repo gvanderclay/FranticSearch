@@ -2,14 +2,14 @@ package vanderclay.comet.benson.franticsearch.ui.fragments
 
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.app.Fragment
-import android.support.v4.view.MenuItemCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import android.widget.SearchView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuItemCompat
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.magicthegathering.javasdk.resource.Card
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -22,13 +22,13 @@ import vanderclay.comet.benson.franticsearch.ui.adapters.listeners.EndlessRecycl
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [CardSearchFragment.OnFragmentInteractionListener] interface
+ * [CardSearchFragment] interface
  * to handle interaction events.
  * Use the [CardSearchFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
-    private val TAG = "CardSearchFragment"
+    private val cardSearchTag = "CardSearchFragment"
 
     private var cardModel = mutableListOf<Card>()
 
@@ -67,13 +67,16 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val rootView = inflater!!.inflate(R.layout.fragment_card_search, container, false)
-        rootView.tag = TAG
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val rootView = inflater.inflate(R.layout.fragment_card_search, container, false)
+        rootView.tag = cardSearchTag
         cardList = rootView.findViewById(R.id.cardList) as RecyclerView
 
-        val layoutManager = LinearLayoutManager(activity.applicationContext)
+        val layoutManager = LinearLayoutManager(activity!!.applicationContext)
         cardList?.layoutManager = layoutManager
         scrollListener = object: EndlessRecyclerViewScrollListener(layoutManager) {
             override fun onLoadMore(currentPage: Int): Boolean {
@@ -82,7 +85,7 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
             }
         }
 
-        cardList?.addOnScrollListener(scrollListener)
+        cardList?.addOnScrollListener(scrollListener as EndlessRecyclerViewScrollListener)
         cardList?.setHasFixedSize(true)
         cardList?.adapter = cardAdapter
         return rootView
@@ -90,7 +93,7 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onResume() {
         super.onResume()
-        (activity as AppCompatActivity).supportActionBar?.title = activity.getString(R.string.card_search)
+        (activity as AppCompatActivity).supportActionBar?.title = (activity as AppCompatActivity).getString(R.string.card_search)
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
@@ -114,7 +117,7 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
             val cards = MtgAPI.getCards(page, "name=$cardFilter", "orderBy=name")
             uiThread {
                 cardModel.addAll(cards)
-                Log.d(TAG, "Elements in array after search change ${cardModel.size}")
+                Log.d(cardSearchTag, "Elements in array after search change ${cardModel.size}")
                 cardAdapter.notifyDataSetChanged()
             }
         }
@@ -132,11 +135,8 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
          * @return A new instance of fragment CardSearchFragment.
          */
-        // TODO: Rename and change types and number of parameters
         fun newInstance(): CardSearchFragment {
-            val fragment = CardSearchFragment()
-//            val args = Bundle()
-            return fragment
+            return CardSearchFragment()
         }
 
         fun newInstance(searchText: String): CardSearchFragment {

@@ -6,7 +6,6 @@ import com.google.firebase.database.FirebaseDatabase
 /**
  * Created by gclay on 4/5/17.
  */
-
 class App: Application() {
     companion object {
         var instance: App? = null

@@ -1,23 +1,19 @@
 package vanderclay.comet.benson.franticsearch.ui.fragments
 
-
+import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
-import android.media.Image
 import android.content.res.Configuration
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
@@ -28,11 +24,13 @@ import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
 import vanderclay.comet.benson.franticsearch.model.Deck
 import vanderclay.comet.benson.franticsearch.model.Favorite
+import kotlin.math.pow
+import kotlin.math.roundToLong
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [CardFragment.OnFragmentInteractionListener] interface
+ * [CardFragment] interface
  * to handle interaction events.
  * Use the [CardFragment.newInstance] factory method to
  * create an instance of this fragment.
@@ -99,17 +97,17 @@ class CardFragment : Fragment(), View.OnClickListener {
     private var favorited = false
 
     /*Reference to the Log Tag String for debugging*/
-    val TAG: String = "CardFragment"
+    private val cardFragmentTag: String = "CardFragment"
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        Log.d(TAG, " Getting reference to buttons and references to ")
+    @SuppressLint("SetTextI18n")
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        Log.d(cardFragmentTag, " Getting reference to buttons and references to ")
         // Inflate the layout for this fragment
-        val rootView = inflater!!.inflate(R.layout.fragment_card, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_card, container, false)
         (activity as AppCompatActivity).supportActionBar?.title = card?.name
 
         addButton = rootView.findViewById(R.id.addButton) as ImageButton
@@ -130,7 +128,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         manaContainer = rootView.findViewById(R.id.cardManaContainer) as LinearLayout
 
         decks = mutableListOf()
-        arrayAdapter = ArrayAdapter(activity, android.R.layout.select_dialog_singlechoice, decks!!)
+        arrayAdapter = ArrayAdapter(activity as AppCompatActivity, android.R.layout.select_dialog_singlechoice, decks!!)
 
         favorites = Favorite()
 
@@ -146,7 +144,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         loadCardImage()
 
         if (card?.cmc != null) {
-            cmcText?.text = round(card!!.cmc, 2)
+            cmcText?.text = round(card!!.cmc)
         } else {
             cmcText?.text = "0"
         }
@@ -165,14 +163,10 @@ class CardFragment : Fragment(), View.OnClickListener {
 
         //Firebase Setup
         this.mAuth = FirebaseAuth.getInstance()
-        this.mDatabase = FirebaseDatabase.getInstance().getReference()
+        this.mDatabase = FirebaseDatabase.getInstance().reference
 
-        mAuthListener = object : FirebaseAuth.AuthStateListener {
-            override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
-                //Create a reference to the current user to get access to there UID
-                //Used for database insertions and such
-                user = firebaseAuth.currentUser
-            }
+        mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            user = firebaseAuth.currentUser
         }
 
         setFavoriteButton()
@@ -181,42 +175,28 @@ class CardFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setFavoriteButton(){
-        Favorite.findCardById(card?.id.toString(), { favorited ->
-            if(favorited) {
+        Favorite.findCardById(card?.id.toString()) { favored ->
+            if(favored) {
                 favButton?.setImageResource(android.R.drawable.star_on)
                 this.favorited = true
-            }
-            else {
+            } else {
                 favButton?.setImageResource(android.R.drawable.star_off)
                 this.favorited = false
-            }
-        })
-    }
-
-    private fun round(value: Double, places: Int): String {
-        var tempValue = value
-        val factor: Long = Math.pow(10.0, places.toDouble()).toLong()
-        tempValue *= factor
-        var temp: Long = Math.round(tempValue)
-        temp = temp / factor
-        return temp.toString()
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser) {
-            val a = getActivity()
-            if (a != null) {
             }
         }
     }
 
+    private fun round(value: Double): String {
+        var tempValue = value
+        val factor: Long = 10.0.pow(2.toDouble()).toLong()
+        tempValue *= factor
+        var temp: Long = tempValue.roundToLong()
+        temp /= factor
+        return temp.toString()
+    }
+
     // Bind a card to the ItemCardRow
-    fun loadCardImage() {
+    private fun loadCardImage() {
         Picasso.with(activity)
                 .load(this.card?.imageUrl)
                 .placeholder(R.drawable.no_card)
@@ -227,22 +207,25 @@ class CardFragment : Fragment(), View.OnClickListener {
      * Implementation of the onclick listener in the card Fragment.
      */
     override fun onClick(view: View?) {
-        val i = view?.id
-        if (i == R.id.addButton) {
-            addButtonPressed()
-            Log.d(TAG, " Add Button Pressed... ")
-        } else if (i == R.id.favoriteButton) {
-            if(favorited) {
-                favorites?.removeFavorite(card!!)
+        when (view?.id) {
+            R.id.addButton -> {
+                addButtonPressed()
+                Log.d(cardFragmentTag, " Add Button Pressed... ")
             }
-            else {
-                favorites?.addFavorite(card!!)
+            R.id.favoriteButton -> {
+                if(favorited) {
+                    favorites?.removeFavorite(card!!)
+                }
+                else {
+                    favorites?.addFavorite(card!!)
+                }
+
+                Log.d(cardFragmentTag, " favorite Button Pressed ")
+
             }
-
-            Log.d(TAG, " favorite Button Pressed ")
-
-        } else if (i == R.id.cartButton) {
-            cartButtonPressed()
+            R.id.cartButton -> {
+                cartButtonPressed()
+            }
         }
     }
 
@@ -252,13 +235,11 @@ class CardFragment : Fragment(), View.OnClickListener {
             val buyCardIntent = Intent(Intent.ACTION_VIEW)
             buyCardIntent.data = Uri.parse(tcgPlayer + generateCardUri() + productType)
             startActivity(buyCardIntent)
-        } else {
-//            showSnackBar("Wait a second for us to sign you in")
         }
     }
 
     private fun addButtonPressed(){
-        var  builderSingle: AlertDialog.Builder = AlertDialog.Builder(activity)
+        val builderSingle: AlertDialog.Builder = AlertDialog.Builder(activity)
         builderSingle.setTitle("Choose a Deck to add To")
 
         decks?.clear()
@@ -274,16 +255,16 @@ class CardFragment : Fragment(), View.OnClickListener {
             amountInput.setText("")
             amountInput.append("1")
             innerDialog.setView(amountInput)
-            innerDialog.setPositiveButton("Add", { _, _ ->
+            innerDialog.setPositiveButton("Add") { _, _ ->
                 if(amountInput.text.isEmpty()) {
                     return@setPositiveButton
                 }
                 deck?.addCard(card!!, amountInput.text.toString().toLong())
-            })
-            innerDialog.setNegativeButton("Cancel", { _, _ ->
+            }
+            innerDialog.setNegativeButton("Cancel") { _, _ ->
                 dialog.dismiss()
-                Log.d(TAG, "Add card cancelled")
-            })
+                Log.d(cardFragmentTag, "Add card cancelled")
+            }
             innerDialog.show()
         }
 

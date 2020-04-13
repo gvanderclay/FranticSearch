@@ -12,16 +12,7 @@ import vanderclay.comet.benson.franticsearch.commons.convertStringToDateTime
 class MtgAPI {
 
     companion object {
-        private val TAG = "MtgAPI"
-        /**
-         *
-         *
-         *  CARD API CALLS
-         *
-         *  - All api calls that are related to cards
-         *
-         *
-         */
+        private const val TAG = "MtgAPI"
 
         fun getCards(vararg extraFilters: String): List<Card> {
             val cardList = mutableListOf<Card>()
@@ -72,9 +63,7 @@ class MtgAPI {
             return getCards("name=$name")
         }
 
-        fun getCard(id: Int): Card = doAsyncResult {
-                CardAPI.getCard(id)
-            }.get()
+        fun getCard(id: Int): Card = doAsyncResult { CardAPI.getCard(id) }.get()
 
         /**
         *
@@ -120,11 +109,11 @@ class MtgAPI {
             return getSets()
         }
 
-        fun getAllSets(after: DateTime?): List<MtgSet> {
-            return getAllSets().filter({
+        private fun getAllSets(after: DateTime?): List<MtgSet> {
+            return getAllSets().filter {
                 val releaseDate = convertStringToDateTime(it.releaseDate)
                 releaseDate?.isAfter(after)!!
-            })
+            }
         }
 
     }

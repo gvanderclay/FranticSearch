@@ -1,9 +1,5 @@
 package vanderclay.comet.benson.franticsearch.vision;
 
-/**
- * Created by bcom3_000 on 4/22/2017.
- */
-
 /*
  * Copyright (C) The Android Open Source Project
  *
@@ -19,7 +15,6 @@ package vanderclay.comet.benson.franticsearch.vision;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -28,7 +23,6 @@ import com.google.android.gms.vision.text.TextBlock;
 
 import java.util.ArrayList;
 
-
 /**
  * A very simple Processor which receives detected TextBlocks and adds them to the overlay
  * as OcrGraphics.
@@ -36,10 +30,9 @@ import java.util.ArrayList;
 public class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
     private GraphicOverlay<OcrGraphic> mGraphicOverlay;
     private ConsecutiveTextMatchesListener listener;
-    public ArrayList<String> ocrDetections = new ArrayList<String>();
-    public OcrDetectorProcessor(GraphicOverlay<OcrGraphic> ocrGraphicOverlay, ArrayList<String> _ocrDetections) {
+    private ArrayList<String> ocrDetections = new ArrayList<>();
+    public OcrDetectorProcessor(GraphicOverlay<OcrGraphic> ocrGraphicOverlay) {
         mGraphicOverlay = ocrGraphicOverlay;
-//        ocrDetections = _ocrDetections;
     }
 
     /**
@@ -86,7 +79,7 @@ public class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
     }
 
     public interface ConsecutiveTextMatchesListener{
-        public void onConsecutiveMatches(String newText);
+        void onConsecutiveMatches(String newText);
     }
 
     /**

@@ -1,28 +1,15 @@
 package vanderclay.comet.benson.franticsearch.model
 
-import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.widget.BaseAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import io.magicthegathering.javasdk.resource.Card
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import vanderclay.comet.benson.franticsearch.ui.adapters.CardListAdapter
-import vanderclay.comet.benson.franticsearch.ui.adapters.DeckListAdapter
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardViewHolder
-import kotlin.jvm.internal.Ref
 
-/**
- * Created by Ben on 4/22/2017.
- */
-
+@Suppress("UNCHECKED_CAST")
 class Favorite {
 
-    //tag value for debugging
-    private val TAG = "Favorite"
-
-    //Database Reference
     private val mFavoriteDatabase = FirebaseDatabase.getInstance()
             .reference
             .child("Favorites")
@@ -52,7 +39,7 @@ class Favorite {
 
         init {
             this.id = card.id
-            if (card?.originalText != null) {
+            if (card.originalText != null) {
                 this.abiltity = card.originalText
             } else {
                 this.abiltity = " no ability "
@@ -106,24 +93,24 @@ class Favorite {
         constructor() : this(Card())
 
         fun toMap(): HashMap<String, String> {
-            var map: HashMap<String, String> = HashMap<String, String>()
-            map.put("id", id!!)
-            map.put("mana", manaCost!!)
-            map.put("multiverseid", multiverseid!!)
-            map.put("power", power!!)
-            map.put("toughness", toughness!!)
-            map.put("name", name!!)
-            map.put("type", type!!)
-            map.put("types", types!!)
-            map.put("set", set!!)
-            map.put("rarity", rarity!!)
-            map.put("imageUrl", imageUrl!!)
-            map.put("originalText", abiltity!!)
+            val map: HashMap<String, String> = HashMap()
+            map["id"] = id!!
+            map["mana"] = manaCost!!
+            map["multiverseid"] = multiverseid!!
+            map["power"] = power!!
+            map["toughness"] = toughness!!
+            map["name"] = name!!
+            map["type"] = type!!
+            map["types"] = types!!
+            map["set"] = set!!
+            map["rarity"] = rarity!!
+            map["imageUrl"] = imageUrl!!
+            map["originalText"] = abiltity!!
             return map
         }
 
         fun mapToCard(map: Map<String, *>): CardDO {
-            var empty: CardDO = CardDO()
+            val empty = CardDO()
             empty.id = map["id"] as String
             empty.multiverseid = map["multiverseid"] as String
             empty.power = map["power"] as String
@@ -144,7 +131,7 @@ class Favorite {
         }
 
         fun convertCardDOtoCard(): Card {
-            var card: Card = Card()
+            val card = Card()
             card.id = this.id
             card.multiverseid = this.multiverseid!!.toInt()
             card.manaCost = this.manaCost
@@ -171,16 +158,14 @@ class Favorite {
                     .child(FirebaseAuth.getInstance().currentUser?.uid)
 
             val valueEventListener = object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
+                override fun onCancelled(p0: DatabaseError?) { }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                     for (snapshot: DataSnapshot in dataSnapshot.children) {
                         Log.d("Favorites", snapshot.value.toString())
-                        var card = Card()
-                        var convertedCard = CardDO()
+                        var card: Card
+                        val convertedCard = CardDO()
                         try {
                             card = convertedCard.mapToCard(snapshot.value as Map<String, *>).convertCardDOtoCard()
                             favorites.add(card)
@@ -197,7 +182,6 @@ class Favorite {
         }
 
         fun findCardById(primaryKey: String, callback: (favorited: Boolean) -> Unit){
-            var result = false
             val favoritesDatabaseRef = FirebaseDatabase
                     .getInstance()
                     .getReference("Favorites")
@@ -205,9 +189,7 @@ class Favorite {
                     .child(primaryKey)
 
             val valueEventListener = object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
+                override fun onCancelled(p0: DatabaseError?) { }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     if(dataSnapshot.value != null){
@@ -216,12 +198,10 @@ class Favorite {
                     }else {
                         callback(false)
                     }
-                    result = true
                 }
             }
 
             favoritesDatabaseRef.addValueEventListener(valueEventListener)
-//            return result
         }
     }
 }
