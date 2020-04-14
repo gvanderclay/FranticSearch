@@ -1,16 +1,21 @@
 package vanderclay.comet.benson.franticsearch.ui.fragments
 
 import android.os.Bundle
-import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.R
-import vanderclay.comet.benson.franticsearch.model.Favorite
+import vanderclay.comet.benson.franticsearch.commons.mapToCard
 import vanderclay.comet.benson.franticsearch.ui.adapters.FavoriteListAdapter
-import vanderclay.comet.benson.franticsearch.ui.adapters.listeners.EndlessRecyclerViewScrollListener
+import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardViewHolder
 
 /**
  * A simple [Fragment] subclass.
@@ -31,17 +36,9 @@ class FavoriteFragment : Fragment(){
     /*The adapter for the recycler view*/
     private var cardAdapter = FavoriteListAdapter(cardModel)
 
-    /*Listener for the users endless scrolling*/
-    private var scrollListener: EndlessRecyclerViewScrollListener? = null
-
-    /*Search parameter for the top of the Fragment*/
-    private var cardFilter: String? = ""
-
-    /*bound to the message qeue or to the Thread */
-    private val handler = Handler()
-
     /*Reference to the Recycler View*/
     private var cardList: RecyclerView? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,15 +70,45 @@ class FavoriteFragment : Fragment(){
         super.onResume()
     }
 
+
     private fun loadNextDataFromApi(page: Int) {
-        Favorite.getAllFavorites(cardModel, cardAdapter)
+        getAllFavorites(cardModel, cardAdapter)
         cardAdapter.notifyDataSetChanged()
     }
 
+    private fun getAllFavorites(favorites: MutableList<Card>, recycler: RecyclerView.Adapter<CardViewHolder>) {
+
+        val favoritesDatabaseRef = FirebaseDatabase
+                .getInstance()
+                .getReference("Favorites")
+                .child(FirebaseAuth.getInstance().currentUser?.uid)
+
+        val valueEventListener = object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                for (snapshot: DataSnapshot in dataSnapshot.children) {
+                    Log.d("Favorites", snapshot.value.toString())
+                    val card = mapToCard(snapshot.value as Map<String, Object>)
+                    try {
+                        favorites.add(card)
+                    } catch(e: Exception) {
+                        Log.e("Favorites", card.toString())
+                    }
+                }
+                recycler.notifyDataSetChanged()
+
+            }
+        }
+
+        favoritesDatabaseRef.addListenerForSingleValueEvent(valueEventListener)
+    }
     companion object {
         fun newInstance(): FavoriteFragment {
             val fragment = FavoriteFragment()
-//            val args = Bundle()
             return fragment
         }
     }

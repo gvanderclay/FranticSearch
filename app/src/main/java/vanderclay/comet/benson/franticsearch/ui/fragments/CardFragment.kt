@@ -2,14 +2,10 @@ package vanderclay.comet.benson.franticsearch.ui.fragments
 
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
-import android.media.Image
 import android.content.res.Configuration
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
@@ -20,14 +16,13 @@ import android.view.ViewGroup
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
+import vanderclay.comet.benson.franticsearch.commons.cardToMap
 import vanderclay.comet.benson.franticsearch.model.Deck
-import vanderclay.comet.benson.franticsearch.model.Favorite
 
 /**
  * A simple [Fragment] subclass.
@@ -83,20 +78,17 @@ class CardFragment : Fragment(), View.OnClickListener {
 
     private var manaContainer: LinearLayout? = null
 
-    /**/
-    private var favorites: Favorite? = null
-
-    //Tcg player link
-    private val tcgPlayer = "http://shop.tcgplayer.com/magic/product/show?ProductName="
-
-    /*End of the string for tcg player links*/
-    private val productType = "newSearch=false&ProductType=All&IsProductNameExact=true"
 
     private var arrayAdapter: ArrayAdapter<Deck>? = null
 
     private var decks: MutableList<Deck>? = null
 
     private var favorited = false
+
+    private val mFavoriteDatabase = FirebaseDatabase.getInstance()
+            .reference
+            .child("Favorites")
+            .child(FirebaseAuth.getInstance().currentUser?.uid)
 
     /*Reference to the Log Tag String for debugging*/
     val TAG: String = "CardFragment"
@@ -132,8 +124,6 @@ class CardFragment : Fragment(), View.OnClickListener {
         decks = mutableListOf()
         arrayAdapter = ArrayAdapter(activity, android.R.layout.select_dialog_singlechoice, decks!!)
 
-        favorites = Favorite()
-
         setText?.text = card?.set
 
         if (card?.number != null) {
@@ -160,19 +150,17 @@ class CardFragment : Fragment(), View.OnClickListener {
         if (card?.originalText != null) {
             abilityText?.text = card?.originalText
         } else {
-            abilityText?.text = " no ability "
+            abilityText?.text = "No ability"
         }
 
         //Firebase Setup
         this.mAuth = FirebaseAuth.getInstance()
         this.mDatabase = FirebaseDatabase.getInstance().getReference()
 
-        mAuthListener = object : FirebaseAuth.AuthStateListener {
-            override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
-                //Create a reference to the current user to get access to there UID
-                //Used for database insertions and such
-                user = firebaseAuth.currentUser
-            }
+        mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            //Create a reference to the current user to get access to there UID
+            //Used for database insertions and such
+            user = firebaseAuth.currentUser
         }
 
         setFavoriteButton()
@@ -181,7 +169,7 @@ class CardFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setFavoriteButton(){
-        Favorite.findCardById(card?.id.toString(), { favorited ->
+        findCardById(card?.id.toString(), { favorited ->
             if(favorited) {
                 favButton?.setImageResource(android.R.drawable.star_on)
                 this.favorited = true
@@ -198,7 +186,7 @@ class CardFragment : Fragment(), View.OnClickListener {
         val factor: Long = Math.pow(10.0, places.toDouble()).toLong()
         tempValue *= factor
         var temp: Long = Math.round(tempValue)
-        temp = temp / factor
+        temp /= factor
         return temp.toString()
     }
 
@@ -209,7 +197,7 @@ class CardFragment : Fragment(), View.OnClickListener {
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (isVisibleToUser) {
-            val a = getActivity()
+            val a = activity
             if (a != null) {
             }
         }
@@ -233,10 +221,10 @@ class CardFragment : Fragment(), View.OnClickListener {
             Log.d(TAG, " Add Button Pressed... ")
         } else if (i == R.id.favoriteButton) {
             if(favorited) {
-                favorites?.removeFavorite(card!!)
+                removeFavorite(card!!)
             }
             else {
-                favorites?.addFavorite(card!!)
+                addFavorite(card!!)
             }
 
             Log.d(TAG, " favorite Button Pressed ")
@@ -250,12 +238,23 @@ class CardFragment : Fragment(), View.OnClickListener {
         val user = mAuth?.currentUser
         if (user != null) {
             val buyCardIntent = Intent(Intent.ACTION_VIEW)
-            buyCardIntent.data = Uri.parse(tcgPlayer + generateCardUri() + productType)
+            buyCardIntent.data = tcgPlayerLink()
             startActivity(buyCardIntent)
         } else {
 //            showSnackBar("Wait a second for us to sign you in")
         }
     }
+
+    private fun tcgPlayerLink() = Uri.Builder()
+            .scheme("http")
+            .authority("shop.tcgplayer.com")
+            .appendPath("magic")
+            .appendPath("product")
+            .appendPath("show")
+            .appendQueryParameter("ProductName", card?.name)
+            .appendQueryParameter("newSearch", "false")
+            .appendQueryParameter("ProductType", "ALL")
+            .appendQueryParameter("IsProductName", "ALL").build()
 
     private fun addButtonPressed(){
         var  builderSingle: AlertDialog.Builder = AlertDialog.Builder(activity)
@@ -290,14 +289,42 @@ class CardFragment : Fragment(), View.OnClickListener {
         builderSingle.show()
     }
 
-    private fun generateCardUri(): String {
-        //split the string on every space in the anem
-        val tokenizedName = card?.name?.split("\\s+")
-        var resultString = tokenizedName?.joinToString("+")
-        resultString += "&"
-        return resultString!!
+
+    private fun addFavorite(card: Card) {
+        mFavoriteDatabase.child(card.id).setValue(cardToMap(card))
     }
 
+    private fun removeFavorite(card: Card) {
+        mFavoriteDatabase.child(card.id).removeValue()
+    }
+
+    private fun findCardById(primaryKey: String, callback: (favorited: Boolean) -> Unit) {
+        var result = false
+        val favoritesDatabaseRef = FirebaseDatabase
+                .getInstance()
+                .getReference("Favorites")
+                .child(FirebaseAuth.getInstance().currentUser?.uid)
+                .child(primaryKey)
+
+        val valueEventListener = object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if(dataSnapshot.value != null){
+                    Log.d("Favorites", dataSnapshot.value.toString())
+                    callback(true)
+                }else {
+                    callback(false)
+                }
+                result = true
+            }
+        }
+
+        favoritesDatabaseRef.addValueEventListener(valueEventListener)
+//            return result
+    }
 
     companion object {
         fun newInstance(card: Card): CardFragment {
