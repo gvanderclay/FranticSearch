@@ -9,14 +9,12 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 import io.magicthegathering.javasdk.resource.Card
 import vanderclay.comet.benson.franticsearch.R
 import vanderclay.comet.benson.franticsearch.commons.addManaSymbols
 import vanderclay.comet.benson.franticsearch.model.Deck
-import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardImageTransform
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.DeckCardHeaderViewHolder
 import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.DeckCardViewHolder
 
@@ -35,11 +33,11 @@ class DeckCardSection(private val title: String, val cards: MutableMap<Card, Lon
         Log.d(deckCardTag, "Binding DeckCardViewHolder with ${card.name}")
 
         deckCardView.cardText.text = "${cards[card]}\t${card.name}"
-        Picasso.with(deckCardView.itemView.context)
-                .load(card.imageUrl)
-                .transform(CardImageTransform())
-                .placeholder(R.drawable.no_card)
-                .into(deckCardView.cardImage)
+//        Picasso.with(deckCardView.itemView.context)
+//                .load(card.imageUrl)
+//                .transform(CardImageTransform())
+//                .placeholder(R.drawable.no_card)
+//                .into(deckCardView.cardImage)
         deckCardView.cardImage.scaleType = ImageView.ScaleType.FIT_XY
         deckCardView.manaContainer?.removeAllViews()
         addManaSymbols(card, deckCardView.itemView.context, deckCardView.manaContainer)

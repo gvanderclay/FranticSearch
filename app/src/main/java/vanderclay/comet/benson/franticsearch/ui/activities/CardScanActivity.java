@@ -44,23 +44,17 @@ public class CardScanActivity extends AppCompatActivity {
     private static final String TAG = "OcrCaptureActivity";
     private static final int RC_HANDLE_GMS = 9001;
 
-    // Permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
-    // Constants used to pass extra data in the intent
     public static final String TextBlockObject = "String";
 
     private CameraSource mCameraSource;
     private CameraSourcePreview mPreview;
     private GraphicOverlay<OcrGraphic> mGraphicOverlay;
 
-    // Helper objects for detecting taps and pinches.
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
 
-    /**
-     * Initializes the UI and creates the detector pipeline.
-     */
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -88,11 +82,6 @@ public class CardScanActivity extends AppCompatActivity {
                 .show();
     }
 
-    /**
-     * Handles the requesting of the camera permission.  This includes
-     * showing a "Snackbar" message of why the permission is needed then
-     * sending the request.
-     */
     private void requestCameraPermission() {
         Log.w(TAG, "Camera permission is not granted. Requesting permission");
 
@@ -129,14 +118,6 @@ public class CardScanActivity extends AppCompatActivity {
         return b || c || super.onTouchEvent(e);
     }
 
-    /**
-     * Creates and starts the camera.  Note that this uses a higher resolution in comparison
-     * to other detection examples to enable the ocr detector to detect small text samples
-     * at long distances.
-     *
-     * Suppressing InlinedApi since there is a check that the minimum version is met before using
-     * the constant.
-     */
     @SuppressLint("InlinedApi")
     private void createCameraSource() {
         Context context = getApplicationContext();
@@ -196,18 +177,12 @@ public class CardScanActivity extends AppCompatActivity {
                         .build();
     }
 
-    /**
-     * Restarts the camera.
-     */
     @Override
     protected void onResume() {
         super.onResume();
         startCameraSource();
     }
 
-    /**
-     * Stops the camera.
-     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -216,10 +191,6 @@ public class CardScanActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Releases the resources associated with the camera source, the associated detectors, and the
-     * rest of the processing pipeline.
-     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

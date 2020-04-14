@@ -31,12 +31,16 @@ class DeckListAdapter(decks: MutableList<Deck>): RecyclerView.Adapter<DeckViewHo
             alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
                 mDecks.removeAt(position)
 
-                FirebaseDatabase
-                    .getInstance()
-                    .getReference("Decks")
-                    .child(FirebaseAuth.getInstance().currentUser?.uid)
-                    .child(deck.key)
-                    .removeValue()
+                FirebaseAuth.getInstance().currentUser?.uid?.let { it1 ->
+                    deck.key?.let { it2 ->
+                        FirebaseDatabase
+                            .getInstance()
+                            .getReference("Decks")
+                            .child(it1)
+                            .child(it2)
+                            .removeValue()
+                    }
+                }
                 Log.d(deckListTag, "Removing deck ${deck.name}")
 
                 notifyItemRemoved(position)

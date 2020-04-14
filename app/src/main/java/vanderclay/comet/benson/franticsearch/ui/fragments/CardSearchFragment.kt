@@ -14,7 +14,7 @@ import io.magicthegathering.javasdk.resource.Card
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import vanderclay.comet.benson.franticsearch.R
-import vanderclay.comet.benson.franticsearch.api.MtgAPI
+import vanderclay.comet.benson.franticsearch.api.MtgApi
 import vanderclay.comet.benson.franticsearch.ui.activities.MainActivity
 import vanderclay.comet.benson.franticsearch.ui.adapters.CardListAdapter
 import vanderclay.comet.benson.franticsearch.ui.adapters.listeners.EndlessRecyclerViewScrollListener
@@ -52,11 +52,11 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        menu?.clear()
-        inflater?.inflate(R.menu.search_menu, menu)
-        val item = menu?.findItem(R.id.action_search)
+        menu.clear()
+        inflater.inflate(R.menu.search_menu, menu)
+        val item = menu.findItem(R.id.action_search)
         searchView = SearchView((context as MainActivity).supportActionBar?.themedContext)
         MenuItemCompat.setActionView(item, searchView)
         searchView?.setOnQueryTextListener(this)
@@ -114,12 +114,12 @@ class CardSearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun loadNextDataFromApi(page: Int) {
         doAsync {
-            val cards = MtgAPI.getCards(page, "name=$cardFilter", "orderBy=name")
-            uiThread {
-                cardModel.addAll(cards)
-                Log.d(cardSearchTag, "Elements in array after search change ${cardModel.size}")
-                cardAdapter.notifyDataSetChanged()
-            }
+//            val cards = MtgApi.getCards(page, "name=$cardFilter", "orderBy=name")
+//            uiThread {
+//                cardModel.addAll(cards)
+//                Log.d(cardSearchTag, "Elements in array after search change ${cardModel.size}")
+//                cardAdapter.notifyDataSetChanged()
+//            }
         }
     }
 

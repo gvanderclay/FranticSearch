@@ -104,7 +104,6 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
             return;
         }
 
-
         // Break the text into multiple lines and draw each one according to its own bounding box.
         List<? extends Text> textComponents = text.getComponents();
 //        for (Text currentText : textComponents) {
@@ -114,6 +113,5 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
             canvas.drawText(currentText.getValue(), left, bottom, sTextPaint);
 //        }
 
-        //Draw the instructional text
     }
 }

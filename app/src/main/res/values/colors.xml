@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="franticBlue">#7EC0EE</color>
-    <color name="franticWhite">#fffff0</color>
+    <color name="primaryColor">#283593</color>
+    <color name="primaryLightColor">#5f5fc4</color>
+    <color name="primaryDarkColor">#001064</color>
+    <color name="primaryTextColor">#ffffff</color>
+    <color name="primaryAccent">#E1E2E1</color>
 </resources>

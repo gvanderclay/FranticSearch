@@ -14,13 +14,13 @@
         android:layout_alignParentStart="true"
         android:layout_marginStart="16dp"
         tools:text="Title test text"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/primaryColor"
         android:textStyle="bold"
         android:id="@+id/cardTypeTitle" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorAccent"
+        android:background="@color/primaryAccent"
         android:layout_alignParentBottom="true"/>
 </RelativeLayout>

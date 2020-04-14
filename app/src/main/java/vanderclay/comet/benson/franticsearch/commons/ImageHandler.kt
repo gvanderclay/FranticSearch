@@ -31,9 +31,9 @@ fun loadManaType(manaType: String, context: Context?, manaContainer: LinearLayou
     val url = getManaUrl(manaType)
     val imageView = ImageView(context)
     imageView.layoutParams = ViewGroup.LayoutParams(50, 50)
-    Picasso.with(context)
-            .load(url)
-            .into(imageView)
+//    Picasso.with(context)
+//            .load(url)
+//            .into(imageView)
     manaContainer?.addView(imageView)
 }
 

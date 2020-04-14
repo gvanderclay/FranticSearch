@@ -27,15 +27,15 @@ class CardViewHolder(binding: ItemCardRowBinding): RecyclerView.ViewHolder(bindi
         if (card.imageUrl != null) {
             mBinding.missingText.text = ""
         }
-        Picasso.with(mBinding.root.context)
-                .load(card.imageUrl)
-                .transform(CardImageTransform())
-                .placeholder(R.drawable.no_card)
-                .into(mBinding.cardImage)
+//        Picasso.with(mBinding.root.context)
+//                .load(card.imageUrl)
+//                .transform(CardImageTransform())
+//                .placeholder(R.drawable.no_card)
+//                .into(mBinding.cardImage)
         mBinding.cardImage.scaleType = ImageView.ScaleType.FIT_XY
-        Picasso.with(mBinding.root.context)
-                .load("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=${getSetCode()}&size=large&rarity=${getRaritySymbol()}")
-                .into(mBinding.setImage)
+//        Picasso.with(mBinding.root.context)
+//                .load("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=${getSetCode()}&size=large&rarity=${getRaritySymbol()}")
+//                .into(mBinding.setImage)
     }
 
     override fun onClick(view: View) {

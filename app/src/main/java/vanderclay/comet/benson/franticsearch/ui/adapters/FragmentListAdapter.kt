@@ -33,12 +33,14 @@ class FavoriteListAdapter(val cards: MutableList<Card>): RecyclerView.Adapter<Ca
             val alertDialogBuilder = AlertDialog.Builder(holder.itemView.context!!)
             alertDialogBuilder.setMessage("Delete Favorite? ${card.name}?")
             alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
-                FirebaseDatabase
-                    .getInstance()
-                    .getReference("Favorites")
-                    .child(FirebaseAuth.getInstance().currentUser?.uid)
-                    .child(card.id)
-                    .removeValue()
+                FirebaseAuth.getInstance().currentUser?.uid?.let { it1 ->
+                    FirebaseDatabase
+                        .getInstance()
+                        .getReference("Favorites")
+                        .child(it1)
+                        .child(card.id)
+                        .removeValue()
+                }
                 cards.removeAt(position)
                 notifyItemRemoved(position)
                 notifyItemRangeChanged(position, cards.size)

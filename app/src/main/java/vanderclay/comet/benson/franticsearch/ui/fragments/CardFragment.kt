@@ -197,10 +197,10 @@ class CardFragment : Fragment(), View.OnClickListener {
 
     // Bind a card to the ItemCardRow
     private fun loadCardImage() {
-        Picasso.with(activity)
-                .load(this.card?.imageUrl)
-                .placeholder(R.drawable.no_card)
-                .into(cardImage)
+//        Picasso.with(activity)
+//                .load(this.card?.imageUrl)
+//                .placeholder(R.drawable.no_card)
+//                .into(cardImage)
     }
 
     /*

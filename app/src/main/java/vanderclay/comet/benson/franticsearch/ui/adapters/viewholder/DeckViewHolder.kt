@@ -20,11 +20,11 @@ class DeckViewHolder(binding: ItemDeckRowBinding): RecyclerView.ViewHolder(bindi
         mBinding.deck = deck
         if(deck.coverCardIndex < deck.cards.size && deck.cards.size >= 0) {
             val imageUrl = deck.coverCardImageUrl
-            Picasso.with(mBinding.root.context)
-                    .load(imageUrl)
-                    .transform(CardImageTransform())
-                    .placeholder(R.drawable.no_card)
-                    .into(mBinding.deckListCardImage)
+//            Picasso.with(mBinding.root.context)
+//                    .load(imageUrl)
+//                    .transform(CardImageTransform())
+//                    .placeholder(R.drawable.no_card)
+//                    .into(mBinding.deckListCardImage)
             mBinding.deckListCardImage.scaleType = ImageView.ScaleType.FIT_XY
             addManaSymbols(deck.getManaTypes(), mBinding.root.context, mBinding.deckListManaContainer)
         }

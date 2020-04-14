@@ -8,9 +8,7 @@
     android:fitsSystemWindows="true"
     android:id="@+id/CreateAccountActivity">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="vanderclay.comet.benson.franticsearch.ui.activities.CreateAccountActivity"
@@ -124,10 +122,10 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="32dp"
-            android:background="@color/franticBlue"
-            android:text="Create Account "
+            android:background="@color/primaryColor"
+            android:text="Create Account"
             android:textAlignment="center"
-            android:textColor="@color/franticWhite"
+            android:textColor="@color/primaryTextColor"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintLeft_toLeftOf="@+id/guideline"
             app:layout_constraintRight_toLeftOf="@+id/guideline3"
@@ -145,5 +143,5 @@
             app:layout_constraintTop_toBottomOf="@+id/createAccountButton"
             app:srcCompat="@drawable/firebase" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.ConstraintLayout>
 </ScrollView>

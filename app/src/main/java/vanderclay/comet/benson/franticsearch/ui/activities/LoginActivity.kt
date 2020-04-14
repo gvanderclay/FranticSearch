@@ -15,36 +15,24 @@ import vanderclay.comet.benson.franticsearch.R
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private var mEmailView: TextView? = null
-
     private var mPasswordView: TextView? = null
-
-    // Reference to the firebase authorization object
     private var mAuth: FirebaseAuth? = null
-
-    // Reference to the Sign in Button
     private var signInButton: Button? = null
-
-    // Reference to the firebase Auth State Changed listener
     private var mAuthListener: FirebaseAuth.AuthStateListener? = null
-
-    //The tag filter
-    private val loginActivityTag: String = "LoginActivity"
-
-    //Reference to the create account Button
+    private val loginActivityTag = "LoginActivity"
     private var createAccountButton: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        //Instantiate a Reference to the Firebase Auth Object
         this.mAuth = FirebaseAuth.getInstance()
-        mEmailView = findViewById(R.id.email)
-        mPasswordView = findViewById(R.id.password)
-        signInButton = findViewById(R.id.email_sign_in_button)
-        signInButton?.setOnClickListener(this)
-        createAccountButton = findViewById(R.id.create_account_button)
-        createAccountButton?.setOnClickListener(this)
+//        mEmailView = findViewById(R.id.email)
+//        mPasswordView = findViewById(R.id.password)
+//        signInButton = findViewById(R.id.email_sign_in_button)
+//        signInButton?.setOnClickListener(this)
+//        createAccountButton = findViewById(R.id.create_account_button)
+//        createAccountButton?.setOnClickListener(this)
 
         Log.w(loginActivityTag, "Assigning listener to Firebase Authorize object")
         mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
@@ -63,9 +51,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         mAuth!!.addAuthStateListener(this.mAuthListener!!)
     }
 
-    /*
-     * Override the onStop method and
-     */
     public override fun onStop() {
         Log.w(loginActivityTag, "Stopping the task.")
         super.onStop()
@@ -80,7 +65,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         Log.w(loginActivityTag, "signIn: $email")
         val intent = Intent(baseContext, MainActivity::class.java)
         intent.action = "SEARCH_INTENT"
-        if(!isValideForm()){
+        if(!isValidForm()){
             showSnackBar("Password or Email had Invalid Format")
             return
         }
@@ -104,11 +89,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun showSnackBar(message: String){
-        val snackbar = Snackbar.make(LoginActivity, message, Snackbar.LENGTH_LONG)
-        snackbar.show()
+//        Snackbar.make(LoginActivity, message, Snackbar.LENGTH_LONG).show()
     }
 
-    private fun isValideForm(): Boolean{
+    private fun isValidForm(): Boolean{
         val emailText = mEmailView?.text.toString()
         val passwordText = mPasswordView?.text.toString()
         if(!isEmailValid(emailText) || !isPasswordValid(passwordText)){
@@ -119,19 +103,13 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         val i = v.id
-        if (i == R.id.email_sign_in_button) {
-            signIn(mEmailView?.text.toString(), mPasswordView?.text.toString())
-        }
-        else if(i == R.id.create_account_button){
-            transferToCreateAccount()
-        }
+//        if (i == R.id.email_sign_in_button) {
+//            signIn(mEmailView?.text.toString(), mPasswordView?.text.toString())
+//        }
+//        else if(i == R.id.create_account_button){
+//            transferToCreateAccount()
+//        }
     }
-
-/*
-    private fun signOut() {
-        mAuth!!.signOut()
-    }
-*/
 
     private fun isEmailValid(email: String): Boolean {
         return email.contains("@")

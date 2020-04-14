@@ -126,10 +126,6 @@ public class CameraSource {
     private String mFocusMode = null;
     private String mFlashMode = null;
 
-    // These instances need to be held onto to avoid GC of their underlying resources.  Even though
-    // these aren't used outside of the method that creates them, they still must have hard
-    // references maintained to them.
-    private SurfaceView mDummySurfaceView;
     private SurfaceTexture mDummySurfaceTexture;
 
     /**
@@ -333,7 +329,10 @@ public class CameraSource {
                 mDummySurfaceTexture = new SurfaceTexture(DUMMY_TEXTURE_NAME);
                 mCamera.setPreviewTexture(mDummySurfaceTexture);
             } else {
-                mDummySurfaceView = new SurfaceView(mContext);
+                // These instances need to be held onto to avoid GC of their underlying resources.  Even though
+                // these aren't used outside of the method that creates them, they still must have hard
+                // references maintained to them.
+                SurfaceView mDummySurfaceView = new SurfaceView(mContext);
                 mCamera.setPreviewDisplay(mDummySurfaceView.getHolder());
             }
             mCamera.startPreview();

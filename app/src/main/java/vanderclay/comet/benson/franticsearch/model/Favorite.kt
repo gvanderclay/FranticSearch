@@ -10,17 +10,19 @@ import vanderclay.comet.benson.franticsearch.ui.adapters.viewholder.CardViewHold
 @Suppress("UNCHECKED_CAST")
 class Favorite {
 
-    private val mFavoriteDatabase = FirebaseDatabase.getInstance()
+    private val mFavoriteDatabase = FirebaseAuth.getInstance().currentUser?.uid?.let {
+        FirebaseDatabase.getInstance()
             .reference
             .child("Favorites")
-            .child(FirebaseAuth.getInstance().currentUser?.uid)
+            .child(it)
+    }
 
     fun addFavorite(card: Card) {
-        mFavoriteDatabase.child(card.id).setValue(CardDO(card).toMap())
+        mFavoriteDatabase?.child(card.id)?.setValue(CardDO(card).toMap())
     }
 
     fun removeFavorite(card: Card) {
-        mFavoriteDatabase.child(card.id).removeValue()
+        mFavoriteDatabase?.child(card.id)?.removeValue()
     }
 
     private class CardDO(card: Card) {
@@ -152,13 +154,8 @@ class Favorite {
     companion object {
         fun getAllFavorites(favorites: MutableList<Card>, recycler: RecyclerView.Adapter<CardViewHolder>) {
 
-            val favoritesDatabaseRef = FirebaseDatabase
-                    .getInstance()
-                    .getReference("Favorites")
-                    .child(FirebaseAuth.getInstance().currentUser?.uid)
-
             val valueEventListener = object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) { }
+                override fun onCancelled(p0: DatabaseError) { }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
 
@@ -178,18 +175,18 @@ class Favorite {
                 }
             }
 
-            favoritesDatabaseRef.addListenerForSingleValueEvent(valueEventListener)
+            FirebaseAuth.getInstance().currentUser?.uid?.let {
+                FirebaseDatabase
+                    .getInstance()
+                    .getReference("Favorites")
+                    .child(it)
+            }?.addListenerForSingleValueEvent(valueEventListener)
         }
 
         fun findCardById(primaryKey: String, callback: (favorited: Boolean) -> Unit){
-            val favoritesDatabaseRef = FirebaseDatabase
-                    .getInstance()
-                    .getReference("Favorites")
-                    .child(FirebaseAuth.getInstance().currentUser?.uid)
-                    .child(primaryKey)
 
             val valueEventListener = object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) { }
+                override fun onCancelled(p0: DatabaseError) {}
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     if(dataSnapshot.value != null){
@@ -201,7 +198,13 @@ class Favorite {
                 }
             }
 
-            favoritesDatabaseRef.addValueEventListener(valueEventListener)
+            FirebaseAuth.getInstance().currentUser?.uid?.let {
+                FirebaseDatabase
+                    .getInstance()
+                    .getReference("Favorites")
+                    .child(it)
+                    .child(primaryKey)
+            }?.addValueEventListener(valueEventListener)
         }
     }
 }

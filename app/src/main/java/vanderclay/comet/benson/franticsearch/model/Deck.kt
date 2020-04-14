@@ -40,13 +40,13 @@ class Deck(val name: String, deckKey: String? = null) {
             if (mDeckDatabase != null) {
                 deckReference = mDeckDatabase.child(key!!)
             }
-            cardListReference = deckReference?.child("cards")
+            cardListReference = deckReference?.child("cards")!!
         } else {
             // else create a new deck and add it to firebase
             deckReference = mDeckDatabase?.push()
             key = deckReference?.key
             deckReference?.child("deckName")?.setValue(name)
-            cardListReference = deckReference.child("cards")
+            cardListReference = deckReference?.child("cards")!!
             cardListReference.setValue(arrayListOf<String>())
         }
     }
@@ -59,13 +59,13 @@ class Deck(val name: String, deckKey: String? = null) {
                 override fun onCancelled(snapshot: DatabaseError) { }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if(snapshot.child("count")?.value != null) {
+                    if(snapshot.child("count").value != null) {
                         val count = snapshot.child("count").value as Long
                         snapshot.ref.child("count").setValue(count + 1)
                         return
                     }
                     with(card) {
-                        with(snapshot.ref!!) {
+                        with(snapshot.ref) {
                             child("multiverse").setValue(multiverseid.toString())
                             child("id").setValue(id)
                             child("mana").setValue(manaCost)

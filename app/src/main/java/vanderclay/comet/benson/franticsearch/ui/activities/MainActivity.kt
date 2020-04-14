@@ -34,19 +34,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val rcOcrCapture = 9003
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if(FirebaseAuth.getInstance().currentUser == null) {
-            goToLoginActivity()
+        try {
+            if (FirebaseAuth.getInstance().currentUser == null) {
+                 goToLoginActivity()
+            }
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_main)
+
+            setSupportActionBar(toolbar as Toolbar?)
+            mDrawer = findViewById(R.id.drawer_layout)
+            nvDrawer = findViewById(R.id.nvView)
+            drawerToggle = setUpDrawerToggle()
+            mDrawer?.addDrawerListener(drawerToggle as DrawerLayout.DrawerListener)
+
+            setupDrawerContent(nvDrawer)
+        } catch (e: Exception) {
+            Log.d(mainActivityTag, e.message)
         }
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        setSupportActionBar(toolbar as Toolbar?)
-        mDrawer = findViewById(R.id.drawer_layout)
-        nvDrawer = findViewById(R.id.nvView)
-        drawerToggle = setUpDrawerToggle()
-        mDrawer?.addDrawerListener(drawerToggle as DrawerLayout.DrawerListener)
-
-        setupDrawerContent(nvDrawer)
     }
 
     override fun onResume() {

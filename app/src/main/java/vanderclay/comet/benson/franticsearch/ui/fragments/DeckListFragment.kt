@@ -51,11 +51,11 @@ class DeckListFragment : Fragment() {
         return rootView
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        menu?.clear()
-        inflater?.inflate(R.menu.deck_add_menu, menu)
-        menu?.findItem(R.id.deckAdd)?.setOnMenuItemClickListener {
+        menu.clear()
+        inflater.inflate(R.menu.deck_add_menu, menu)
+        menu.findItem(R.id.deckAdd)?.setOnMenuItemClickListener {
             val alertDialogBuilder = AlertDialog.Builder(activity)
             val input = EditText(activity)
             alertDialogBuilder.setView(input)
